@@ -9,7 +9,7 @@ public abstract class Team
 {
     private String name = null;
     private TeamStats stats = null;
-    private LinkedHashMap<UUID,Player> players = null;
+    private LinkedHashMap<UUID,PvPPlayer> players = null;
     private int maxSize;
 
     public Team(String name, int maxSize) throws Exception
@@ -19,13 +19,18 @@ public abstract class Team
 
         this.name = name;
         // TODO: fetch stats from DB
-        this.players = new LinkedHashMap<UUID,Player>();
+        this.players = new LinkedHashMap<UUID,PvPPlayer>();
         this.maxSize = maxSize;
     }
 
     public int getSize()
     {
         return players.size();
+    }
+
+    public String getName()
+    {
+        return name;
     }
 
     public boolean containsPlayer(Player player)
@@ -37,7 +42,7 @@ public abstract class Team
     {
         if( getSize()<maxSize )
         {
-            players.put(player.getUniqueId(), player);
+            players.put( player.getUniqueId(), new PvPPlayer(player) );
             return true;
         }
 
@@ -50,4 +55,8 @@ public abstract class Team
             players.remove( player.getUniqueId() );
     }
 
+    public LinkedHashMap<UUID,PvPPlayer> getPlayers()
+    {
+        return players;
+    }
 }

@@ -1,32 +1,48 @@
 package eu.ezpzcraft.pvpkit;
 
+import java.util.Map;
+import java.util.UUID;
+
 public class Duel
 {
     private Arena arena = null;
     private Team team1 = null;
     private Team team2 = null;
+    private float priority = 0;
 
     public Duel(Team team1, Team team2, Arena arena)
     {
         this.team1 = team1;
         this.team2 = team2;
         this.arena = arena;
+        this.priority = 0;
     }
 
     public void start()
     {
-        // Save pos+orientation
-        // Save health
-        // Save hunger
-        // Save effects
+        // For all players from both team
+        for( Map.Entry<UUID, PvPPlayer> entry: team1.getPlayers().entrySet() )
+        {
+            // Save current state
+            entry.getValue().setState();
 
-        // clear inventory
-        // clear effect
+            // Clear inventory
+            entry.getValue().getPlayer().getInventory().clear();
 
-        // TP (pos+orientation)
-        // set health
-        // set hunger
-        // set inventory
+            // Clear effect
+
+            // TP (pos+orientation)
+            // set health
+            // set hunger
+            // set inventory
+
+            // Countdown title, immobilise ?
+        }
+        for( Map.Entry<UUID, PvPPlayer> entry: team2.getPlayers().entrySet() )
+        {
+            // Save current state
+            entry.getValue().setState();
+        }
     }
 
     public void end()
@@ -37,5 +53,15 @@ public class Duel
         // Set hunger
         // Set effects
         // Set inventory
+    }
+
+    public float getPriority()
+    {
+        return priority;
+    }
+
+    public void updatePriority(float value)
+    {
+        priority = value;
     }
 }
