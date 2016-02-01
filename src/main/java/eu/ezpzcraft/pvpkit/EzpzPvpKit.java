@@ -1,8 +1,10 @@
+
 package eu.ezpzcraft.pvpkit;
 
 import org.slf4j.Logger;
 import com.google.inject.Inject;
 
+import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.entity.living.player.Player;
@@ -11,6 +13,7 @@ import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
+import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.scheduler.Scheduler;
 import org.spongepowered.api.scheduler.Task;
@@ -35,6 +38,9 @@ public class EzpzPvpKit
     /* Variables */
     @Inject
     private Logger logger;
+    @Inject
+    private Game game;
+    
     private LinkedHashMap<String, DuelQueue> queues = null;
     private LinkedHashMap<String, Arena> arenas = new LinkedHashMap<String, Arena>();
     private LinkedHashMap<UUID, Arena> players = new LinkedHashMap<UUID, Arena>();
@@ -89,12 +95,18 @@ public class EzpzPvpKit
         Task threadMatchStart = Sponge.getScheduler().createTaskBuilder().execute(startMatchSetup)
         	.interval(1, TimeUnit.SECONDS)
             .name("StartMatchSetup").submit(this);
-        
-        
+                
         getLogger().info(" Started");
     }    
    
-    
+    public void onServerStarting(GameStartingServerEvent event)
+    {
+        /* Load queues */
+        db.loadArenas();
+        
+        /* Load arenas */
+        db.loadQueues();	
+    }
 
     /* Getters and Setters */
     
@@ -113,10 +125,20 @@ public class EzpzPvpKit
 
         return EzpzPvpKit.instance;
     }
+    
+    public Game getGame()
+    {
+    	return this.game;
+    }
 
     public DuelQueue getQueue(String name)
     {
         return queues.get(name);
+    }
+    
+    public void addQueue(DuelQueue queue)
+    {
+    	this.queues.put(queue.getName(), queue);
     }
 
     public Arena getArena(String name)
@@ -139,6 +161,21 @@ public class EzpzPvpKit
     {
     	return arenas.containsKey(name);
     }
+
+    public Arena getPlayerArena(UUID uuid)
+    {
+        return players.get(uuid);
+    }
+
+    public Database getDatabase()
+    {
+        return this.db;
+    }
+    
+    public Utils getUtils() 
+    {
+		return utils;
+	}
     
     public LinkedList<Text> getArenaList()
     {
@@ -185,28 +222,17 @@ public class EzpzPvpKit
 												.style(TextStyles.BOLD)
 												.color(TextColors.DARK_GRAY)
 												.build())
+										.append(Text.builder("  (")
+												.style(TextStyles.BOLD)
+												.color(TextColors.DARK_GRAY)
+												.append(Text.builder(""+entry.getValue().getPos1().getBlockX())
+														.build())
+												.build())
 								.build());
     		}
     	}
     	return arenalist;
     }
-
-    public Arena getPlayerArena(UUID uuid)
-    {
-        return players.get(uuid);
-    }
-
-    public Database getDatabase()
-    {
-        return this.db;
-    }
-    
-    public Utils getUtils() 
-    {
-		return utils;
-	}
-    
-
 
 }
 
