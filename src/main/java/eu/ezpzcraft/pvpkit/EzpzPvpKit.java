@@ -17,6 +17,9 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.scheduler.Scheduler;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 
 import javax.xml.crypto.Data;
 
@@ -157,21 +160,6 @@ public class EzpzPvpKit
     {
     	return arenas.containsKey(name);
     }
-    
-    public LinkedList<Text> getArenaList()
-    {
-    	if(arenas.size()==0)
-    		return null;
-    	else
-    	{
-        	LinkedList<Text> arenalist = new LinkedList<Text>();
-    		for (Map.Entry<String,Arena> entry : arenas.entrySet()) 
-    		{
-    			arenalist.add(Text.of(entry.getKey()));
-    		}
-        	return arenalist;
-    	}
-    }
 
     public Arena getPlayerArena(UUID uuid)
     {
@@ -188,7 +176,61 @@ public class EzpzPvpKit
 		return utils;
 	}
     
-
-
+    public LinkedList<Text> getArenaList()
+    {
+    	LinkedList<Text> arenalist = new LinkedList<Text>();
+    	if(arenas.size()==0)
+    	{
+    		arenalist.add(Text.builder("No arena created!").build());
+    	}
+    	else
+    	{
+    		for (Map.Entry<String,Arena> entry : arenas.entrySet()) 
+    		{
+    			arenalist.add(Text.builder("")   
+										.append(Text.builder(" [")
+												.style(TextStyles.BOLD)
+												.color(TextColors.DARK_GRAY)
+												.build())
+    									.append(Text.builder(" ✘")
+												.color(TextColors.RED)
+												.style(TextStyles.BOLD)
+												.onHover(TextActions.showText(Text.builder("Click to delete"+entry.getKey())
+														.style(TextStyles.RESET)
+														.color(TextColors.RED)
+														.build()))
+												.onClick(TextActions.runCommand("/k del "+entry.getKey()))
+												.build())
+										.append(Text.builder("]   ")
+												.style(TextStyles.BOLD)
+												.color(TextColors.DARK_GRAY)
+												.build())
+										.append(Text.builder(entry.getKey())
+												.style(TextStyles.RESET)
+												.color(TextColors.WHITE)
+												.build())
+										.append(Text.builder("   <")
+												.style(TextStyles.BOLD)
+												.color(TextColors.DARK_GRAY)
+												.build())
+										.append(Text.builder(entry.getValue().getType())
+												.style(TextStyles.RESET)
+												.color(TextColors.GRAY)
+												.build())
+										.append(Text.builder(">")
+												.style(TextStyles.BOLD)
+												.color(TextColors.DARK_GRAY)
+												.build())
+										.append(Text.builder("  (")
+												.style(TextStyles.BOLD)
+												.color(TextColors.DARK_GRAY)
+												.append(Text.builder(""+entry.getValue().getPos1().getBlockX())
+														.build())
+												.build())
+								.build());
+    		}
+    	}
+    	return arenalist;
+    }
 }
 
