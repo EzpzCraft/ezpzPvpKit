@@ -12,6 +12,7 @@ import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
+import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.scheduler.Scheduler;
@@ -97,8 +98,9 @@ public class EzpzPvpKit
                 
         getLogger().info(" Started");
     }    
-   
-    public void onServerStarting(GameStartingServerEvent event)
+    
+    @Listener
+    public void onServerStarting(GameStartedServerEvent event)
     {
         /* Load queues */
         db.loadArenas();
