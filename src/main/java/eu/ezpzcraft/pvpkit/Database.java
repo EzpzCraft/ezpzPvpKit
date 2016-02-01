@@ -336,7 +336,7 @@ public class Database
 	        
 	        Location<World> pos1, pos2;
 	        Vector3d rotation1, rotation2;
-	        
+
 	        while( result.next() )
 	        {
 	        	// Get the data from DB
@@ -358,6 +358,12 @@ public class Database
 	        	type = result.getString("type");
 	        	
 	        	// Create position
+	        	if( !EzpzPvpKit.getInstance().getGame().getServer().getWorld(world).isPresent() )
+	        	{
+	        		EzpzPvpKit.getLogger().info("World " + world + " not found." );
+	        		continue;
+	        	}
+	        		
 	        	pos1 = new Location<World>(EzpzPvpKit.getInstance().getGame().getServer().getWorld(world).get(),
 	        							   pos1_x, pos1_y, pos1_z);
 	        	pos2 = new Location<World>(EzpzPvpKit.getInstance().getGame().getServer().getWorld(world).get(),
@@ -368,6 +374,7 @@ public class Database
 	        	rotation2 = new Vector3d(orientation2_x, orientation2_y, orientation2_z);
 	        	
 	        	// Add arena
+	        	EzpzPvpKit.getLogger().info("Load arena " + name);
 	        	EzpzPvpKit.getInstance().addArena( new Arena(name,type,score,pos1,rotation1,pos2,rotation2) );
 	        }
     	}
