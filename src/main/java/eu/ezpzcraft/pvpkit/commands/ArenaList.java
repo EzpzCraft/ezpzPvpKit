@@ -28,13 +28,27 @@ public class ArenaList implements CommandExecutor
         	PaginationService paginationService = Sponge.getServiceManager().provide(PaginationService.class).get();
 
 	    	paginationService.builder()
-	        .title(Text.builder("").color(TextColors.DARK_GRAY).style(TextStyles.BOLD)
-	        				.append(Text.builder("Arena List").color(TextColors.DARK_RED).style(TextStyles.BOLD)
-	        						.append(Text.builder("").color(TextColors.DARK_GRAY).style(TextStyles.BOLD).build())
+	        .title(Text.builder("")
+	        				.append(Text.builder("------")
+	        						.color(TextColors.DARK_GRAY)
+	        						.style(TextStyles.STRIKETHROUGH)
+	        						.style(TextStyles.BOLD)
+	        						.build())
+	        				.append(Text.builder("  Arena List  ")
+	        						.color(TextColors.DARK_RED)
+	        						.style(TextStyles.RESET)
+	        						.style(TextStyles.BOLD)
+	        						.build())
+	        				.append(Text.builder("------")
+	        						.color(TextColors.DARK_GRAY)
+	        						.style(TextStyles.STRIKETHROUGH)
+	        						.style(TextStyles.BOLD)
+	        						.build())
+	        				.style(TextStyles.RESET)
+	        				.color(TextColors.DARK_GRAY)
 	        				.build())
-	        			.build())
 	        .contents(EzpzPvpKit.getInstance().getArenaList())
-	        .paddingString("=")
+	        .paddingString("")
 	        .sendTo(src);
 
         }
