@@ -11,6 +11,8 @@ public class DuelQueue
     private LinkedHashMap<String, Arena> usedArenas = null;
     private LinkedHashMap<String, Team> waitingTeams = null;
     private LinkedList<Duel> duels = null;
+    private Boolean isRanked = false;
+    private String type = null;
 
     /* Constructor */
     public DuelQueue(String name)
@@ -48,5 +50,20 @@ public class DuelQueue
     public void addDuel(Duel duel)
     {
         duels.add(duel);
+    }
+    
+    public String getName()
+    {
+    	return this.name;
+    }
+    
+    public Boolean isRanked()
+    {
+    	return this.isRanked;
+    }
+    
+    public String getType()
+    {
+    	return this.type;
     }
 }

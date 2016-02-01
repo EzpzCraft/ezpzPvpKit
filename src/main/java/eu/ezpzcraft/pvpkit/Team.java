@@ -1,18 +1,22 @@
 package eu.ezpzcraft.pvpkit;
 
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.util.LinkedHashMap;
 import java.util.UUID;
 
-public abstract class Team
+public class Team
 {
     private String name = null;
     private TeamStats stats = null;
     private LinkedHashMap<UUID,PvPPlayer> players = null;
     private int maxSize;
+    private Location<World> location;
+	private int countdown = 3;
 
-    public Team(String name, int maxSize) throws Exception
+    public Team(String name,int maxSize) throws Exception
     {
         if(name==null)
             throw new Exception("A team cannot have a null name.");
@@ -59,4 +63,24 @@ public abstract class Team
     {
         return players;
     }
+    
+	public Location<World> getLocation() 
+	{
+		return location;
+	}
+
+	public void setLocation(Location<World> location) 
+	{
+		this.location = location;
+	}
+	
+    public int getCountdown() 
+    {
+		return countdown;
+	}
+
+	public void setCountdown(int countdown) 
+	{
+		this.countdown = countdown;
+	}
 }

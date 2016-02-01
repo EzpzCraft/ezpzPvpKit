@@ -1,24 +1,41 @@
 package eu.ezpzcraft.pvpkit;
 
-import com.sun.xml.internal.ws.api.message.Messages;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.Transaction;
-import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.type.DyeColors;
+import org.spongepowered.api.data.value.BaseValue;
+import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.entity.health.HealthModifier;
+import org.spongepowered.api.event.entity.item.TargetItemEvent;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
+import org.spongepowered.api.event.item.inventory.UseItemStackEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
+import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
+import org.spongepowered.api.item.inventory.entity.HumanInventory;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
+import org.spongepowered.api.item.inventory.type.GridInventory;
+import org.spongepowered.api.item.inventory.type.InventoryRow;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 public class EventHandler
@@ -84,6 +101,9 @@ public class EventHandler
 
         for (Transaction<BlockSnapshot> tr : event.getTransactions())
         {
+        	
+            
+        	
             if ( tr.getOriginal().getState().getType().equals(BlockTypes.DIRT) )
             {
                 EzpzPvpKit.getLogger().info("Dirt break - save");
@@ -93,6 +113,34 @@ public class EventHandler
                 if(player.isPresent())
                     states.put( player.get().getName(), new PlayerState(player.get()) );
             }
+            
+            //TODO REMOVE
+            else if ( tr.getOriginal().getState().getType().equals(BlockTypes.SPONGE) )
+            {
+                Cause cause = event.getCause();
+                Optional<Player> player = cause.first(Player.class);
+
+                if(player.isPresent())
+                {          
+                	Team team;
+					try 
+					{
+						team = new Team("MonEquipe",2);
+	                	for(Player player2 : Sponge.getServer().getOnlinePlayers())
+	                	{
+	                		team.addPlayer(player2);
+	                	}
+	                    EzpzPvpKit.getInstance().getStartMatchSetup().addTeamStart(team);
+					} catch (Exception e) 
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+                }
+            }
+            
+            
             else if ( tr.getOriginal().getState().getType().equals(BlockTypes.STONE) )
             {
                 EzpzPvpKit.getLogger().info("Stone break - reset");
@@ -111,37 +159,140 @@ public class EventHandler
                 Cause cause = event.getCause();
                 Optional<Player> player = cause.first(Player.class);
 
+                // TODO: packet client
+                // https://bukkit.org/threads/util-edit-itemstack-attributes-adding-speed-damage-or-health-bonuses.158316/
                 if(player.isPresent())
                 {
+                    Hotbar hotbar = player.get().getInventory().query(Hotbar.class);
+
                     // Ranked
                     ItemStack ranked = ItemStack.builder().itemType(ItemTypes.DIAMOND_SWORD).quantity(1).build();
-                    ranked.get(DisplayNameData.class).get().displayName();
+                    Text title = Text.builder("Ranked").color(TextColors.AQUA).style(TextStyles.BOLD).build();
+                    List<Text> lore = new ArrayList<Text>();
+                    lore.add( Text.builder("Remaining ranked: ").color(TextColors.GOLD)
+                                  .append(Text.builder("5").color(TextColors.YELLOW).build()).build() );
+                    lore.add( Text.builder("Click to play").color(TextColors.GRAY).build() );
 
-                    /*
-                    ItemStack exitDoor = ItemStack.builder().itemType(ItemTypes.WOODEN_DOOR).quantity(1).build();
-                    DisplayNameData exitDoorDisp = exitDoor.get(DisplayNameData.class).get();
-                    exitDoorDisp.displayName().set(Text.builder("Exit to Hub").color(TextColors.DARK_BLUE).build());
-                    */
-
-                    if( ranked.get(DisplayNameData.class).isPresent() )
-                        EzpzPvpKit.getLogger().info("TEST " + ranked.get(DisplayNameData.class).get());
-                    //ranked.get(DisplayNameData.class).get().displayName().set(Text.builder("test").color(TextColors.AQUA).build() );
-
-                    player.get().getInventory().query(Hotbar.class).offer(ranked);
+                    ranked.offer(Keys.DISPLAY_NAME, title);
+                    ranked.offer(Keys.ITEM_LORE, lore);
+                    //ranked.offer(Keys.ATTACK_DAMAGE, 8.5); // TODO remove
 
                     // Unranked
                     ItemStack unranked = ItemStack.builder().itemType(ItemTypes.IRON_SWORD).quantity(1).build();
-                    player.get().getInventory().query(Hotbar.class).offer(unranked);
+                    title = Text.builder("Unranked").color(TextColors.AQUA).style(TextStyles.BOLD).build();
+                    lore = new ArrayList<Text>();
+                    lore.add( Text.builder("Unlimited").color(TextColors.GOLD).build() );
+                    lore.add( Text.builder("Click to play").color(TextColors.GRAY).build() );
 
-                    // PlayerHead
-                    ItemStack head = ItemStack.builder().itemType(ItemTypes.SKULL).quantity(1).build();
-                    player.get().getInventory().query(Hotbar.class).offer(head);
+                    unranked.offer(Keys.DISPLAY_NAME, title);
+                    unranked.offer(Keys.ITEM_LORE, lore);
+
+                    // PlayerHead TODO: player head
+                    ItemStack stats = ItemStack.builder().itemType(ItemTypes.SKULL).quantity(1).build();
+                    title = Text.builder("Statistics").color(TextColors.AQUA).style(TextStyles.BOLD).build();
+                    lore = new ArrayList<Text>();
+                    lore.add( Text.builder("Player: ").color(TextColors.GOLD)
+                              .append(Text.builder("Nomeho").color(TextColors.YELLOW).build() ).build() );
+                    lore.add( Text.builder("Click to see").color(TextColors.GRAY).build() );
+
+                    stats.offer(Keys.DISPLAY_NAME, title);
+                    stats.offer(Keys.ITEM_LORE, lore);
+
+
+                    // Lang
+                    ItemStack lang = ItemStack.builder().itemType(ItemTypes.BANNER).quantity(1).build();
+                    title = Text.builder("Lang").color(TextColors.AQUA).style(TextStyles.BOLD).build();
+                    lore = new ArrayList<Text>();
+                    lore.add( Text.builder("Choose your laguage").color(TextColors.GOLD).build() );
+                    lore.add( Text.builder("Choice: ").color(TextColors.GRAY)
+                             .append(Text.builder("English").color(TextColors.YELLOW).build() ).build() );
+
+                    lang.offer(Keys.DISPLAY_NAME, title);
+                    lang.offer(Keys.ITEM_LORE, lore);
+
+                    lang.offer(Keys.DYE_COLOR, DyeColors.RED);
+
+                    DataContainer data = lang.toContainer();
+
+                    lang.setRawData(data);
+                    //data.set();
+
+                    //Banner banner = (Banner) lang.getItem();
+                    //banner.patternsList().add(BannerPatternShapes.DIAGONAL_LEFT, DyeColors.BLUE);
+                    //lang.offer(Keys.BANNER_BASE_COLOR, DyeColors.WHITE);
 
                     // Spectator
                     ItemStack spectator = ItemStack.builder().itemType(ItemTypes.COMPASS).quantity(1).build();
-                    player.get().getInventory().query(Hotbar.class).offer(spectator);
+                    title = Text.builder("Spectator").color(TextColors.AQUA).style(TextStyles.BOLD).build();
+                    lore = new ArrayList<Text>();
+                    lore.add( Text.builder("Click to see another player").color(TextColors.GOLD).build() );
+
+                    spectator.offer(Keys.DISPLAY_NAME, title);
+                    spectator.offer(Keys.ITEM_LORE, lore);
+
+                    // Finally place items in hotbar
+                    // TODO good placement
+                    hotbar.set(new SlotIndex(8), stats);
+
+                    hotbar.offer(ranked);
+                    hotbar.offer(unranked);
+                    hotbar.offer(stats);
+                    hotbar.offer(lang);
+                    hotbar.offer(spectator);
+
+                    Text line1 = Text.builder("---------------").color(TextColors.DARK_GRAY).style(TextStyles.STRIKETHROUGH)
+                                 .append(Text.builder(" E").color(TextColors.DARK_RED).style(TextStyles.RESET).style(TextStyles.BOLD)
+                                 .append(Text.builder("zpz").color(TextColors.RED)
+                                 .append(Text.builder("C").color(TextColors.DARK_RED).style(TextStyles.RESET).style(TextStyles.BOLD)
+                                 .append(Text.builder("raft ").color(TextColors.RED)
+                                 .append(Text.builder("---------------").color(TextColors.DARK_GRAY).style(TextStyles.STRIKETHROUGH).build())
+                                 .build()).build()).build()).build()).build();
+
+                    Text line2 = Text.builder("§a Test  §c§nLol").build();
+
+                    // Motd
+                    player.get().sendMessage(line2);
                 }
             }
         }
     }
+
+    // No drop, no deplace
+    @Listener
+    public void handleClick2(TargetItemEvent event)
+    {
+        Cause cause = event.getCause();
+        Optional<Player> player = cause.first(Player.class);
+
+        if(player.isPresent())
+        {
+            EzpzPvpKit.getLogger().info("target " + player.get().getName() );
+        }
+
+    }
+    @Listener
+    public void handleClick3(UseItemStackEvent event)
+    {
+        Cause cause = event.getCause();
+        Optional<Player> player = cause.first(Player.class);
+
+        if(!player.isPresent())
+            return;
+
+        EzpzPvpKit.getLogger().info("use");
+
+        //CustomInventory inventory = CustomInventory.builder().name(new FixedTranslation("test")).size(5).build(); // TODO nom
+        Player p = player.get();
+
+        //p.openInventory(inventory);
+
+    }
+
+    @Listener
+    public void handleClick4(ClickInventoryEvent.Primary event)
+    {
+        EzpzPvpKit.getLogger().info("Primary"); // Left click inside inventary
+    }
+
+    // TODO supprimer toute interaction avec les blocks dans le spawn
 }
