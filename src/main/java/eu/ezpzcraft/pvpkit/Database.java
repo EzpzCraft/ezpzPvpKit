@@ -4,6 +4,10 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.service.sql.SqlService;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
+
+import com.flowpowered.math.vector.Vector3d;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -315,6 +319,64 @@ public class Database
         executePrepared(datasource, executeString, params);
     }
     
+    public void loadArenas()
+    {    
+    	try
+    	{
+	        DataSource datasource = getDataSource("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password);
+	        String executeString = "SELECT * FROM Arenas";
+	        ResultSet result = execute(executeString, datasource);
+	    	    	
+	        String name;
+	        String world;
+	        Float pos1_x, pos1_y, pos1_z, pos2_x, pos2_y, pos2_z;
+	        Float orientation1_x, orientation1_y, orientation1_z, orientation2_x, orientation2_y, orientation2_z;
+	        Float score;
+	        String type;
+	        
+	        Location<World> pos1, pos2;
+	        Vector3d rotation1, rotation2;
+	        
+	        while( result.next() )
+	        {
+	        	// Get the data from DB
+	        	name = result.getString("name");
+	        	world = result.getString("world");
+	        	pos1_x = result.getFloat("pos1_x");
+	        	pos1_y = result.getFloat("pos1_y");
+	        	pos1_z = result.getFloat("pos1_z");
+	        	pos2_x = result.getFloat("pos2_x");
+	        	pos2_y = result.getFloat("pos2_y");
+	        	pos2_z = result.getFloat("pos2_z");
+	        	orientation1_x = result.getFloat("orientation1_x");
+	        	orientation1_y = result.getFloat("orientation1_y");
+	        	orientation1_z = result.getFloat("orientation1_z");
+	        	orientation2_x = result.getFloat("orientation2_x");
+	        	orientation2_y = result.getFloat("orientation2_y");
+	        	orientation2_z = result.getFloat("orientation2_z");
+	        	score = result.getFloat("score");
+	        	type = result.getString("type");
+	        	
+	        	// Create position
+	        	pos1 = new Location<World>(EzpzPvpKit.getInstance().getGame().getServer().getWorld(world).get(),
+	        							   pos1_x, pos1_y, pos1_z);
+	        	pos2 = new Location<World>(EzpzPvpKit.getInstance().getGame().getServer().getWorld(world).get(),
+	        							   pos2_x, pos2_y, pos2_z);
+	        	
+	        	// Create rotation
+	        	rotation1 = new Vector3d(orientation1_x, orientation1_y, orientation1_z);
+	        	rotation2 = new Vector3d(orientation2_x, orientation2_y, orientation2_z);
+	        	
+	        	// Add arena
+	        	EzpzPvpKit.getInstance().addArena( new Arena(name,type,score,pos1,rotation1,pos2,rotation2) );
+	        }
+    	}
+    	catch(SQLException e)
+    	{
+    		EzpzPvpKit.getLogger().info("Error while loading arena from database.");
+    	}
+    }
+    
     public void saveQueue(DuelQueue queue) throws SQLException
     {
         DataSource datasource = getDataSource("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password);
@@ -349,27 +411,30 @@ public class Database
         executePrepared(datasource, executeString, params);
     }
     
-    public ArrayList<DuelQueue> loadQueues() throws SQLException
-    {
-    	ArrayList<DuelQueue> queues = new ArrayList<DuelQueue>();
-    	
-        DataSource datasource = getDataSource("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password);
-        String executeString = "SELECT * FROM Queues";
-        ResultSet result = execute(executeString, datasource);
-    	    	
-        String name;
-        Boolean isRanked;
-        String type;
-        while( result.next() )
-        {
-        	name = result.getNString("name");
-        	isRanked = result.getBoolean("isRanked");
-        	type = result.getString("type");
-        	
-        	//EzpzPvpKit.getInstance().addDuelQueue( new DuelQueue(name, isRanked, type) );
-        }
-        
-    	return queues;
+    public void loadQueues()
+    { 
+    	try
+    	{
+	        DataSource datasource = getDataSource("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password);
+	        String executeString = "SELECT * FROM Queues";
+	        ResultSet result = execute(executeString, datasource);
+	    	    	
+	        String name;
+	        Boolean isRanked;
+	        String type;
+	        while( result.next() )
+	        {
+	        	name = result.getString("name");
+	        	isRanked = result.getBoolean("isRanked");
+	        	type = result.getString("type");
+	        	
+	        	EzpzPvpKit.getInstance().addQueue( new DuelQueue(name, isRanked, type) );
+	        }
+    	}
+    	catch(SQLException e)
+    	{
+    		EzpzPvpKit.getLogger().info("Error while loading queues from database.");
+    	}
     }
     
     /* Utils */

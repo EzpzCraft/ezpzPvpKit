@@ -153,6 +153,22 @@ public class EventHandler
                         states.get(player.get().getName()).reset(player.get());
                 }
             }
+            
+            else if ( tr.getOriginal().getState().getType().equals(BlockTypes.EMERALD_BLOCK) )
+            {
+                EzpzPvpKit.getLogger().info("Emerald break");
+                Cause cause = event.getCause();
+                Optional<Player> player = cause.first(Player.class);
+
+                if(player.isPresent())
+                {
+                	if( EzpzPvpKit.getInstance().getGame().getServer().getWorld("New World").isPresent() )
+                		EzpzPvpKit.getLogger().info("WORLD NOT FOUND");
+                	else
+                		EzpzPvpKit.getLogger().info("WORLD FOUND");
+                }
+            }
+            
             else if ( tr.getOriginal().getState().getType().equals(BlockTypes.COBBLESTONE) )
             {
                 EzpzPvpKit.getLogger().info("Cobblestone break - reset");
@@ -248,7 +264,7 @@ public class EventHandler
                                  .append(Text.builder("---------------").color(TextColors.DARK_GRAY).style(TextStyles.STRIKETHROUGH).build())
                                  .build()).build()).build()).build()).build();
 
-                    Text line2 = Text.builder("§a Test  §c§nLol").build();
+                    Text line2 = Text.builder("ï¿½a Test  ï¿½cï¿½nLol").build();
 
                     // Motd
                     player.get().sendMessage(line2);

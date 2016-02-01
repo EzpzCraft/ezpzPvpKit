@@ -15,9 +15,11 @@ public class DuelQueue
     private String type = null;
 
     /* Constructor */
-    public DuelQueue(String name)
+    public DuelQueue(String name, Boolean isRanked, String type)
     {
         this.name = name;
+        this.isRanked = isRanked;
+        this.type = type;
         this.freeArenas = new LinkedHashMap<String, Arena>();
         this.usedArenas = new LinkedHashMap<String, Arena>();
     }

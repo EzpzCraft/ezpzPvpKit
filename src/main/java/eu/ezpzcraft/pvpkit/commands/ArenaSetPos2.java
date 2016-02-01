@@ -34,7 +34,7 @@ public class ArenaSetPos2 implements CommandExecutor
 						
 						Arena arena = new Arena(EzpzPvpKit.getInstance().getUtils().getName(),
 								EzpzPvpKit.getInstance().getUtils().getType(),
-								EzpzPvpKit.getInstance().getUtils().getPos1(),
+								0, EzpzPvpKit.getInstance().getUtils().getPos1(),
 								EzpzPvpKit.getInstance().getUtils().getRotation1(),
 								EzpzPvpKit.getInstance().getUtils().getPos2(),
 								EzpzPvpKit.getInstance().getUtils().getRotation2());

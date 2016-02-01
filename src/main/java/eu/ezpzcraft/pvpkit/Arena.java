@@ -22,9 +22,9 @@ public class Arena
     private float voteScore = 0;
     private LinkedHashMap<Location<World>, BlockState> modifiedBlocks = null; // TODO block
 
-    public Arena(String name, String type, 
+    public Arena(String name, String type, float voteScore,
     				Location<World> pos1, Vector3d rotation1, 
-    				Location<World> pos2, Vector3d rotation2) throws Exception
+    				Location<World> pos2, Vector3d rotation2)
     {
         this.name = name;
         this.pos1 = pos1;
@@ -32,9 +32,7 @@ public class Arena
         this.type = type;
         this.rotation1 = rotation1;
         this.rotation2 = rotation2;
-        /* Fetch vote score from DB
-        this.voteScore = 0;
-        this.modifiedBlocks = new LinkedHashMap<Location<World>, BlockState>();*/
+        this.voteScore = voteScore;
     }
 
     public String getName()
