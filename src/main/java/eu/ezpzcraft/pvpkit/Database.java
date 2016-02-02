@@ -170,7 +170,7 @@ public class Database
     	{
 	        DataSource datasource = getDataSource("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password);
 	
-	        String executeString = "SELECT * FROM Players WHERE UUID=" + player.getUniqueId();
+	        String executeString = "SELECT * FROM Players WHERE UUID='" + player.getIdentifier() +"'";
 	
 	        ResultSet result = execute(executeString, datasource);
 	    	
@@ -442,13 +442,13 @@ public class Database
 
         executePrepared(datasource, executeString, params);
         
-        executeString = "DROP InventoryQueue" + queue.getName() + " IF EXISTS";
+        executeString = "DROP TABLE IF EXISTS InventoryQueue" + queue.getName();
         execute(executeString,datasource);
         
-        executeString = "DROP MatchQueue" + queue.getName() + " IF EXISTS";
+        executeString = "DROP TABLE IF EXISTS MatchQueue" + queue.getName();
         execute(executeString,datasource);
         
-        executeString = "DROP StatsQueue" + queue.getName() + " IF EXISTS";
+        executeString = "DROP TABLE IF EXISTS StatsQueue" + queue.getName();
         execute(executeString,datasource);
     }
     

@@ -32,7 +32,7 @@ public class StartMatchSetup implements Consumer<Task>
 			team = teams.get(entryT.getKey());
 			countdown = team.getCountdown();
 			// each player of the current team
-			for (UUID uuid : team.getPlayers()) 
+			for (String uuid : team.getPlayers()) 
 			{
 				sendCountDownTitle(EzpzPvpKit.getInstance().getPlayer(uuid),countdown);
 			}

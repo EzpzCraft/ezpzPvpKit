@@ -14,7 +14,7 @@ public class Team
 {
     private String name = null;
     private TeamStats stats = null;
-    private LinkedHashSet<UUID> players = null;
+    private LinkedHashSet<String> players = null;
     private int maxSize;
     private Location<World> location;
 	private int countdown = 3;
@@ -26,7 +26,7 @@ public class Team
 
         this.name = name;
         // TODO: fetch stats from DB
-        this.players = new LinkedHashSet<UUID>();
+        this.players = new LinkedHashSet<String>();
         this.maxSize = maxSize;
     }
 
@@ -49,7 +49,7 @@ public class Team
     {
         if( getSize()<maxSize )
         {
-            players.add(player.getUniqueId());
+            players.add(player.getIdentifier());
             return true;
         }
 
@@ -59,10 +59,10 @@ public class Team
     public void removePlayer(Player player)
     {
         if( containsPlayer(player) )
-            players.remove( player.getUniqueId() );
+            players.remove( player.getIdentifier() );
     }
 
-    public LinkedHashSet<UUID> getPlayers()
+    public LinkedHashSet<String> getPlayers()
     {
         return players;
     }

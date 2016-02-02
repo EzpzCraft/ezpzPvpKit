@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import com.google.inject.Inject;
 
+import eu.ezpzcraft.pvpkit.events.JoinEventHandler;
 import eu.ezpzcraft.pvpkit.events.UseItemHandler;
 
 import org.spongepowered.api.Game;
@@ -47,7 +48,7 @@ public class EzpzPvpKit
     private LinkedHashMap<String, DuelQueue> queues = new LinkedHashMap<String, DuelQueue>();
     private long startTime = 0;
     private LinkedHashMap<String, Arena> arenas = new LinkedHashMap<String, Arena>();
-    private LinkedHashMap<UUID, PvPPlayer> players = new LinkedHashMap<UUID, PvPPlayer>();
+    private LinkedHashMap<String, PvPPlayer> players = new LinkedHashMap<String, PvPPlayer>();
     private static EzpzPvpKit instance = null;
     private Database db = null;
 	private Utils utils = null;
@@ -59,13 +60,7 @@ public class EzpzPvpKit
     public StartMatchSetup getStartMatchSetup() 
     {
 		return startMatchSetup;
-	}
-
-    public void addPlayerPlayers()
-    {
-    	
-    }
-    
+	}  
     
 	/* Constructor */
 	public EzpzPvpKit()
@@ -98,9 +93,9 @@ public class EzpzPvpKit
     	
         Sponge.getGame().getEventManager().registerListeners(this, new EventHandler());
         Sponge.getGame().getEventManager().registerListeners(this, useItemHandler);
+        Sponge.getGame().getEventManager().registerListeners(this, new JoinEventHandler());
         
         /*  Create thread */
-        
         Task threadMatchStart = Sponge.getScheduler().createTaskBuilder().execute(startMatchSetup)
         	.interval(1, TimeUnit.SECONDS)
             .name("StartMatchSetup").submit(this);
@@ -216,14 +211,14 @@ public class EzpzPvpKit
     	return arenalist;
     }
 
-	public PvPPlayer getPlayer(UUID uuid) 
+	public PvPPlayer getPlayer(String uuid) 
 	{
 		return players.get(uuid);
 	}
 
 	public void addPlayer(PvPPlayer pvpPlayer) 
 	{
-		this.players.put(pvpPlayer.getPlayer().getUniqueId(), pvpPlayer);
+		this.players.put(pvpPlayer.getPlayer().getIdentifier(), pvpPlayer);
 	}
 
 }
