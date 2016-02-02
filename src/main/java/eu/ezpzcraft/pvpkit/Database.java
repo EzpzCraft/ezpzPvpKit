@@ -310,7 +310,7 @@ public class Database
 
         String[] params = new String[5];
         params[0] = queue.getName();
-        params[1] = queue.isRanked() + "";
+        params[1] = queue.isRanked()==true ? 1 + "": 0 + "";
         params[2] = queue.getType();
         params[3] = queue.isRanked()==true ? 1 + "": 0 + "";
         params[4] = queue.getType();
@@ -415,6 +415,15 @@ public class Database
         params[0] = queue.getName();
 
         executePrepared(datasource, executeString, params);
+        
+        executeString = "DROP InventoryQueue" + queue.getName() + " IF EXSITS";
+        execute(executeString,datasource);
+        
+        executeString = "DROP MatchQueue" + queue.getName() + " IF EXSITS ";
+        execute(executeString,datasource);
+        
+        executeString = "DROP StatsQueue" + queue.getName() + " IF EXSITS ";
+        execute(executeString,datasource);
     }
     
     public void loadQueues()

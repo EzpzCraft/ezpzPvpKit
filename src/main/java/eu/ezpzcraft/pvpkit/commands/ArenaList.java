@@ -87,7 +87,7 @@ public class ArenaList implements CommandExecutor
 	        						.style(TextStyles.RESET)
 	        						.style(TextStyles.BOLD)
 	        						.build())
-	        				.append(Text.builder("------------/k")
+	        				.append(Text.builder("------------")
 	        						.color(TextColors.DARK_GRAY)
 	        						.style(TextStyles.STRIKETHROUGH)
 	        						.style(TextStyles.BOLD)
