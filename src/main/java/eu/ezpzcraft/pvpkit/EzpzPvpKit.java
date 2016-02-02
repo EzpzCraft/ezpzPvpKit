@@ -53,7 +53,7 @@ public class EzpzPvpKit
 
 	///
 	private StartMatchSetup startMatchSetup = new StartMatchSetup();	
-	//private UseItemHandler useItemHandler = new UseItemHandler();
+	private UseItemHandler useItemHandler = new UseItemHandler();
 	
     public StartMatchSetup getStartMatchSetup() 
     {
@@ -96,7 +96,7 @@ public class EzpzPvpKit
     	/*  Register events */
     	
         Sponge.getGame().getEventManager().registerListeners(this, new EventHandler());
-      //  Sponge.getGame().getEventManager().registerListeners(this, useItemHandler);
+        Sponge.getGame().getEventManager().registerListeners(this, useItemHandler);
         
         /*  Create thread */
         
