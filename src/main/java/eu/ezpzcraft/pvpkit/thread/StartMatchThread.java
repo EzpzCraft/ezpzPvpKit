@@ -1,4 +1,4 @@
-package eu.ezpzcraft.pvpkit;
+package eu.ezpzcraft.pvpkit.thread;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -15,7 +15,11 @@ import org.spongepowered.api.text.title.Title;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-public class StartMatchSetup implements Consumer<Task>
+import eu.ezpzcraft.pvpkit.EzpzPvpKit;
+import eu.ezpzcraft.pvpkit.PvPPlayer;
+import eu.ezpzcraft.pvpkit.Team;
+
+public class StartMatchThread implements Consumer<Task>
 {
 	private LinkedHashMap<String,Team> teams = new LinkedHashMap<String,Team>();
 	private Team team = null;

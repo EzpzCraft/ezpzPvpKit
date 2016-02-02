@@ -7,6 +7,9 @@ import com.google.inject.Inject;
 import eu.ezpzcraft.pvpkit.commands.CommandHandler;
 import eu.ezpzcraft.pvpkit.events.JoinEventHandler;
 import eu.ezpzcraft.pvpkit.events.UseItemHandler;
+import eu.ezpzcraft.pvpkit.thread.QueueThread;
+import eu.ezpzcraft.pvpkit.thread.ScoreboardThread;
+import eu.ezpzcraft.pvpkit.thread.StartMatchThread;
 
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
@@ -43,13 +46,13 @@ public class EzpzPvpKit
 	private Utils utils = null;
 
 	///
-	private StartMatchSetup startMatchSetup = new StartMatchSetup();	
-	private UseItemHandler useItemHandler = new UseItemHandler();
+	private StartMatchThread startMatchThread = new StartMatchThread();	
 	private ScoreboardThread scorebardThread = new ScoreboardThread();
+	private QueueThread queueThread = new QueueThread();
 	
-    public StartMatchSetup getStartMatchSetup() 
+    public StartMatchThread getStartMatchSetup() 
     {
-		return startMatchSetup;
+		return startMatchThread;
 	}  
     
 	/* Constructor */
@@ -82,14 +85,17 @@ public class EzpzPvpKit
     	/*  Register events */
     	
         Sponge.getGame().getEventManager().registerListeners(this, new EventHandler());
-        Sponge.getGame().getEventManager().registerListeners(this, useItemHandler);
+        Sponge.getGame().getEventManager().registerListeners(this, new UseItemHandler());
         Sponge.getGame().getEventManager().registerListeners(this, new JoinEventHandler());
         
         /*  Create thread */
-        Task threadMatchStart = Sponge.getScheduler().createTaskBuilder().execute(startMatchSetup)
+        Sponge.getScheduler().createTaskBuilder().execute(startMatchThread)
         	.interval(1, TimeUnit.SECONDS)
             .name("StartMatchSetup").submit(this);
-        Task threadScoreboard = Sponge.getScheduler().createTaskBuilder().execute(scorebardThread)
+        Sponge.getScheduler().createTaskBuilder().execute(queueThread)
+            .interval(1, TimeUnit.SECONDS)
+            .name("QueueDispatcher").submit(this);
+        Sponge.getScheduler().createTaskBuilder().execute(scorebardThread) // useless
             .interval(1, TimeUnit.SECONDS)
             .name("Scoreboard").submit(this);
         
@@ -211,7 +217,7 @@ public class EzpzPvpKit
     	return arenalist;
     }
     
-    public LinkedList<String> getQueueList()
+    public LinkedList<String> getQueueList() // TO REMOVE
     {
     	LinkedList<String> queuelist = new LinkedList<String>();
     	for (Map.Entry<String,DuelQueue> entry : queues.entrySet()) 
@@ -219,6 +225,11 @@ public class EzpzPvpKit
     		queuelist.add(entry.getKey());
     	}
     	return queuelist;
+    }
+    
+    public LinkedHashMap<String, DuelQueue> getQueues()
+    {
+    	return this.queues;
     }
 
 	public PvPPlayer getPlayer(String uuid) 

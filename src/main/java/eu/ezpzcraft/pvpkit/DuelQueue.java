@@ -1,5 +1,6 @@
 package eu.ezpzcraft.pvpkit;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
@@ -7,7 +8,7 @@ public class DuelQueue
 {
     /* Variables */
     private String name = null;
-    private LinkedHashMap<String, Team> waitingTeams = null;
+    private ArrayList<Team> waitingTeams = new ArrayList<Team>();
     private LinkedList<Duel> duels = null;
 	private Boolean isRanked = false;
     private String type = null;
@@ -28,7 +29,7 @@ public class DuelQueue
         if(team==null)
             return false;
 
-        waitingTeams.put(team.getName(), team);
+        waitingTeams.add(team);
         return true;
     }
 
@@ -42,9 +43,36 @@ public class DuelQueue
         return true;
     }
 
-    public LinkedList<Team> match()
+    public ArrayList<Team> match()
     {
-        return null;
+    	if( waitingTeams.size()<2 )
+    		return null;
+
+    	// From here we know that there is at least one available couple
+    	ArrayList<Team> result = new ArrayList<Team>();
+    	result.add( waitingTeams.remove(0) );
+    	
+    	// Let's check the three (if any) last teams
+    	int size = waitingTeams.size();
+    	int max = waitingTeams.size()>=3 ? 3: size;
+    	double cote = result.get(0).getScore(this.type);
+    	
+    	double currentMin = Double.MAX_VALUE, tmpMin;
+    	int currentCandidate = 0;
+    	
+    	for(int i=1; i<max; ++i)
+    	{
+    		tmpMin = waitingTeams.get(i).getScore(this.type);
+    		if( Math.abs(cote - currentMin) > Math.abs(cote - tmpMin) )
+    		{
+    			currentMin = tmpMin;
+    			currentCandidate = i;
+    		}
+    	}
+    		
+    	result.add( waitingTeams.remove(currentCandidate) );
+    	
+        return result;
     }
 
     public void addDuel(Duel duel)

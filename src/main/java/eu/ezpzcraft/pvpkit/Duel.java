@@ -3,19 +3,21 @@ package eu.ezpzcraft.pvpkit;
 import java.util.Map;
 import java.util.UUID;
 
+import org.spongepowered.api.entity.living.player.Player;
+
 public class Duel
 {
     private Arena arena = null;
     private Team team1 = null;
     private Team team2 = null;
-    private float priority = 0;
+    
+    private Player tmp = null; // tmp var
 
     public Duel(Team team1, Team team2, Arena arena)
     {
         this.team1 = team1;
         this.team2 = team2;
         this.arena = arena;
-        this.priority = 0;
     }
 
     public void start()
@@ -23,6 +25,14 @@ public class Duel
         // For all players from both team
         for( String player : team1.getPlayers() )
         {
+        	tmp = EzpzPvpKit.getInstance().getPlayer(player).getPlayer();
+        	
+        	// TP
+        	tmp.setLocationAndRotation( arena.getPos1(), arena.getRotation1() );
+        	
+        	// DO not forget to update player state
+        	// Current duel link
+        	
             // Save current state
             //entry.getValue().setState();
 
@@ -42,9 +52,14 @@ public class Duel
         }
         for( String player : team2.getPlayers()  )
         {
-            // Save current state
-            //entry.getValue().setState();
+        	tmp = EzpzPvpKit.getInstance().getPlayer(player).getPlayer();
+        	
+        	// TP
+        	tmp.setLocationAndRotation( arena.getPos2(), arena.getRotation2() );
         }
+        
+        EzpzPvpKit.getInstance().getStartMatchSetup().addTeamStart(team1);
+        EzpzPvpKit.getInstance().getStartMatchSetup().addTeamStart(team2);
     }
 
     public void end()
@@ -55,15 +70,5 @@ public class Duel
         // Set hunger
         // Set effects
         // Set inventory
-    }
-
-    public float getPriority()
-    {
-        return priority;
-    }
-
-    public void updatePriority(float value)
-    {
-        priority = value;
     }
 }

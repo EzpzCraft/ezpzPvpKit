@@ -194,14 +194,12 @@ public class CommandHandler
 				.child(queuedelete, "queuedelete", "qdel", "qd")
 				.child(queueconfirmdelete, "queuecdelete", "qcdel", "qcd")
 				.child(queuelist, "queuelist", "qlist", "ql")
-				.child(ping, "ping")
 				.child(joinqueue, "joinqueue", "joinq")
 				.permission("ezpzkit.command")
 				.build();
 		
 		Sponge.getCommandManager().register(EzpzPvpKit.getInstance(), kit, "kit", "k", "ezpzkit");
-		
-		
+		Sponge.getCommandManager().register(EzpzPvpKit.getInstance(), ping, "ping");		
 	}
 
 }

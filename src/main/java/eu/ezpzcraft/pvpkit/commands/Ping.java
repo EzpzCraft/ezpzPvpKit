@@ -1,6 +1,7 @@
 package eu.ezpzcraft.pvpkit.commands;
 
 import java.util.LinkedList;
+import java.util.Optional;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
@@ -28,11 +29,19 @@ public class Ping  implements CommandExecutor
     {
         if(src instanceof Player) 
         {   
-        	Player dst = args.<Player>getOne("player").get();        	
-        	Player player = (Player) src;
+        	Player dest, source = (Player) src;
         	
-        	Utils.sendPingMessage(player,50);
-        	//Utils.sendPingMessage(player, dst.getConnection().getPing());
+        	String arg = args.<String>getOne("player").get();     	
+        	Optional<Player> optPlayer  = Sponge.getGame().getServer().getPlayer(arg);
+        	
+        	if( !optPlayer.isPresent() )
+        	{
+        		Utils.sendKitMessage(source, Text.of(TextColors.RED, "Cannot find player"));
+        		return CommandResult.success();
+        	} 	 
+        	
+        	dest = optPlayer.get();    	
+        	Utils.sendPingMessage(source, dest.getConnection().getPing());
         }
         else if(src instanceof ConsoleSource) 
         {

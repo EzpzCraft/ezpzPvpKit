@@ -44,7 +44,7 @@ public class JoinEventHandler
 	{
 		this.scoreboard = Scoreboard.builder().build();
 		this.objective = Objective.builder().name("Score")
-						 .displayName( Text.of("score") )
+						 .displayName( Text.of(TextColors.GOLD, "score") )
 						 .criterion(Criteria.DUMMY)
 						 .build();
 		
@@ -69,7 +69,7 @@ public class JoinEventHandler
         // Load player informations
         EzpzPvpKit.getInstance().getDatabase().loadPlayer(player);
         PvPPlayer pvpPlayer = EzpzPvpKit.getInstance().getPlayer(player.getIdentifier());
-        pvpPlayer.setTeam( new Team(pvpPlayer.getPlayer().getName()) );
+        pvpPlayer.setTeam( new Team(pvpPlayer.getPlayer().getName()) ); // Set cote, transfer score
         
         // TP to spawn
         player.setLocation( player.getWorld().getSpawnLocation() );
