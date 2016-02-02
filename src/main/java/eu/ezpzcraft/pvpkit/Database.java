@@ -77,6 +77,13 @@ public class Database
 	        		+ "type VARCHAR(32) NOT NULL"
 	                + ")ENGINE=InnoDB;";
 	        execute(executeString, datasource);
+	        
+	        executeString = "CREATE TABLE IF NOT EXISTS Teams("
+	        		+ "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,"
+	                + "name VARCHAR(32),"
+	        		+ "players_list SET"
+	                + ")ENGINE=InnoDB;";
+	        execute(executeString, datasource);
     	}
     	catch(SQLException e) 
     	{
@@ -345,14 +352,14 @@ public class Database
         
         // Stats
         executeString = "CREATE TABLE IF NOT EXISTS StatsQueue" + queue.getName() + " ("
-                        + "player VARCHAR(64) PRIMARY KEY,"
+                        + "team INT PRIMARY KEY,"
                         + "score DOUBLE DEFAULT 0,"
                         + "kills INT DEFAULT 0,"
                         + "deaths INT DEFAULT 0,"
                         + "wins INT DEFAULT 0,"
                         + "loose INT DEFAULT 0,"
-                        + "FOREIGN KEY(player)"
-                        + "REFERENCES Players(UUID)"
+                        + "FOREIGN KEY(team)"
+                        + "REFERENCES Teams(id)"
                         + ")ENGINE=InnoDB;";
         execute(executeString, datasource);
 
@@ -405,26 +412,22 @@ public class Database
         // Matchs
         executeString = "CREATE TABLE IF NOT EXISTS MatchQueue" + queue.getName() + " ("
                 + "match_id BIGINT PRIMARY KEY,"
-                + "player1 VARCHAR(64) NOT NULL,"
-                + "player2 VARCHAR(64) NOT NULL,"
-                + "winner VARCHAR(64),"
+                + "team1 int NOT NULL,"
+                + "team2 int NOT NULL,"
+                + "winner int,"
                 + "map VARCHAR(32),"
                 + "date BIGINT,"
                 + "time INT,"
-                + "inventory1 BIGINT,"
-                + "inventory2 BIGINT,"
+                + "inventory1 SET,"
+                + "inventory2 SET,"
                 + "heal1 INT,"
                 + "heal2 INT,"
                 + "hunger1 INT,"
                 + "hunger2 INT,"
-                + "FOREIGN KEY(player1)"
-                + "REFERENCES Players(UUID),"
-                + "FOREIGN KEY(player2)"
-                + "REFERENCES Players(UUID),"
-                + "FOREIGN KEY(inventory1)"
-                + "REFERENCES InventoryQueue" + queue.getName() + "(inventory_id),"
-                + "FOREIGN KEY(inventory2)"
-                + "REFERENCES InventoryQueue" + queue.getName() + "(inventory_id)"
+                + "FOREIGN KEY(team1)"
+                + "REFERENCES Teams(id),"
+                + "FOREIGN KEY(team2)"
+                + "REFERENCES Teams(id)"
                 + ")ENGINE=InnoDB;";
         execute(executeString, datasource);
     }   
@@ -449,10 +452,7 @@ public class Database
         execute(executeString,datasource);
         
         executeString = "DROP TABLE IF EXISTS InventoryQueue" + queue.getName();
-        execute(executeString,datasource);
-        
-        
-
+        execute(executeString,datasource);        
     }
     
     public void loadQueues()

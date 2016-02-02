@@ -45,9 +45,11 @@ public class JoinEventHandler
         player.setLocation( player.getWorld().getSpawnLocation() );
         
         // Reset player
-        player.getInventory().clear();        
-        //player.get(Keys.POTION_EFFECTS)
+        player.getInventory().clear();  
+        player.remove(Keys.POTION_EFFECTS);
+        
         // Give items
+        
         
         // Send MOTD
         sendMOTD(pvpPlayer);

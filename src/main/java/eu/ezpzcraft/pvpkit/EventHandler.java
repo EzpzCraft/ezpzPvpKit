@@ -111,7 +111,7 @@ public class EventHandler
                 	Team team;
 					try 
 					{
-						team = new Team("MonEquipe",2);
+						team = new Team("MonEquipe");
 	                	for(Player player2 : Sponge.getServer().getOnlinePlayers())
 	                	{
 	                		team.addPlayer(player2);
