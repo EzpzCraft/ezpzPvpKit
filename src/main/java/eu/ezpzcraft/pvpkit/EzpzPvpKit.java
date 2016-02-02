@@ -30,6 +30,7 @@ import javax.xml.crypto.Data;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Optional;
@@ -49,6 +50,8 @@ public class EzpzPvpKit
     private long startTime = 0;
     private LinkedHashMap<String, Arena> arenas = new LinkedHashMap<String, Arena>();
     private LinkedHashMap<String, PvPPlayer> players = new LinkedHashMap<String, PvPPlayer>();
+    private LinkedHashMap<String, LinkedList<String>> usedArenas = new LinkedHashMap<String, LinkedList<String>>();
+    private LinkedHashMap<String, LinkedList<String>> freeArenas = new LinkedHashMap<String, LinkedList<String>>();
     private static EzpzPvpKit instance = null;
     private Database db = null;
 	private Utils utils = null;
@@ -114,6 +117,20 @@ public class EzpzPvpKit
         
         /* Load arenas */
         db.loadQueues();	
+        
+        /* Create free arena list */
+        
+        // Find all type of arenas available
+        LinkedHashSet<String> types = new LinkedHashSet<String>();
+        for(Map.Entry<String, Arena> entry : arenas.entrySet())
+        {
+        	types.add( entry.getValue().getType() );
+        }
+        
+        for(String type: types)
+        {
+        	this.freeArenas.put(type, new LinkedList<String>());
+        }
         
         double elapsedTime = (System.nanoTime() - startTime) / 1000000000.0;
         logger.info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
@@ -222,6 +239,19 @@ public class EzpzPvpKit
 	public void addPlayer(PvPPlayer pvpPlayer) 
 	{
 		this.players.put(pvpPlayer.getPlayer().getIdentifier(), pvpPlayer);
+	}
+	
+	public Arena getFreeArena(String type)
+	{
+		LinkedList<String> list = freeArenas.get(type);
+		
+		if( list.size()<=0 )
+				return null;
+		
+		Arena arena = arenas.get( list.poll() );
+		usedArenas.get(arena.getType()).add(arena.getName());
+		
+		return arena;
 	}
 
 }

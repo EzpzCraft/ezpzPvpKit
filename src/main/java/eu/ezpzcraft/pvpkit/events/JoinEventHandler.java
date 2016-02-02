@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.manipulator.mutable.PotionEffectData;
+import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.Cause;
@@ -42,6 +44,9 @@ public class JoinEventHandler
         // TP to spawn
         player.setLocation( player.getWorld().getSpawnLocation() );
         
+        // Reset player
+        player.getInventory().clear();        
+        //player.get(Keys.POTION_EFFECTS)
         // Give items
         
         // Send MOTD

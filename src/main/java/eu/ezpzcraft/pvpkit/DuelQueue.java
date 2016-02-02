@@ -7,8 +7,6 @@ public class DuelQueue
 {
     /* Variables */
     private String name = null;
-    private LinkedHashMap<String, Arena> freeArenas = null;
-    private LinkedHashMap<String, Arena> usedArenas = null;
     private LinkedHashMap<String, Team> waitingTeams = null;
     private LinkedList<Duel> duels = null;
 	private Boolean isRanked = false;
@@ -20,8 +18,6 @@ public class DuelQueue
         this.name = name;
         this.isRanked = isRanked;
         this.type = type;
-        this.freeArenas = new LinkedHashMap<String, Arena>();
-        this.usedArenas = new LinkedHashMap<String, Arena>();
     }
 
     /* Methods */
