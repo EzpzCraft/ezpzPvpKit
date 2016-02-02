@@ -36,7 +36,7 @@ public class PlayerState
     private HealthData health = null;
     private FoodData food = null;
     private Optional<PotionEffectData> effects = null;
-
+       
     private Inventory inventory = null;
     private ItemStack helmet = null;
     private ItemStack chestplate = null;
@@ -45,7 +45,7 @@ public class PlayerState
 
     /* Constructor */
     public PlayerState(Player player)
-    {
+    {   	
         // TODO: check if get() exsits
         this.location = player.getLocation();
         this.rotation = player.getRotation();

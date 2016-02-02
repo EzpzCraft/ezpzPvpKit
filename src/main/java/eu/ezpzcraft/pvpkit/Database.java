@@ -87,25 +87,32 @@ public class Database
     /*
      * Update 'Player' table on playerJoin
      */
-    public void updateJoinPlayer(Player player) throws SQLException
+    public void updateJoinPlayer(Player player)
     {
-        DataSource datasource = getDataSource("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password);
-
-        String executeString =
-          "INSERT INTO Players "
-        + "(UUID, name, first_join, rank, remaining_ranked) "
-        + "VALUES (?,?,?,?,?) "
-        + "ON DUPLICATE KEY UPDATE name=?";
-
-        String[] params = new String[6];
-        params[0] = player.getIdentifier();
-        params[1] = player.getName();
-        params[2] = new Timestamp(new java.util.Date().getTime()).getTime() + "";
-        params[3] = Config.DEFAULT_RANK;
-        params[4] = Config.DEFAULT_NUMBER_RANKED;
-        params[5] = params[1];
-
-        executePrepared(datasource, executeString, params);
+    	try
+    	{
+	        DataSource datasource = getDataSource("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password);
+	
+	        String executeString =
+	          "INSERT INTO Players "
+	        + "(UUID, name, first_join, rank, remaining_ranked) "
+	        + "VALUES (?,?,?,?,?) "
+	        + "ON DUPLICATE KEY UPDATE name=?";
+	
+	        String[] params = new String[6];
+	        params[0] = player.getIdentifier();
+	        params[1] = player.getName();
+	        params[2] = new Timestamp(new java.util.Date().getTime()).getTime() + "";
+	        params[3] = Config.DEFAULT_RANK;
+	        params[4] = Config.DEFAULT_NUMBER_RANKED;
+	        params[5] = params[1];
+	
+	        executePrepared(datasource, executeString, params);
+    	}
+    	catch(SQLException e)
+    	{
+    		EzpzPvpKit.getLogger().info("Error while updating player information");
+    	}
     }
 
     /*
@@ -157,16 +164,36 @@ public class Database
     /*
      * Get player info TODO
      */
-    public void getPlayer(String UUID) throws SQLException
+    public void loadPlayer(Player player) 
     {
-        DataSource datasource = getDataSource("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password);
-
-        String executeString = "UPDATE Players SET last_seen=? WHERE UUID=?";
-
-        String[] params = new String[2];
-        params[0] = new Timestamp(new java.util.Date().getTime()).getTime() + "";
-
-        executePrepared(datasource, executeString, params);
+    	try
+    	{
+	        DataSource datasource = getDataSource("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password);
+	
+	        String executeString = "SELECT * FROM Players WHERE UUID=" + player.getUniqueId();
+	
+	        ResultSet result = execute(executeString, datasource);
+	    	
+	        String rank;
+	        int remainingRanked;
+	        long[] vote = new long[4];
+	        float score = 0; // TODO
+	        while( result.next() ) // Unique since UUID is a key
+	        {
+	        	rank = result.getString("rank");
+	        	remainingRanked = result.getInt("remaining_ranked");
+	        	vote[0] = result.getLong("last_vote_1");
+	        	vote[1] = result.getLong("last_vote_2");
+	        	vote[2] = result.getLong("last_vote_3");
+	        	vote[3] = result.getLong("last_vote_4");
+	        	
+	        	EzpzPvpKit.getInstance().addPlayer( new PvPPlayer(player,score,remainingRanked,rank,vote) );
+	        }
+    	}
+    	catch(SQLException e)
+    	{
+    		EzpzPvpKit.getLogger().info("Error while fetching player information");
+    	}
     }
     
     public void saveArena(Arena arena) throws SQLException
@@ -415,13 +442,13 @@ public class Database
 
         executePrepared(datasource, executeString, params);
         
-        executeString = "DROP InventoryQueue" + queue.getName() + " IF EXSITS";
+        executeString = "DROP InventoryQueue" + queue.getName() + " IF EXISTS";
         execute(executeString,datasource);
         
-        executeString = "DROP MatchQueue" + queue.getName() + " IF EXSITS ";
+        executeString = "DROP MatchQueue" + queue.getName() + " IF EXISTS";
         execute(executeString,datasource);
         
-        executeString = "DROP StatsQueue" + queue.getName() + " IF EXSITS ";
+        executeString = "DROP StatsQueue" + queue.getName() + " IF EXISTS";
         execute(executeString,datasource);
     }
     

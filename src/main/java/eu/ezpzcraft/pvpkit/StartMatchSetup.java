@@ -32,9 +32,9 @@ public class StartMatchSetup implements Consumer<Task>
 			team = teams.get(entryT.getKey());
 			countdown = team.getCountdown();
 			// each player of the current team
-			for (Map.Entry<UUID,PvPPlayer> entryP : team.getPlayers().entrySet()) 
+			for (UUID uuid : team.getPlayers()) 
 			{
-				sendCountDownTitle(entryP.getValue().getPlayer(),countdown);
+				sendCountDownTitle(EzpzPvpKit.getInstance().getPlayer(uuid),countdown);
 			}
 			if(countdown == 0)
 			{
@@ -62,8 +62,10 @@ public class StartMatchSetup implements Consumer<Task>
     }
 	
 	
-	private void sendCountDownTitle(Player player, int cd)
+	private void sendCountDownTitle(PvPPlayer pvpPlayer, int cd)
 	{
+		Player player = pvpPlayer.getPlayer();
+		
 		switch(cd)
 		{
 			case 3:
@@ -107,7 +109,7 @@ public class StartMatchSetup implements Consumer<Task>
     {
     	
 		teams.put(team.getName(), team);		
-		team.setLocation(team.getPlayers().values().iterator().next().getPlayer().getLocation());
+		team.setLocation( EzpzPvpKit.getInstance().getPlayer(team.getPlayers().iterator().next()).getPlayer().getLocation() );
 
 		/*CREATE BOX
 		for(int x=-2;x<=2;x++)

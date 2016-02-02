@@ -4,6 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import com.google.inject.Inject;
 
+import eu.ezpzcraft.pvpkit.events.UseItemHandler;
+
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
@@ -45,8 +47,7 @@ public class EzpzPvpKit
     private LinkedHashMap<String, DuelQueue> queues = new LinkedHashMap<String, DuelQueue>();
     private long startTime = 0;
     private LinkedHashMap<String, Arena> arenas = new LinkedHashMap<String, Arena>();
-    private LinkedHashMap<UUID, Arena> players = new LinkedHashMap<UUID, Arena>();
-    private LinkedHashMap<UUID, Integer> enderpearlCD = new LinkedHashMap<UUID, Integer>();
+    private LinkedHashMap<UUID, PvPPlayer> players = new LinkedHashMap<UUID, PvPPlayer>();
     private static EzpzPvpKit instance = null;
     private Database db = null;
 	private Utils utils = null;
@@ -188,11 +189,6 @@ public class EzpzPvpKit
     	return arenas.containsKey(name);
     }
 
-    public Arena getPlayerArena(UUID uuid)
-    {
-        return players.get(uuid);
-    }
-
     public Database getDatabase()
     {
         return this.db;
@@ -219,6 +215,16 @@ public class EzpzPvpKit
     	}
     	return arenalist;
     }
+
+	public PvPPlayer getPlayer(UUID uuid) 
+	{
+		return players.get(uuid);
+	}
+
+	public void addPlayer(PvPPlayer pvpPlayer) 
+	{
+		this.players.put(pvpPlayer.getPlayer().getUniqueId(), pvpPlayer);
+	}
 
 }
 

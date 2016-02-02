@@ -5,13 +5,16 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
 public class Team
 {
     private String name = null;
     private TeamStats stats = null;
-    private LinkedHashMap<UUID,PvPPlayer> players = null;
+    private LinkedHashSet<UUID> players = null;
     private int maxSize;
     private Location<World> location;
 	private int countdown = 3;
@@ -23,7 +26,7 @@ public class Team
 
         this.name = name;
         // TODO: fetch stats from DB
-        this.players = new LinkedHashMap<UUID,PvPPlayer>();
+        this.players = new LinkedHashSet<UUID>();
         this.maxSize = maxSize;
     }
 
@@ -39,14 +42,14 @@ public class Team
 
     public boolean containsPlayer(Player player)
     {
-        return getSize()>0 && players.containsKey( player.getUniqueId() );
+        return players.contains(player.getUniqueId());
     }
 
     public boolean addPlayer(Player player)
     {
         if( getSize()<maxSize )
         {
-            players.put( player.getUniqueId(), new PvPPlayer(player) );
+            players.add(player.getUniqueId());
             return true;
         }
 
@@ -59,7 +62,7 @@ public class Team
             players.remove( player.getUniqueId() );
     }
 
-    public LinkedHashMap<UUID,PvPPlayer> getPlayers()
+    public LinkedHashSet<UUID> getPlayers()
     {
         return players;
     }

@@ -21,13 +21,13 @@ public class Duel
     public void start()
     {
         // For all players from both team
-        for( Map.Entry<UUID, PvPPlayer> entry: team1.getPlayers().entrySet() )
+        for( UUID uuid: team1.getPlayers() )
         {
             // Save current state
-            entry.getValue().setState();
+            //entry.getValue().setState();
 
             // Clear inventory
-            entry.getValue().getPlayer().getInventory().clear();
+            //entry.getValue().getPlayer().getInventory().clear();
 
             // Clear effect
 
@@ -38,10 +38,10 @@ public class Duel
 
             // Countdown title, immobilise ?
         }
-        for( Map.Entry<UUID, PvPPlayer> entry: team2.getPlayers().entrySet() )
+        for( UUID uuid: team2.getPlayers()  )
         {
             // Save current state
-            entry.getValue().setState();
+            //entry.getValue().setState();
         }
     }
 

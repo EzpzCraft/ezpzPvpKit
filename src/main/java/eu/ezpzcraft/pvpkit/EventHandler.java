@@ -57,29 +57,6 @@ public class EventHandler
     private HashMap<String,PlayerState> states = new HashMap<String,PlayerState>();
     private Database db = EzpzPvpKit.getInstance().getDatabase();
 
-    // Connection
-    @Listener
-    public void handleConnection(ClientConnectionEvent.Join event)
-    {
-        Cause cause = event.getCause();
-        Optional<Player> OptPlayer = cause.first(Player.class);
-
-        if( !OptPlayer.isPresent() )
-            return;
-
-        Player player = OptPlayer.get();
-
-        // Spawn TP
-        try
-        {
-            db.updateJoinPlayer(player);
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
     // Disconnection
     @Listener
     public void handleDeconnection(ClientConnectionEvent.Disconnect event)
@@ -274,25 +251,6 @@ public class EventHandler
                     //ItemStack.Builder i = ItemStack.builder();
                     //hotbar.offer( i.itemType(ItemTypes.STONE_AXE).itemData(itemName).quantity(1).build() );
                     
-                    Text motd;
-					try 
-					{
-						motd = Text.builder().append(Text.of(TextColors.DARK_GRAY,TextStyles.STRIKETHROUGH, "---------------" ))
-								                  .append(Text.of(TextColors.DARK_RED, " EzpzCraft " ))
-								                  .append(Text.of(TextColors.DARK_GRAY,TextStyles.STRIKETHROUGH, "---------------\n" ))
-								                  .append(Text.of(TextColors.DARK_GRAY, "Welcome Back", TextColors.GOLD,TextStyles.ITALIC,"Nomeho" + " \n" )) // CENTER
-								                  .append(Text.of("     ",TextColors.DARK_GRAY,TextStyles.UNDERLINE, "• Website: " ))
-								                  .append(Text.of(TextColors.DARK_RED,TextActions.openUrl(new URL(Config.WEBSITE)), TextColors.GRAY,Config.WEBSITE + "\n" ))
-								                  .append(Text.of("     ",TextColors.DARK_GRAY,TextStyles.UNDERLINE,"• Remaining ranked: \n" ))
-
-								.build();
-						
-						player.get().sendMessage(motd);
-					} 
-					catch (MalformedURLException e) 
-					{
-						EzpzPvpKit.getLogger().info("Error while creating MOTD url");
-					}  
                     
                     // Broadcaster
                 }
