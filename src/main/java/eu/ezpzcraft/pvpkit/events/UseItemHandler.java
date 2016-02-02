@@ -1,4 +1,4 @@
-package eu.ezpzcraft.pvpkit;
+package eu.ezpzcraft.pvpkit.events;
 
 import java.util.LinkedHashMap;
 import java.util.Optional;
@@ -10,6 +10,8 @@ import org.spongepowered.api.event.entity.DisplaceEntityEvent;
 import org.spongepowered.api.event.entity.projectile.LaunchProjectileEvent;
 import org.spongepowered.api.event.entity.projectile.TargetProjectileEvent;
 import org.spongepowered.api.event.item.inventory.UseItemStackEvent;
+
+import eu.ezpzcraft.pvpkit.EzpzPvpKit;
 
 public class UseItemHandler
 {
