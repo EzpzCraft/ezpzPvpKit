@@ -25,6 +25,7 @@ import eu.ezpzcraft.pvpkit.commands.Ping;
 import eu.ezpzcraft.pvpkit.commands.QueueConfirmDelete;
 import eu.ezpzcraft.pvpkit.commands.QueueCreate;
 import eu.ezpzcraft.pvpkit.commands.QueueDelete;
+import eu.ezpzcraft.pvpkit.commands.QueueJoin;
 import eu.ezpzcraft.pvpkit.commands.QueueList;
 
 
@@ -160,6 +161,13 @@ public class CommandHandler
 				.permission("ezpzkit.command.ping")
 				.build();
 		
+		/* Join Queue */
+		CommandSpec joinqueue = CommandSpec.builder()
+				.description(Text.of("Create an arena <Name> <Type>"))
+				.executor(new QueueJoin())
+				.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
+				.permission("ezpzkit.command.create")
+				.build();
 		
 		/*  kit => kit help */
 		CommandSpec kit = CommandSpec.builder()
@@ -198,6 +206,7 @@ public class CommandHandler
 				.child(queueconfirmdelete, "queuecdelete", "qcdel", "qcd")
 				.child(queuelist, "queuelist", "qlist", "ql")
 				.child(ping, "ping")
+				.child(joinqueue, "joinqueue", "joinq")
 				.permission("ezpzkit.command")
 				.build();
 		

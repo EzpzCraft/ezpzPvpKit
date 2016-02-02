@@ -32,9 +32,9 @@ public class StartMatchSetup implements Consumer<Task>
 			team = teams.get(entryT.getKey());
 			countdown = team.getCountdown();
 			// each player of the current team
-			for (String uuid : team.getPlayers()) 
+			for (String player : team.getPlayers()) 
 			{
-				sendCountDownTitle(EzpzPvpKit.getInstance().getPlayer(uuid),countdown);
+				sendCountDownTitle(EzpzPvpKit.getInstance().getPlayer(player),countdown);
 			}
 			if(countdown == 0)
 			{
@@ -109,7 +109,8 @@ public class StartMatchSetup implements Consumer<Task>
     {
     	
 		teams.put(team.getName(), team);		
-		team.setLocation( EzpzPvpKit.getInstance().getPlayer(team.getPlayers().iterator().next()).getPlayer().getLocation() );
+		team.setLocation( 
+				EzpzPvpKit.getInstance().getPlayer(team.getPlayers().iterator().next()).getPlayer().getLocation() );
 
 		/*CREATE BOX
 		for(int x=-2;x<=2;x++)

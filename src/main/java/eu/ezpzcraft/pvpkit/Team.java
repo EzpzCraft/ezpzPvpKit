@@ -19,11 +19,8 @@ public class Team
     private Location<World> location;
 	private int countdown = 3;
 
-    public Team(String name) throws Exception
+    public Team(String name)
     {
-        if(name==null)
-            throw new Exception("A team cannot have a null name.");
-
         this.name = name;
         // TODO: fetch stats from DB
         this.players = new LinkedHashSet<String>();
@@ -48,7 +45,7 @@ public class Team
     {
         if( getSize()<maxSize )
         {
-            players.add(player.getIdentifier());
+            players.add( player.getIdentifier() );
             return true;
         }
 

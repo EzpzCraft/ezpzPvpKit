@@ -21,7 +21,7 @@ public class Duel
     public void start()
     {
         // For all players from both team
-        for( String uuid: team1.getPlayers() )
+        for( String player : team1.getPlayers() )
         {
             // Save current state
             //entry.getValue().setState();
@@ -37,8 +37,10 @@ public class Duel
             // set inventory
 
             // Countdown title, immobilise ?
+        	
+        	// Send msg
         }
-        for( String uuid: team2.getPlayers()  )
+        for( String player : team2.getPlayers()  )
         {
             // Save current state
             //entry.getValue().setState();

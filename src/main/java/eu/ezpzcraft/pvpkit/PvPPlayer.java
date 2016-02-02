@@ -17,8 +17,8 @@ public class PvPPlayer
     private String rank;
     private long vote[];
     private String lang = "English"; // TODO: add in DB in the future when handling languages
-    
-    private double enderpearlCD = 0.0;
+	private Team team = null;
+	private double enderpearlCD = 0.0;
     private PlayerState state = null;
     private DuelQueue queue = null;
     private Boolean inMatch = false;
@@ -101,5 +101,25 @@ public class PvPPlayer
 	public int getScore()
 	{
 		return (int) this.score;
+	}
+
+    public DuelQueue getQueue() 
+    {
+		return queue;
+	}
+
+	public void setQueue(DuelQueue queue) 
+	{
+		this.queue = queue;
+	}
+	
+    public Team getTeam() 
+    {
+		return team;
+	}
+
+	public void setTeam(Team team) 
+	{
+		this.team = team;
 	}
 }

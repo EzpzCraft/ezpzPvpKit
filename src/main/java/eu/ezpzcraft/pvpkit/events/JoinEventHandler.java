@@ -33,6 +33,7 @@ import org.spongepowered.api.text.format.TextStyles;
 import eu.ezpzcraft.pvpkit.Config;
 import eu.ezpzcraft.pvpkit.EzpzPvpKit;
 import eu.ezpzcraft.pvpkit.PvPPlayer;
+import eu.ezpzcraft.pvpkit.Team;
 
 public class JoinEventHandler 
 {	
@@ -68,6 +69,7 @@ public class JoinEventHandler
         // Load player informations
         EzpzPvpKit.getInstance().getDatabase().loadPlayer(player);
         PvPPlayer pvpPlayer = EzpzPvpKit.getInstance().getPlayer(player.getIdentifier());
+        pvpPlayer.setTeam( new Team(pvpPlayer.getPlayer().getName()) );
         
         // TP to spawn
         player.setLocation( player.getWorld().getSpawnLocation() );
