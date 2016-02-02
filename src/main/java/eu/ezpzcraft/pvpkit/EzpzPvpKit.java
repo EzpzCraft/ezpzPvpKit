@@ -41,15 +41,19 @@ public class EzpzPvpKit
     @Inject
     private Game game;
     
+    private long startTime = 0;
     private LinkedHashMap<String, DuelQueue> queues = null;
     private LinkedHashMap<String, Arena> arenas = new LinkedHashMap<String, Arena>();
     private LinkedHashMap<UUID, Arena> players = new LinkedHashMap<UUID, Arena>();
+    private LinkedHashMap<UUID, Integer> enderpearlCD = new LinkedHashMap<UUID, Integer>();
     private static EzpzPvpKit instance = null;
     private Database db = null;
 	private Utils utils = null;
 
 	///
-	private StartMatchSetup startMatchSetup = new StartMatchSetup();		
+	private StartMatchSetup startMatchSetup = new StartMatchSetup();	
+	private UseItemHandler useItemHandler = new UseItemHandler();
+	
     public StartMatchSetup getStartMatchSetup() 
     {
 		return startMatchSetup;
@@ -72,7 +76,9 @@ public class EzpzPvpKit
        
     @Listener
     public void onGameInit(GameInitializationEvent event)
-    {      
+    {   
+    	this.startTime = System.nanoTime();
+    	
     	/* Load Commands */
     	
     	try 
@@ -89,24 +95,31 @@ public class EzpzPvpKit
     	/*  Register events */
     	
         Sponge.getGame().getEventManager().registerListeners(this, new EventHandler());
+        Sponge.getGame().getEventManager().registerListeners(this, useItemHandler);
         
         /*  Create thread */
         
         Task threadMatchStart = Sponge.getScheduler().createTaskBuilder().execute(startMatchSetup)
         	.interval(1, TimeUnit.SECONDS)
             .name("StartMatchSetup").submit(this);
-                
+        
         getLogger().info(" Started");
     }    
     
     @Listener
     public void onServerStarting(GameStartedServerEvent event)
     {
+    	/* Create DB if needed */
+    	db.createDB();
+    	
         /* Load queues */
         db.loadArenas();
         
         /* Load arenas */
         db.loadQueues();	
+        
+        double elapsedTime = (System.nanoTime() - startTime) / 1000000000.0;
+        logger.info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
     }
 
     /* Getters and Setters */

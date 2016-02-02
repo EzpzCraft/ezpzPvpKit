@@ -17,7 +17,9 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
+import org.spongepowered.api.item.inventory.property.SlotPos;
 import org.spongepowered.api.item.inventory.type.GridInventory;
+import org.spongepowered.api.item.inventory.type.Inventory2D;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -95,7 +97,9 @@ public class PlayerState
                 playerGridInventory.set(i,j, ItemStack.builder().itemType(ItemTypes.DIAMOND_SWORD).quantity(1).build() );
             }
         }
-
+        
+        //Inventory2D inv = player.getInventory().query(Inventory2D.class);
+        //inv.set(new SlotPos(1,1), ItemStack.builder().itemType(ItemTypes.APPLE).quantity(1).build());
         /*
         if(helmet!=null)
             player.setHelmet(helmet);

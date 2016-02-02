@@ -26,148 +26,62 @@ public class Database
     /*
      * Create the database and the player table
      */
-    public void createDB() throws SQLException
+    public void createDB()
     {
-        DataSource datasource = getDataSource("jdbc:mysql://" + host + ":" + port + "/?user=" + username + "&password=" + password);
-
-        String executeString = "CREATE DATABASE IF NOT EXISTS " + database;
-        execute(executeString, datasource);
-
-        datasource = getDataSource("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password);
-
-        executeString = "CREATE TABLE IF NOT EXISTS Player("
-                + "UUID VARCHAR(64) PRIMARY KEY,"
-                + "name VARCHAR(32) NOT NULL,"
-                + "first_join BIGINT NOT NULL,"
-                + "last_seen BIGINT,"
-                + "rank VARCHAR(32) NOT NULL,"
-                + "remaining_ranked INT DEFAULT 0,"
-                + "last_vote_1 TIMESTAMP,"
-                + "last_vote_2 TIMESTAMP,"
-                + "last_vote_3 TIMESTAMP,"
-                + "last_vote_4 TIMESTAMP"
-                + ")ENGINE=InnoDB;";
-        execute(executeString, datasource);
-        
-        executeString = "CREATE TABLE IF NOT EXISTS Arenas("
-                + "name VARCHAR(32) PRIMARY KEY,"
-        		+ "world VARCHAR(32) NOT NULL,"
-        		+ "pos1_x DOUBLE NOT NULL, "
-        		+ "pos1_y DOUBLE NOT NULL, "
-        		+ "pos1_z DOUBLE NOT NULL, "
-        		+ "pos2_x DOUBLE NOT NULL, "
-        		+ "pos2_y DOUBLE NOT NULL, "
-        		+ "pos2_z DOUBLE NOT NULL, "
-        		+ "orientation1_x DOUBLE NOT NULL, "
-        		+ "orientation1_y DOUBLE NOT NULL, "
-        		+ "orientation1_z DOUBLE NOT NULL, "
-        		+ "orientation2_x DOUBLE NOT NULL, "
-        		+ "orientation2_y DOUBLE NOT NULL, "
-        		+ "orientation2_z DOUBLE NOT NULL, "
-        		+ "score DOUBLE NOT NULL DEFAULT 0, "
-        		+ "type VARCHAR(32) NOT NULL "
-                + ")ENGINE=InnoDB;";
-        execute(executeString, datasource);  
-        
-        executeString = "CREATE TABLE IF NOT EXISTS Queues("
-                + "name VARCHAR(32) PRIMARY KEY,"
-        		+ "isRanked BOOLEAN NOT NULL DEFAULT false,"
-        		+ "type VARCHAR(32) NOT NULL"
-                + ")ENGINE=InnoDB;";
-        execute(executeString, datasource); 
-    }
-
-    /*
-     * Add the three tables to the database for the new queue
-     */
-    public void addQueue(String name) throws SQLException
-    {
-        DataSource datasource = getDataSource("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password);
-
-        // Stats
-        String executeString = "CREATE TABLE IF NOT EXISTS StatsQueue" + name + " ("
-                            + "player VARCHAR(64) PRIMARY KEY,"
-                            + "score DOUBLE DEFAULT 0,"
-                            + "kills INT DEFAULT 0,"
-                            + "deaths INT DEFAULT 0,"
-                            + "wins INT DEFAULT 0,"
-                            + "loose INT DEFAULT 0,"
-                            + "FOREIGN KEY(player)"
-                            + "REFERENCES Player(UUID)"
-                            + ")ENGINE=InnoDB;";
-        execute(executeString, datasource);
-
-        // Inventory
-        executeString = "CREATE TABLE IF NOT EXISTS InventoryQueue" + name + " ("
-                + "inventory_id BIGINT PRIMARY KEY,"
-                + "item1 JSON,"
-                + "item2 JSON,"
-                + "item3 JSON,"
-                + "item4 JSON,"
-                + "item5 JSON,"
-                + "item6 JSON,"
-                + "item7 JSON,"
-                + "item8 JSON,"
-                + "item9 JSON,"
-                + "item10 JSON,"
-                + "item11 JSON,"
-                + "item12 JSON,"
-                + "item13 JSON,"
-                + "item14 JSON,"
-                + "item15 JSON,"
-                + "item16 JSON,"
-                + "item17 JSON,"
-                + "item18 JSON,"
-                + "item19 JSON,"
-                + "item20 JSON,"
-                + "item21 JSON,"
-                + "item22 JSON,"
-                + "item23 JSON,"
-                + "item24 JSON,"
-                + "item25 JSON,"
-                + "item26 JSON,"
-                + "item27 JSON,"
-                + "item28 JSON,"
-                + "item29 JSON,"
-                + "item30 JSON,"
-                + "item31 JSON,"
-                + "item32 JSON,"
-                + "item33 JSON,"
-                + "item34 JSON,"
-                + "item35 JSON,"
-                + "item36 JSON,"
-                + "item37 JSON,"
-                + "item38 JSON,"
-                + "item39 JSON,"
-                + "item40 JSON"
-                + ")ENGINE=InnoDB;";
-        execute(executeString, datasource);
-
-        // Matchs
-        executeString = "CREATE TABLE IF NOT EXISTS MatchQueue" + name + " ("
-                + "match_id BIGINT PRIMARY KEY,"
-                + "player1 VARCHAR(64) NOT NULL,"
-                + "player2 VARCHAR(64) NOT NULL,"
-                + "winner VARCHAR(64),"
-                + "map VARCHAR(32),"
-                + "date BIGINT,"
-                + "time INT,"
-                + "inventory1 BIGINT,"
-                + "inventory2 BIGINT,"
-                + "heal1 INT,"
-                + "heal2 INT,"
-                + "hunger1 INT,"
-                + "hunger2 INT,"
-                + "FOREIGN KEY(player1)"
-                + "REFERENCES Player(UUID),"
-                + "FOREIGN KEY(player2)"
-                + "REFERENCES Player(UUID),"
-                + "FOREIGN KEY(inventory1)"
-                + "REFERENCES InventoryQueue" + name + "(inventory_id),"
-                + "FOREIGN KEY(inventory2)"
-                + "REFERENCES InventoryQueue" + name + "(inventory_id)"
-                + ")ENGINE=InnoDB;";
-        execute(executeString, datasource);
+    	try
+    	{
+	        DataSource datasource = getDataSource("jdbc:mysql://" + host + ":" + port + "/?user=" + username + "&password=" + password);
+	
+	        String executeString = "CREATE DATABASE IF NOT EXISTS " + database;
+	        execute(executeString, datasource);
+	
+	        datasource = getDataSource("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password);
+	
+	        executeString = "CREATE TABLE IF NOT EXISTS Player("
+	                + "UUID VARCHAR(64) PRIMARY KEY,"
+	                + "name VARCHAR(32) NOT NULL,"
+	                + "first_join BIGINT NOT NULL,"
+	                + "last_seen BIGINT,"
+	                + "rank VARCHAR(32) NOT NULL,"
+	                + "remaining_ranked INT DEFAULT 0,"
+	                + "last_vote_1 TIMESTAMP,"
+	                + "last_vote_2 TIMESTAMP,"
+	                + "last_vote_3 TIMESTAMP,"
+	                + "last_vote_4 TIMESTAMP"
+	                + ")ENGINE=InnoDB;";
+	        execute(executeString, datasource);
+	        
+	        executeString = "CREATE TABLE IF NOT EXISTS Arenas("
+	                + "name VARCHAR(32) PRIMARY KEY,"
+	        		+ "world VARCHAR(32) NOT NULL,"
+	        		+ "pos1_x DOUBLE NOT NULL, "
+	        		+ "pos1_y DOUBLE NOT NULL, "
+	        		+ "pos1_z DOUBLE NOT NULL, "
+	        		+ "pos2_x DOUBLE NOT NULL, "
+	        		+ "pos2_y DOUBLE NOT NULL, "
+	        		+ "pos2_z DOUBLE NOT NULL, "
+	        		+ "orientation1_x DOUBLE NOT NULL, "
+	        		+ "orientation1_y DOUBLE NOT NULL, "
+	        		+ "orientation1_z DOUBLE NOT NULL, "
+	        		+ "orientation2_x DOUBLE NOT NULL, "
+	        		+ "orientation2_y DOUBLE NOT NULL, "
+	        		+ "orientation2_z DOUBLE NOT NULL, "
+	        		+ "score DOUBLE NOT NULL DEFAULT 0, "
+	        		+ "type VARCHAR(32) NOT NULL "
+	                + ")ENGINE=InnoDB;";
+	        execute(executeString, datasource);  
+	        
+	        executeString = "CREATE TABLE IF NOT EXISTS Queues("
+	                + "name VARCHAR(32) PRIMARY KEY,"
+	        		+ "isRanked BOOLEAN NOT NULL DEFAULT false,"
+	        		+ "type VARCHAR(32) NOT NULL"
+	                + ")ENGINE=InnoDB;";
+	        execute(executeString, datasource);
+    	}
+    	catch(SQLException e) 
+    	{
+    		EzpzPvpKit.getLogger().info("Error creating the database.");
+    	}
     }
 
     /*
@@ -402,6 +316,91 @@ public class Database
         params[4] = queue.getType();
 
         executePrepared(datasource, executeString, params);
+        
+        // Stats
+        executeString = "CREATE TABLE IF NOT EXISTS StatsQueue" + queue.getName() + " ("
+                        + "player VARCHAR(64) PRIMARY KEY,"
+                        + "score DOUBLE DEFAULT 0,"
+                        + "kills INT DEFAULT 0,"
+                        + "deaths INT DEFAULT 0,"
+                        + "wins INT DEFAULT 0,"
+                        + "loose INT DEFAULT 0,"
+                        + "FOREIGN KEY(player)"
+                        + "REFERENCES Player(UUID)"
+                        + ")ENGINE=InnoDB;";
+        execute(executeString, datasource);
+
+        // Inventory
+        executeString = "CREATE TABLE IF NOT EXISTS InventoryQueue" + queue.getName() + " ("
+                + "inventory_id BIGINT PRIMARY KEY,"
+                + "item1 JSON,"
+                + "item2 JSON,"
+                + "item3 JSON,"
+                + "item4 JSON,"
+                + "item5 JSON,"
+                + "item6 JSON,"
+                + "item7 JSON,"
+                + "item8 JSON,"
+                + "item9 JSON,"
+                + "item10 JSON,"
+                + "item11 JSON,"
+                + "item12 JSON,"
+                + "item13 JSON,"
+                + "item14 JSON,"
+                + "item15 JSON,"
+                + "item16 JSON,"
+                + "item17 JSON,"
+                + "item18 JSON,"
+                + "item19 JSON,"
+                + "item20 JSON,"
+                + "item21 JSON,"
+                + "item22 JSON,"
+                + "item23 JSON,"
+                + "item24 JSON,"
+                + "item25 JSON,"
+                + "item26 JSON,"
+                + "item27 JSON,"
+                + "item28 JSON,"
+                + "item29 JSON,"
+                + "item30 JSON,"
+                + "item31 JSON,"
+                + "item32 JSON,"
+                + "item33 JSON,"
+                + "item34 JSON,"
+                + "item35 JSON,"
+                + "item36 JSON,"
+                + "item37 JSON,"
+                + "item38 JSON,"
+                + "item39 JSON,"
+                + "item40 JSON"
+                + ")ENGINE=InnoDB;";
+        execute(executeString, datasource);
+
+        // Matchs
+        executeString = "CREATE TABLE IF NOT EXISTS MatchQueue" + queue.getName() + " ("
+                + "match_id BIGINT PRIMARY KEY,"
+                + "player1 VARCHAR(64) NOT NULL,"
+                + "player2 VARCHAR(64) NOT NULL,"
+                + "winner VARCHAR(64),"
+                + "map VARCHAR(32),"
+                + "date BIGINT,"
+                + "time INT,"
+                + "inventory1 BIGINT,"
+                + "inventory2 BIGINT,"
+                + "heal1 INT,"
+                + "heal2 INT,"
+                + "hunger1 INT,"
+                + "hunger2 INT,"
+                + "FOREIGN KEY(player1)"
+                + "REFERENCES Player(UUID),"
+                + "FOREIGN KEY(player2)"
+                + "REFERENCES Player(UUID),"
+                + "FOREIGN KEY(inventory1)"
+                + "REFERENCES InventoryQueue" + queue.getName() + "(inventory_id),"
+                + "FOREIGN KEY(inventory2)"
+                + "REFERENCES InventoryQueue" + queue.getName() + "(inventory_id)"
+                + ")ENGINE=InnoDB;";
+        execute(executeString, datasource);
     }   
     
     public void deleteQueue(DuelQueue queue) throws SQLException
