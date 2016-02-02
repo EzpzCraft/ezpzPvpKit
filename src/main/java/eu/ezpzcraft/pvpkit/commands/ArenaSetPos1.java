@@ -38,7 +38,7 @@ public class ArenaSetPos1 implements CommandExecutor
 									    													.color(TextColors.GOLD)
 									    													.style(TextStyles.RESET)
 									    													.build()))
-									    					.onClick(TextActions.runCommand("/kit setpos2 " + EzpzPvpKit.getInstance().getUtils().getName()))
+									    					.onClick(TextActions.runCommand("/kit asetpos2 " + EzpzPvpKit.getInstance().getUtils().getName()))
 									    				    .build());
 				} 
         		catch (Exception e) 

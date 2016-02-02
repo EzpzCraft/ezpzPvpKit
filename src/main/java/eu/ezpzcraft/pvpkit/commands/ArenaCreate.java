@@ -37,7 +37,7 @@ public class ArenaCreate implements CommandExecutor
 	            													.color(TextColors.GOLD)
 	            													.style(TextStyles.RESET)
 	            													.build()))
-	            					.onClick(TextActions.runCommand("/kit setpos1 " + EzpzPvpKit.getInstance().getUtils().getName()))
+	            					.onClick(TextActions.runCommand("/kit asetpos1 " + EzpzPvpKit.getInstance().getUtils().getName()))
 	            				    .build());
             
         }

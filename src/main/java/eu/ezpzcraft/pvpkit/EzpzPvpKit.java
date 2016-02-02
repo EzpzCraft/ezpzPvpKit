@@ -206,18 +206,21 @@ public class EzpzPvpKit
     public LinkedList<String> getArenaList()
     {
     	LinkedList<String> arenalist = new LinkedList<String>();
-    	if(arenas.size()==0)
-    	{
-    		arenalist.add("No arena created!");
-    	}
-    	else
-    	{
-    		for (Map.Entry<String,Arena> entry : arenas.entrySet()) 
-    		{   	
-    			arenalist.add(entry.getKey());
-    		}
+    	for (Map.Entry<String,Arena> entry : arenas.entrySet()) 
+    	{   	
+    		arenalist.add(entry.getKey());
     	}
     	return arenalist;
+    }
+    
+    public LinkedList<String> getQueueList()
+    {
+    	LinkedList<String> queuelist = new LinkedList<String>();
+    	for (Map.Entry<String,DuelQueue> entry : queues.entrySet()) 
+    	{   	
+    		queuelist.add(entry.getKey());
+    	}
+    	return queuelist;
     }
 
 }

@@ -44,7 +44,7 @@ public class Utils {
 								.color(TextColors.GOLD)
 								.style(TextStyles.RESET)
 								.build()))
-    					.onClick(TextActions.suggestCommand("/kit create "))
+    					.onClick(TextActions.suggestCommand("/kit acreate "))
 				.build()).build());
     }
 

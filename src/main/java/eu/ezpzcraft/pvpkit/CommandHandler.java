@@ -24,6 +24,7 @@ import eu.ezpzcraft.pvpkit.commands.ArenaSetPos2;
 import eu.ezpzcraft.pvpkit.commands.QueueConfirmDelete;
 import eu.ezpzcraft.pvpkit.commands.QueueCreate;
 import eu.ezpzcraft.pvpkit.commands.QueueDelete;
+import eu.ezpzcraft.pvpkit.commands.QueueList;
 
 
 public class CommandHandler 
@@ -142,6 +143,13 @@ public class CommandHandler
 				.permission("ezpzkit.command.create")
 				.build();
 		
+		/* QueueList */
+		CommandSpec queuelist = CommandSpec.builder()
+				.description(Text.of("Create an arena <Name> <Type>"))
+				.executor(new QueueList())
+				.permission("ezpzkit.command.create")
+				.build();
+		
 		/*  kit => kit help */
 		CommandSpec kit = CommandSpec.builder()
 				.description(Text.of("Display help"))
@@ -177,6 +185,7 @@ public class CommandHandler
 				.child(queuecreate, "qcreate", "qc")
 				.child(queuedelete, "queuedelete", "qdel", "qd")
 				.child(queueconfirmdelete, "queuecdelete", "qcdel", "qcd")
+				.child(queuelist, "queuelist", "qlist", "ql")
 				.permission("ezpzkit.command")
 				.build();
 		

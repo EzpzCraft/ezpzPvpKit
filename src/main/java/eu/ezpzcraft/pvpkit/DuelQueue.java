@@ -11,7 +11,7 @@ public class DuelQueue
     private LinkedHashMap<String, Arena> usedArenas = null;
     private LinkedHashMap<String, Team> waitingTeams = null;
     private LinkedList<Duel> duels = null;
-    private Boolean isRanked = false;
+	private Boolean isRanked = false;
     private String type = null;
 
     /* Constructor */
@@ -68,4 +68,14 @@ public class DuelQueue
     {
     	return this.type;
     }
+    public Boolean getIsRanked() 
+    {
+		return isRanked;
+	}
+
+	public void setIsRanked(Boolean isRanked) 
+	{
+		this.isRanked = isRanked;
+	}
+
 }

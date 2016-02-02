@@ -415,14 +415,17 @@ public class Database
 
         executePrepared(datasource, executeString, params);
         
-        executeString = "DROP InventoryQueue" + queue.getName() + " IF EXSITS";
+        executeString = "DROP TABLE IF EXISTS StatsQueue" + queue.getName();
         execute(executeString,datasource);
         
-        executeString = "DROP MatchQueue" + queue.getName() + " IF EXSITS ";
+        executeString = "DROP TABLE IF EXISTS MatchQueue" + queue.getName();
         execute(executeString,datasource);
         
-        executeString = "DROP StatsQueue" + queue.getName() + " IF EXSITS ";
+        executeString = "DROP TABLE IF EXISTS InventoryQueue" + queue.getName();
         execute(executeString,datasource);
+        
+        
+
     }
     
     public void loadQueues()
