@@ -37,7 +37,7 @@ public class Database
 	
 	        datasource = getDataSource("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password);
 	
-	        executeString = "CREATE TABLE IF NOT EXISTS Player("
+	        executeString = "CREATE TABLE IF NOT EXISTS Players("
 	                + "UUID VARCHAR(64) PRIMARY KEY,"
 	                + "name VARCHAR(32) NOT NULL,"
 	                + "first_join BIGINT NOT NULL,"
@@ -92,7 +92,7 @@ public class Database
         DataSource datasource = getDataSource("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password);
 
         String executeString =
-          "INSERT INTO Player "
+          "INSERT INTO Players "
         + "(UUID, name, first_join, rank, remaining_ranked) "
         + "VALUES (?,?,?,?,?) "
         + "ON DUPLICATE KEY UPDATE name=?";
@@ -115,7 +115,7 @@ public class Database
     {
         DataSource datasource = getDataSource("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password);
 
-        String executeString = "UPDATE Player SET last_seen=? WHERE UUID=?";
+        String executeString = "UPDATE Players SET last_seen=? WHERE UUID=?";
 
         String[] params = new String[2];
         params[0] = new Timestamp(new java.util.Date().getTime()).getTime() + "";
@@ -131,7 +131,7 @@ public class Database
     {
         DataSource datasource = getDataSource("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password);
 
-        String executeString = "UPDATE Player SET last_seen=? WHERE UUID=?";
+        String executeString = "UPDATE Players SET last_seen=? WHERE UUID=?";
 
         String[] params = new String[2];
         params[0] = new Timestamp(new java.util.Date().getTime()).getTime() + "";
@@ -146,7 +146,7 @@ public class Database
     {
         DataSource datasource = getDataSource("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password);
 
-        String executeString = "UPDATE Player SET last_seen=? WHERE UUID=?";
+        String executeString = "UPDATE Players SET last_seen=? WHERE UUID=?";
 
         String[] params = new String[2];
         params[0] = new Timestamp(new java.util.Date().getTime()).getTime() + "";
@@ -161,7 +161,7 @@ public class Database
     {
         DataSource datasource = getDataSource("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password);
 
-        String executeString = "UPDATE Player SET last_seen=? WHERE UUID=?";
+        String executeString = "UPDATE Players SET last_seen=? WHERE UUID=?";
 
         String[] params = new String[2];
         params[0] = new Timestamp(new java.util.Date().getTime()).getTime() + "";
@@ -247,7 +247,6 @@ public class Database
 	        Float orientation1_x, orientation1_y, orientation1_z, orientation2_x, orientation2_y, orientation2_z;
 	        Float score;
 	        String type;
-	        
 	        Location<World> pos1, pos2;
 	        Vector3d rotation1, rotation2;
 
@@ -326,7 +325,7 @@ public class Database
                         + "wins INT DEFAULT 0,"
                         + "loose INT DEFAULT 0,"
                         + "FOREIGN KEY(player)"
-                        + "REFERENCES Player(UUID)"
+                        + "REFERENCES Players(UUID)"
                         + ")ENGINE=InnoDB;";
         execute(executeString, datasource);
 
@@ -392,9 +391,9 @@ public class Database
                 + "hunger1 INT,"
                 + "hunger2 INT,"
                 + "FOREIGN KEY(player1)"
-                + "REFERENCES Player(UUID),"
+                + "REFERENCES Players(UUID),"
                 + "FOREIGN KEY(player2)"
-                + "REFERENCES Player(UUID),"
+                + "REFERENCES Players(UUID),"
                 + "FOREIGN KEY(inventory1)"
                 + "REFERENCES InventoryQueue" + queue.getName() + "(inventory_id),"
                 + "FOREIGN KEY(inventory2)"
@@ -415,6 +414,15 @@ public class Database
         params[0] = queue.getName();
 
         executePrepared(datasource, executeString, params);
+        
+        executeString = "DROP InventoryQueue" + queue.getName() + " IF EXSITS";
+        execute(executeString,datasource);
+        
+        executeString = "DROP MatchQueue" + queue.getName() + " IF EXSITS ";
+        execute(executeString,datasource);
+        
+        executeString = "DROP StatsQueue" + queue.getName() + " IF EXSITS ";
+        execute(executeString,datasource);
     }
     
     public void loadQueues()

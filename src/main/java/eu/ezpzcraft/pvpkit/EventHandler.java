@@ -39,9 +39,12 @@ import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.api.item.inventory.type.InventoryRow;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -271,18 +274,25 @@ public class EventHandler
                     //ItemStack.Builder i = ItemStack.builder();
                     //hotbar.offer( i.itemType(ItemTypes.STONE_AXE).itemData(itemName).quantity(1).build() );
                     
-                    Text line1 = Text.builder("---------------").color(TextColors.DARK_GRAY).style(TextStyles.STRIKETHROUGH)
-                                 .append(Text.builder(" E").color(TextColors.DARK_RED).style(TextStyles.RESET).style(TextStyles.BOLD)
-                                 .append(Text.builder("zpz").color(TextColors.RED)
-                                 .append(Text.builder("C").color(TextColors.DARK_RED).style(TextStyles.RESET).style(TextStyles.BOLD)
-                                 .append(Text.builder("raft ").color(TextColors.RED)
-                                 .append(Text.builder("---------------").color(TextColors.DARK_GRAY).style(TextStyles.STRIKETHROUGH).build())
-                                 .build()).build()).build()).build()).build();
+                    Text motd;
+					try 
+					{
+						motd = Text.builder().append(Text.of(TextColors.DARK_GRAY,TextStyles.STRIKETHROUGH, "---------------" ))
+								                  .append(Text.of(TextColors.DARK_RED, " EzpzCraft " ))
+								                  .append(Text.of(TextColors.DARK_GRAY,TextStyles.STRIKETHROUGH, "---------------\n" ))
+								                  .append(Text.of(TextColors.DARK_GRAY, "Welcome Back", TextColors.GOLD,TextStyles.ITALIC,"Nomeho" + " \n" )) // CENTER
+								                  .append(Text.of("     ",TextColors.DARK_GRAY,TextStyles.UNDERLINE, "• Website: " ))
+								                  .append(Text.of(TextColors.DARK_RED,TextActions.openUrl(new URL(Config.WEBSITE)), TextColors.GRAY,Config.WEBSITE + "\n" ))
+								                  .append(Text.of("     ",TextColors.DARK_GRAY,TextStyles.UNDERLINE,"• Remaining ranked: \n" ))
 
-                    Text line2 = Text.builder("�a Test  �c�nLol").build();
-
-                    // Motd
-                    player.get().sendMessage(line2);
+								.build();
+						
+						player.get().sendMessage(motd);
+					} 
+					catch (MalformedURLException e) 
+					{
+						EzpzPvpKit.getLogger().info("Error while creating MOTD url");
+					}  
                     
                     // Broadcaster
                 }
