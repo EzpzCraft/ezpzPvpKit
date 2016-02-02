@@ -312,7 +312,7 @@ public class Database
         params[0] = queue.getName();
         params[1] = queue.isRanked() + "";
         params[2] = queue.getType();
-        params[3] = queue.isRanked() + "";
+        params[3] = queue.isRanked()==true ? 1 + "": 0 + "";
         params[4] = queue.getType();
 
         executePrepared(datasource, executeString, params);
