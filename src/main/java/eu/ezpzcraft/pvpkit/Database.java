@@ -73,7 +73,7 @@ public class Database
 	        
 	        executeString = "CREATE TABLE IF NOT EXISTS Queues("
 	                + "name VARCHAR(32) PRIMARY KEY,"
-	        		+ "isRanked BOOLEAN NOT NULL DEFAULT false,"
+	        		+ "isRanked BOOLEAN NOT NULL DEFAULT 0,"
 	        		+ "type VARCHAR(32) NOT NULL"
 	                + ")ENGINE=InnoDB;";
 	        execute(executeString, datasource);
