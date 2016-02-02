@@ -11,13 +11,15 @@ public class DuelQueue
     private LinkedList<Duel> duels = null;
 	private Boolean isRanked = false;
     private String type = null;
+    private int size;
 
     /* Constructor */
-    public DuelQueue(String name, Boolean isRanked, String type)
+    public DuelQueue(String name, Boolean isRanked, String type, int size)
     {
         this.name = name;
         this.isRanked = isRanked;
         this.type = type;
+        this.size = size;
     }
 
     /* Methods */
@@ -74,4 +76,8 @@ public class DuelQueue
 		this.isRanked = isRanked;
 	}
 
+	public int getSize() 
+	{
+		return size;
+	}
 }

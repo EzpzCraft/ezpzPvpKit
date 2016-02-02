@@ -74,14 +74,15 @@ public class Database
 	        executeString = "CREATE TABLE IF NOT EXISTS Queues("
 	                + "name VARCHAR(32) PRIMARY KEY,"
 	        		+ "isRanked BOOLEAN NOT NULL DEFAULT 0,"
-	        		+ "type VARCHAR(32) NOT NULL"
+	        		+ "type VARCHAR(32) NOT NULL,"
+	        		+ "size INT NOT NULL"
 	                + ")ENGINE=InnoDB;";
 	        execute(executeString, datasource);
 	        
 	        executeString = "CREATE TABLE IF NOT EXISTS Teams("
 	        		+ "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,"
 	                + "name VARCHAR(32),"
-	        		+ "players_list SET"
+	        		+ "players_list JSON"
 	                + ")ENGINE=InnoDB;";
 	        execute(executeString, datasource);
     	}
@@ -337,16 +338,18 @@ public class Database
 
         String executeString =
             "INSERT INTO Queues "
-                    + "(name, isRanked, type) "
-                    + "VALUES (?,?,?) "
-                    + "ON DUPLICATE KEY UPDATE isRanked=?, type=?";
+                    + "(name, isRanked, type, size) "
+                    + "VALUES (?,?,?,?) "
+                    + "ON DUPLICATE KEY UPDATE isRanked=?, type=?, size=?";
 
-        String[] params = new String[5];
+        String[] params = new String[7];
         params[0] = queue.getName();
         params[1] = queue.isRanked()==true ? 1 + "": 0 + "";
         params[2] = queue.getType();
-        params[3] = queue.isRanked()==true ? 1 + "": 0 + "";
-        params[4] = queue.getType();
+        params[3] = queue.getSize() + "";
+        params[4] = queue.isRanked()==true ? 1 + "": 0 + "";
+        params[5] = queue.getType();
+        params[6] = queue.getSize() + "";
 
         executePrepared(datasource, executeString, params);
         
@@ -418,8 +421,8 @@ public class Database
                 + "map VARCHAR(32),"
                 + "date BIGINT,"
                 + "time INT,"
-                + "inventory1 SET,"
-                + "inventory2 SET,"
+                + "inventory1 JSON,"
+                + "inventory2 JSON,"
                 + "heal1 INT,"
                 + "heal2 INT,"
                 + "hunger1 INT,"
@@ -429,6 +432,10 @@ public class Database
                 + "FOREIGN KEY(team2)"
                 + "REFERENCES Teams(id)"
                 + ")ENGINE=InnoDB;";
+        execute(executeString, datasource);
+        
+        // Player inventory
+        executeString = "ALTER TABLE Players ADD inventory_" + queue.getName() + " INT";
         execute(executeString, datasource);
     }   
     
@@ -466,13 +473,15 @@ public class Database
 	        String name;
 	        Boolean isRanked;
 	        String type;
+	        int size;
 	        while( result.next() )
 	        {
 	        	name = result.getString("name");
 	        	isRanked = result.getBoolean("isRanked");
 	        	type = result.getString("type");
+	        	size = result.getInt("size");
 	        	
-	        	EzpzPvpKit.getInstance().addQueue( new DuelQueue(name, isRanked, type) );
+	        	EzpzPvpKit.getInstance().addQueue( new DuelQueue(name, isRanked, type, size) );
 	        }
     	}
     	catch(SQLException e)

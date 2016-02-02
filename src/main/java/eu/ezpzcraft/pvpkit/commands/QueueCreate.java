@@ -24,6 +24,9 @@ public class QueueCreate implements CommandExecutor
     	
     	String name = args.<String>getOne("name").get();
     	String type = args.<String>getOne("type").get();
+    	int size = 1;
+    	if ( args.<Integer>getOne("size").isPresent() )
+    		size = args.<Integer>getOne("size").get();
     	Boolean ranked = false;
     	if( args.<Boolean>getOne("ranked").isPresent()) 
     		ranked = args.<Boolean>getOne("ranked").get();
@@ -32,7 +35,7 @@ public class QueueCreate implements CommandExecutor
         	Player player = (Player) src;
         	try
         	{
-        		EzpzPvpKit.getInstance().addQueue(new DuelQueue(name,ranked,type));
+        		EzpzPvpKit.getInstance().addQueue(new DuelQueue(name,ranked,type,size));
         		EzpzPvpKit.getInstance().getDatabase().saveQueue(EzpzPvpKit.getInstance().getQueue(name));
         		EzpzPvpKit.getInstance().getUtils().sendKitMessage(player, Text.of("Queue created"));
         	}

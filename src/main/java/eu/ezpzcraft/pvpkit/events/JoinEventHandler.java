@@ -3,15 +3,22 @@ package eu.ezpzcraft.pvpkit.events;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.PotionEffectData;
+import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
+import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.entity.Hotbar;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
@@ -49,7 +56,7 @@ public class JoinEventHandler
         player.remove(Keys.POTION_EFFECTS);
         
         // Give items
-        
+        giveItem(pvpPlayer);
         
         // Send MOTD
         sendMOTD(pvpPlayer);
@@ -83,5 +90,63 @@ public class JoinEventHandler
 		{
 			EzpzPvpKit.getLogger().info("Error while creating MOTD url");
 		} 
+    }
+    
+    public void giveItem(PvPPlayer pvpPlayer)
+    {
+        Hotbar hotbar = pvpPlayer.getPlayer().getInventory().query(Hotbar.class);
+
+        // Ranked
+        ItemStack ranked = ItemStack.builder().itemType(ItemTypes.DIAMOND_SWORD).quantity(1).build();
+        Text title = Text.builder("Ranked").color(TextColors.AQUA).style(TextStyles.BOLD).build();
+        List<Text> lore = new ArrayList<Text>();
+        lore.add( Text.of(TextColors.GOLD,"Remaining ranked: ",
+        		          TextColors.YELLOW, pvpPlayer.getRemainingRanked()) );
+        lore.add( Text.builder("Click to play").color(TextColors.GRAY).build() );
+        ranked.offer(Keys.DISPLAY_NAME, title);
+        ranked.offer(Keys.ITEM_LORE, lore);
+
+        // Unranked
+        ItemStack unranked = ItemStack.builder().itemType(ItemTypes.IRON_SWORD).quantity(1).build();
+        title = Text.builder("Unranked").color(TextColors.AQUA).style(TextStyles.BOLD).build();
+        lore = new ArrayList<Text>();
+        lore.add( Text.builder("Unlimited").color(TextColors.GOLD).build() );
+        lore.add( Text.builder("Click to play").color(TextColors.GRAY).build() );
+        unranked.offer(Keys.DISPLAY_NAME, title);
+        unranked.offer(Keys.ITEM_LORE, lore);
+
+        // PlayerHead TODO: player head
+        ItemStack stats = ItemStack.builder().itemType(ItemTypes.SKULL).quantity(1).build();
+        title = Text.builder("Statistics").color(TextColors.AQUA).style(TextStyles.BOLD).build();
+        lore = new ArrayList<Text>();
+        lore.add( Text.of(TextColors.GOLD, "Player: ", TextColors.YELLOW, pvpPlayer.getPlayer().getName()) );
+        lore.add( Text.of(TextColors.GOLD, "Rank: ", TextColors.YELLOW, pvpPlayer.getRank()) );
+        lore.add( Text.builder("Click to see").color(TextColors.GRAY).build() );
+        stats.offer(Keys.DISPLAY_NAME, title);
+        stats.offer(Keys.ITEM_LORE, lore);
+
+        // Lang
+        ItemStack lang = ItemStack.builder().itemType(ItemTypes.BANNER).quantity(1).build();
+        title = Text.builder("Lang").color(TextColors.AQUA).style(TextStyles.BOLD).build();
+        lore = new ArrayList<Text>();
+        lore.add( Text.builder("Choose your laguage").color(TextColors.GOLD).build() );
+        lore.add( Text.of(TextColors.GRAY, "Choice: ", TextColors.YELLOW, pvpPlayer.getLang()) );
+        lang.offer(Keys.DISPLAY_NAME, title);
+        lang.offer(Keys.ITEM_LORE, lore);
+
+        // Spectator
+        ItemStack spectator = ItemStack.builder().itemType(ItemTypes.COMPASS).quantity(1).build();
+        title = Text.builder("Spectator").color(TextColors.AQUA).style(TextStyles.BOLD).build();
+        lore = new ArrayList<Text>();
+        lore.add( Text.builder("Click to see another player").color(TextColors.GOLD).build() );
+        spectator.offer(Keys.DISPLAY_NAME, title);
+        spectator.offer(Keys.ITEM_LORE, lore);
+
+        // Finally place items in the hotbar
+        hotbar.offer(ranked);
+        hotbar.offer(unranked);
+        hotbar.offer(stats);
+        hotbar.offer(lang);
+        hotbar.offer(spectator);
     }
 }

@@ -16,6 +16,7 @@ public class PvPPlayer
     private int remainingRanked = 0;
     private String rank;
     private long vote[];
+    private String lang = "English"; // TODO: add in DB in the future when handling languages
     
     private double enderpearlCD = 0.0;
     private PlayerState state = null;
@@ -54,5 +55,15 @@ public class PvPPlayer
 	public void setRemainingRanked(int remainingRanked) 
 	{
 		this.remainingRanked = remainingRanked;
+	}
+
+	public String getRank() 
+	{
+		return this.rank;
+	}
+	
+	public String getLang()
+	{
+		return this.lang;
 	}
 }

@@ -123,6 +123,7 @@ public class CommandHandler
 		        .arguments(
 		                GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))),
 		                GenericArguments.onlyOne(GenericArguments.string(Text.of("type"))),
+		                GenericArguments.optionalWeak(GenericArguments.bool(Text.of("size"))),
 		                GenericArguments.optionalWeak(GenericArguments.bool(Text.of("ranked"))))
 				.permission("ezpzkit.command.create")
 				.build();
