@@ -1,5 +1,8 @@
 package eu.ezpzcraft.pvpkit;
 
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
@@ -13,7 +16,7 @@ import com.flowpowered.math.vector.Vector3d;
 
 public class Utils {
 	
-
+	/* ARENA */
 	private String name = null;
 	private Location<World> pos1 = null;
     private Location<World> pos2 = null; 
@@ -32,20 +35,30 @@ public class Utils {
 	            				.build()).build()).build()).build());
     }
     
-    /* Send Message arena not created */
+    /* Send Message arena already exist*/
     public void sendArenaExist(Player player)
     {
-        player.sendMessage(Text.builder("[").color(TextColors.DARK_GRAY).style(TextStyles.BOLD)
-				.append(Text.builder("EzpzKit").color(TextColors.DARK_RED).style(TextStyles.BOLD)
-				.append(Text.builder("]").color(TextColors.DARK_GRAY).style(TextStyles.BOLD)
-				.append(Text.builder(" This arena name is already used.").color(TextColors.WHITE).style(TextStyles.RESET)
+    	sendKitMessage(player,Text.builder(" This arena name is already used.").color(TextColors.WHITE).style(TextStyles.RESET)
 				.append(Text.builder("\n               Choose an other name ?").color(TextColors.GOLD).style(TextStyles.BOLD)
     					.onHover(TextActions.showText(Text.builder("Change it by clicking here")
 								.color(TextColors.GOLD)
 								.style(TextStyles.RESET)
 								.build()))
     					.onClick(TextActions.suggestCommand("/kit create "))
-				.build()).build()).build()).build()).build());
+				.build()).build());
+    }
+
+    /* Send Message queue already exist */
+    public void sendQueueExist(Player player)
+    {
+    	sendKitMessage(player,Text.builder(" This queue name is already used.").color(TextColors.WHITE).style(TextStyles.RESET)
+				.append(Text.builder("\n               Choose an other name ?").color(TextColors.GOLD).style(TextStyles.BOLD)
+    					.onHover(TextActions.showText(Text.builder("Change it by clicking here")
+								.color(TextColors.GOLD)
+								.style(TextStyles.RESET)
+								.build()))
+    					.onClick(TextActions.suggestCommand("/kit qcreate "))
+				.build()).build());
     }
     
     /* CommandBlock */
@@ -63,37 +76,38 @@ public class Utils {
 	public String getName() {
 		return name;
 	}
-	public void setName(String name) {
+	public void setArenaName(String name) {
 		this.name = name;
 	}   
-	public Location<World> getPos1() {
+	public Location<World> getArenaPos1() {
 		return pos1;
 	}
-	public Location<World> getPos2() {
+	public Location<World> getArenaPos2() {
 		return pos2;
 	}
-	public Vector3d getRotation1() {
+	public Vector3d getArenaRotation1() {
 		return rotation1;
 	}
-	public Vector3d getRotation2() {
+	public Vector3d getArenaRotation2() {
 		return rotation2;
 	}
-	public String getType() {
+	public String getArenaType() {
 		return type;
 	}
-	public void setPos1(Location<World> pos1) {
+	public void setArenaPos1(Location<World> pos1) {
 		this.pos1 = pos1;
 	}
-	public void setPos2(Location<World> pos2) {
+	public void setArenaPos2(Location<World> pos2) {
 		this.pos2 = pos2;
 	}
-	public void setRotation1(Vector3d rotation1) {
+	public void setArenaRotation1(Vector3d rotation1) {
 		this.rotation1 = rotation1;
 	}
-	public void setRotation2(Vector3d rotation2) {
+	public void setArenaRotation2(Vector3d rotation2) {
 		this.rotation2 = rotation2;
 	}
-	public void setType(String type) {
+	public void setArenaType(String type) {
 		this.type = type;
 	}
+	
 }

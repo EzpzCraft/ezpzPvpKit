@@ -29,15 +29,15 @@ public class ArenaSetPos2 implements CommandExecutor
 	        	if(EzpzPvpKit.getInstance().getUtils().getName() != null && EzpzPvpKit.getInstance().getUtils().getName().equals(name))
 	        	{
 	        		try {
-						EzpzPvpKit.getInstance().getUtils().setPos2(player.getLocation());
-						EzpzPvpKit.getInstance().getUtils().setRotation2(player.getRotation());
+						EzpzPvpKit.getInstance().getUtils().setArenaPos2(player.getLocation());
+						EzpzPvpKit.getInstance().getUtils().setArenaRotation2(player.getRotation());
 						
 						Arena arena = new Arena(EzpzPvpKit.getInstance().getUtils().getName(),
-								EzpzPvpKit.getInstance().getUtils().getType(),
-								0, EzpzPvpKit.getInstance().getUtils().getPos1(),
-								EzpzPvpKit.getInstance().getUtils().getRotation1(),
-								EzpzPvpKit.getInstance().getUtils().getPos2(),
-								EzpzPvpKit.getInstance().getUtils().getRotation2());
+								EzpzPvpKit.getInstance().getUtils().getArenaType(),
+								0, EzpzPvpKit.getInstance().getUtils().getArenaPos1(),
+								EzpzPvpKit.getInstance().getUtils().getArenaRotation1(),
+								EzpzPvpKit.getInstance().getUtils().getArenaPos2(),
+								EzpzPvpKit.getInstance().getUtils().getArenaRotation2());
 			
 						EzpzPvpKit.getInstance().addArena(arena);
 						EzpzPvpKit.getInstance().getDatabase().saveArena(arena); 

@@ -21,6 +21,7 @@ import eu.ezpzcraft.pvpkit.commands.ArenaDelete;
 import eu.ezpzcraft.pvpkit.commands.ArenaList;
 import eu.ezpzcraft.pvpkit.commands.ArenaSetPos1;
 import eu.ezpzcraft.pvpkit.commands.ArenaSetPos2;
+import eu.ezpzcraft.pvpkit.commands.QueueCreate;
 
 
 public class CommandHandler 
@@ -63,7 +64,7 @@ public class CommandHandler
 				.permission("ezpzkit.command.help")
 				.build();
 		
-		/* Create */
+		/* Arena Create */
 		CommandSpec arenacreate = CommandSpec.builder()
 				.description(Text.of("Create an arena <Name> <Type>"))
 				.executor(new ArenaCreate())
@@ -73,7 +74,7 @@ public class CommandHandler
 				.permission("ezpzkit.command.create")
 				.build();
 		
-		/* Setpos1 */
+		/* Arena Setpos1 */
 		CommandSpec arenasetpos1 = CommandSpec.builder()
 				.description(Text.of("Create an arena <Name> <Type>"))
 				.executor(new ArenaSetPos1())
@@ -81,7 +82,7 @@ public class CommandHandler
 				.permission("ezpzkit.command.create")
 				.build();
 		
-		/* Setpos2 */
+		/* Arena Setpos2 */
 		CommandSpec arenasetpos2 = CommandSpec.builder()
 				.description(Text.of("Create an arena <Name> <Type>"))
 				.executor(new ArenaSetPos2())
@@ -89,7 +90,7 @@ public class CommandHandler
 				.permission("ezpzkit.command.create")
 				.build();
 		
-		/* Delete */
+		/* Arena Delete */
 		CommandSpec arenadelete = CommandSpec.builder()
 				.description(Text.of("Create an arena <Name> <Type>"))
 				.executor(new ArenaDelete())
@@ -97,7 +98,7 @@ public class CommandHandler
 				.permission("ezpzkit.command.create")
 				.build();
 		
-		/* Confirm Delete */
+		/* Arena Confirm Delete */
 		CommandSpec arenaconfirmdelete = CommandSpec.builder()
 				.description(Text.of("Create an arena <Name> <Type>"))
 				.executor(new ArenaConfirmDelete())
@@ -105,10 +106,21 @@ public class CommandHandler
 				.permission("ezpzkit.command.create")
 				.build();
 		
-		/* Confirm Delete */
+		/* Arena Confirm Delete */
 		CommandSpec arenalist = CommandSpec.builder()
 				.description(Text.of("Create an arena <Name> <Type>"))
 				.executor(new ArenaList())
+				.permission("ezpzkit.command.create")
+				.build();
+		
+		/* Create */
+		CommandSpec queuecreate = CommandSpec.builder()
+				.description(Text.of("Create an arena <Name> <Type>"))
+				.executor(new QueueCreate())
+		        .arguments(
+		                GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))),
+		                GenericArguments.onlyOne(GenericArguments.string(Text.of("type"))),
+		                GenericArguments.optionalWeak(GenericArguments.bool(Text.of("ranked"))))
 				.permission("ezpzkit.command.create")
 				.build();
 		
@@ -138,12 +150,13 @@ public class CommandHandler
 				    }
 				})
 				.child(help, "help", "h")
-				.child(arenacreate, "create", "c")
-				.child(arenasetpos1, "setpos1")
-				.child(arenasetpos2, "setpos2")
-				.child(arenadelete, "delete", "del", "d")
-				.child(arenaconfirmdelete, "cdelete", "confirmdelete", "cdel")
-				.child(arenalist, "arenalist", "alist")
+				.child(arenacreate, "acreate", "ac")
+				.child(arenasetpos1, "asetpos1", "a1")
+				.child(arenasetpos2, "asetpos2", "a2")
+				.child(arenadelete, "adelete", "adel", "ad")
+				.child(arenaconfirmdelete, "cdelete", "confirmdelete", "cdel", "cd")
+				.child(arenalist, "arenalist", "alist", "al")
+				.child(queuecreate, "qcreate", "qc")
 				.permission("ezpzkit.command")
 				.build();
 		

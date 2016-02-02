@@ -1,5 +1,6 @@
 package eu.ezpzcraft.pvpkit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import com.google.inject.Inject;
 
@@ -41,7 +42,7 @@ public class EzpzPvpKit
     @Inject
     private Game game;
     
-    private LinkedHashMap<String, DuelQueue> queues = null;
+    private LinkedHashMap<String, DuelQueue> queues = new LinkedHashMap<String, DuelQueue>();
     private LinkedHashMap<String, Arena> arenas = new LinkedHashMap<String, Arena>();
     private LinkedHashMap<UUID, Arena> players = new LinkedHashMap<UUID, Arena>();
     private static EzpzPvpKit instance = null;
@@ -141,6 +142,17 @@ public class EzpzPvpKit
     {
     	this.queues.put(queue.getName(), queue);
     }
+    
+    public void removeQueue(String name)
+    {
+    	if(isArenaExisting(name))
+    		queues.remove(name);
+    }
+    
+    public Boolean isQueueExisting(String name)
+    {
+    	return queues.containsKey(name);
+    }
 
     public Arena getArena(String name)
     {
@@ -178,121 +190,22 @@ public class EzpzPvpKit
 		return utils;
 	}
     
-    public LinkedList<Text> getArenaList()
+    public LinkedList<String> getArenaList()
     {
-    	LinkedList<Text> arenalist = new LinkedList<Text>();
+    	LinkedList<String> arenalist = new LinkedList<String>();
     	if(arenas.size()==0)
     	{
-    		arenalist.add(Text.builder("No arena created!").build());
+    		arenalist.add("No arena created!");
     	}
     	else
     	{
     		for (Map.Entry<String,Arena> entry : arenas.entrySet()) 
-    		{
-    			arenalist.add(Text.builder("")   
-										.append(Text.builder(" [")
-												.style(TextStyles.BOLD)
-												.color(TextColors.DARK_GRAY)
-												.build())
-    									.append(Text.builder(" ✘")
-												.color(TextColors.RED)
-												.style(TextStyles.BOLD)
-												.onHover(TextActions.showText(Text.builder("Click to delete"+entry.getKey())
-														.style(TextStyles.RESET)
-														.color(TextColors.RED)
-														.build()))
-												.onClick(TextActions.runCommand("/k del "+entry.getKey()))
-												.build())
-										.append(Text.builder("]   ")
-												.style(TextStyles.BOLD)
-												.color(TextColors.DARK_GRAY)
-												.build())
-										.append(Text.builder(entry.getKey())
-												.style(TextStyles.RESET)
-												.color(TextColors.WHITE)
-												.build())
-										.append(Text.builder("   <")
-												.style(TextStyles.BOLD)
-												.color(TextColors.DARK_GRAY)
-												.build())
-										.append(Text.builder(entry.getValue().getType())
-												.style(TextStyles.RESET)
-												.color(TextColors.GRAY)
-												.build())
-										.append(Text.builder(">")
-												.style(TextStyles.BOLD)
-												.color(TextColors.DARK_GRAY)
-												.build())
-										.append(Text.builder("  (")
-												.style(TextStyles.BOLD)
-												.color(TextColors.DARK_GRAY)
-												.append(Text.builder(""+entry.getValue().getPos1().getBlockX())
-														.style(TextStyles.RESET)
-														.color(TextColors.GOLD)
-														.build())
-												.append(Text.builder(",")
-														.style(TextStyles.BOLD)
-														.color(TextColors.DARK_GRAY)
-														.build())		
-												.append(Text.builder(""+entry.getValue().getPos1().getBlockY())
-														.style(TextStyles.RESET)
-														.color(TextColors.GOLD)
-														.build())
-												.append(Text.builder(",")
-														.style(TextStyles.BOLD)
-														.color(TextColors.DARK_GRAY)
-														.build())
-												.append(Text.builder(""+entry.getValue().getPos1().getBlockZ())
-														.style(TextStyles.RESET)
-														.color(TextColors.GOLD)
-														.build())
-												.append(Text.builder(")")
-														.style(TextStyles.BOLD)
-														.color(TextColors.DARK_GRAY)
-														.build())
-												.onHover(TextActions.showText(Text.builder("Click to be teleported to pos1 of "+entry.getKey())
-														.style(TextStyles.RESET)
-														.color(TextColors.GOLD)
-														.build()))
-												.onClick(TextActions.runCommand("/k tp pos1"+entry.getKey()))
-										.build())
-										.append(Text.builder("  (")
-												.style(TextStyles.BOLD)
-												.color(TextColors.DARK_GRAY)
-												.append(Text.builder(""+entry.getValue().getPos2().getBlockX())
-														.style(TextStyles.RESET)
-														.color(TextColors.GOLD)
-														.build())
-												.append(Text.builder(",")
-														.style(TextStyles.BOLD)
-														.color(TextColors.DARK_GRAY)
-														.build())		
-												.append(Text.builder(""+entry.getValue().getPos2().getBlockY())
-														.style(TextStyles.RESET)
-														.color(TextColors.GOLD)
-														.build())
-												.append(Text.builder(",")
-														.style(TextStyles.BOLD)
-														.color(TextColors.DARK_GRAY)
-														.build())
-												.append(Text.builder(""+entry.getValue().getPos2().getBlockZ())
-														.style(TextStyles.RESET)
-														.color(TextColors.GOLD)
-														.build())
-												.append(Text.builder(")")
-														.style(TextStyles.BOLD)
-														.color(TextColors.DARK_GRAY)
-														.build())
-												.onHover(TextActions.showText(Text.builder("Click to be teleported to pos2 of "+entry.getKey())
-														.style(TextStyles.RESET)
-														.color(TextColors.GOLD)
-														.build()))
-												.onClick(TextActions.runCommand("/k tp pos2"+entry.getKey()))
-										.build())
-								.build());
+    		{   	
+    			arenalist.add(entry.getKey());
     		}
     	}
     	return arenalist;
     }
+
 }
 

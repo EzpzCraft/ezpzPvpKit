@@ -29,8 +29,8 @@ public class ArenaSetPos1 implements CommandExecutor
         	if(EzpzPvpKit.getInstance().getUtils().getName() != null && EzpzPvpKit.getInstance().getUtils().getName().equals(name))
         	{
         		try {
-					EzpzPvpKit.getInstance().getUtils().setPos1(player.getLocation());
-					EzpzPvpKit.getInstance().getUtils().setRotation1(player.getRotation());
+					EzpzPvpKit.getInstance().getUtils().setArenaPos1(player.getLocation());
+					EzpzPvpKit.getInstance().getUtils().setArenaRotation1(player.getRotation());
 					EzpzPvpKit.getInstance().getUtils().sendKitMessage(player, Text.builder("Set pos2")
 									    					.color(TextColors.GOLD)
 									    					.style(TextStyles.RESET)

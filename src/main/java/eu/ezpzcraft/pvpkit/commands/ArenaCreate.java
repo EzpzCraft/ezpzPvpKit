@@ -25,8 +25,8 @@ public class ArenaCreate implements CommandExecutor
     {
     	
 
-    	EzpzPvpKit.getInstance().getUtils().setName(args.<String>getOne("name").get());
-    	EzpzPvpKit.getInstance().getUtils().setType(args.<String>getOne("type").get());
+    	EzpzPvpKit.getInstance().getUtils().setArenaName(args.<String>getOne("name").get());
+    	EzpzPvpKit.getInstance().getUtils().setArenaType(args.<String>getOne("type").get());
         if(src instanceof Player && !EzpzPvpKit.getInstance().isArenaExisting(EzpzPvpKit.getInstance().getUtils().getName())) 
         {            
         	Player player = (Player) src;
