@@ -6,17 +6,28 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
+import org.spongepowered.api.data.type.BannerPatternShapes;
 import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.data.value.BaseValue;
+import org.spongepowered.api.data.value.mutable.PatternListValue;
+import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.Human;
+import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.projectile.Arrow;
+import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.entity.CollideEntityEvent;
+import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.entity.item.TargetItemEvent;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.item.inventory.UseItemStackEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
+import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -56,13 +67,8 @@ public class EventHandler
         Player player = OptPlayer.get();
 
         // Spawn TP
-
         try
         {
-            db.createDB();
-            db.addQueue("1");
-            db.addQueue("2");
-
             db.updateJoinPlayer(player);
         }
         catch (SQLException e)
@@ -192,6 +198,7 @@ public class EventHandler
                     ranked.offer(Keys.DISPLAY_NAME, title);
                     ranked.offer(Keys.ITEM_LORE, lore);
                     //ranked.offer(Keys.ATTACK_DAMAGE, 8.5); // TODO remove
+                    //ranked.offer(Keys)
 
                     // Unranked
                     ItemStack unranked = ItemStack.builder().itemType(ItemTypes.IRON_SWORD).quantity(1).build();
@@ -227,12 +234,15 @@ public class EventHandler
                     lang.offer(Keys.ITEM_LORE, lore);
 
                     lang.offer(Keys.DYE_COLOR, DyeColors.RED);
-
-                    DataContainer data = lang.toContainer();
-
-                    lang.setRawData(data);
+                    lang.offer(Keys.BANNER_BASE_COLOR, DyeColors.GREEN);
+                    
+                    //PatternListValue patterns = lang.get(Keys.BANNER_PATTERNS).get();
+                    //patterns.add(BannerPatternShapes.CREEPER, DyeColors.BLUE);                    
+                    
+                    //lang.offer(Keys.BANNER_PATTERNS, patterns);                    
+                    //DataContainer data = lang.toContainer();
+                    //lang.setRawData(data);
                     //data.set();
-
                     //Banner banner = (Banner) lang.getItem();
                     //banner.patternsList().add(BannerPatternShapes.DIAGONAL_LEFT, DyeColors.BLUE);
                     //lang.offer(Keys.BANNER_BASE_COLOR, DyeColors.WHITE);
@@ -255,7 +265,12 @@ public class EventHandler
                     hotbar.offer(stats);
                     hotbar.offer(lang);
                     hotbar.offer(spectator);
-
+                    
+                    //final DisplayNameData itemName = Sponge.getGame().getDataManager().getManipulatorBuilder(DisplayNameData.class).get().create();
+                    //itemName.set(Keys.DISPLAY_NAME, Text.of(TextColors.DARK_GREEN, "lol"));
+                    //ItemStack.Builder i = ItemStack.builder();
+                    //hotbar.offer( i.itemType(ItemTypes.STONE_AXE).itemData(itemName).quantity(1).build() );
+                    
                     Text line1 = Text.builder("---------------").color(TextColors.DARK_GRAY).style(TextStyles.STRIKETHROUGH)
                                  .append(Text.builder(" E").color(TextColors.DARK_RED).style(TextStyles.RESET).style(TextStyles.BOLD)
                                  .append(Text.builder("zpz").color(TextColors.RED)
@@ -268,6 +283,8 @@ public class EventHandler
 
                     // Motd
                     player.get().sendMessage(line2);
+                    
+                    // Broadcaster
                 }
             }
         }
@@ -286,29 +303,40 @@ public class EventHandler
         }
 
     }
-    @Listener
-    public void handleClick3(UseItemStackEvent event)
-    {
-        Cause cause = event.getCause();
-        Optional<Player> player = cause.first(Player.class);
-
-        if(!player.isPresent())
-            return;
-
-        EzpzPvpKit.getLogger().info("use");
-
-        //CustomInventory inventory = CustomInventory.builder().name(new FixedTranslation("test")).size(5).build(); // TODO nom
-        Player p = player.get();
-
-        //p.openInventory(inventory);
-
-    }
 
     @Listener
     public void handleClick4(ClickInventoryEvent.Primary event)
     {
         EzpzPvpKit.getLogger().info("Primary"); // Left click inside inventary
     }
+    
+    // Death screen remover ?
+    @Listener
+    public void handleDeath(DestructEntityEvent.Death event)
+    {        
+        Living living = event.getTargetEntity();
+        
+        if( !(living instanceof Player) )       
+        	return;
+
+        Player player = (Player) living;
+        player.offer(Keys.HEALTH, player.get(Keys.MAX_HEALTH).get());        
+        player.setLocationSafely( player.getWorld().getSpawnLocation() );
+    }    
 
     // TODO supprimer toute interaction avec les blocks dans le spawn
+    
+    // Death screen remover
+    @Listener
+    public void test5(CollideEntityEvent event)
+    {        
+        List<Entity> entities = event.getEntities();
+        
+        for(Entity entity: entities)
+        {
+        	if( entity instanceof Arrow) {
+        	EzpzPvpKit.getLogger().info( "COLLISION" );
+        	EzpzPvpKit.getLogger().info( entity.getType().getName() ); }
+        }
+    }  
 }
