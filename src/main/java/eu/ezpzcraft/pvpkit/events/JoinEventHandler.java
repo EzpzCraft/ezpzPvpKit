@@ -37,7 +37,7 @@ public class JoinEventHandler
         
         // Load player informations
         EzpzPvpKit.getInstance().getDatabase().loadPlayer(player);
-        PvPPlayer pvpPlayer = EzpzPvpKit.getInstance().getPlayer(player.getUniqueId());
+        PvPPlayer pvpPlayer = EzpzPvpKit.getInstance().getPlayer(player.getIdentifier());
         
         // TP to spawn
         player.setLocation( player.getWorld().getSpawnLocation() );

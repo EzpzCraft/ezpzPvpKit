@@ -170,7 +170,7 @@ public class Database
     	{
 	        DataSource datasource = getDataSource("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password);
 	
-	        String executeString = "SELECT * FROM Players WHERE UUID=" + player.getUniqueId();
+	        String executeString = "SELECT * FROM Players WHERE UUID='" + player.getIdentifier() +"'";
 	
 	        ResultSet result = execute(executeString, datasource);
 	    	

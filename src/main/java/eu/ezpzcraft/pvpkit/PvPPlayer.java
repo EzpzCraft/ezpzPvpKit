@@ -33,22 +33,22 @@ public class PvPPlayer
     /* Methods */  
     public void setState()
     {
-        state = new PlayerState(this.player);
+        this.state = new PlayerState(this.player);
     }
 
     public PlayerState getState()
     {
-        return state;
+        return this.state;
     }
 
     public Player getPlayer()
     {
-        return player;
+        return this.player;
     }
 
 	public int getRemainingRanked() 
 	{
-		return remainingRanked;
+		return this.remainingRanked;
 	}
 
 	public void setRemainingRanked(int remainingRanked) 
