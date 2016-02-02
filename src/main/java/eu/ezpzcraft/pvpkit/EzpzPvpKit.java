@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import com.google.inject.Inject;
 
+import eu.ezpzcraft.pvpkit.commands.CommandHandler;
 import eu.ezpzcraft.pvpkit.events.JoinEventHandler;
 import eu.ezpzcraft.pvpkit.events.UseItemHandler;
 

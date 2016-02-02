@@ -10,6 +10,7 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.source.CommandBlockSource;
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
@@ -18,6 +19,7 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
 import eu.ezpzcraft.pvpkit.EzpzPvpKit;
+import eu.ezpzcraft.pvpkit.Utils;
 
 public class Ping  implements CommandExecutor
 {
@@ -28,8 +30,9 @@ public class Ping  implements CommandExecutor
         {   
         	Player dst = args.<Player>getOne("player").get();        	
         	Player player = (Player) src;
-
         	
+        	Utils.sendPingMessage(player,50);
+        	//Utils.sendPingMessage(player, dst.getConnection().getPing());
         }
         else if(src instanceof ConsoleSource) 
         {

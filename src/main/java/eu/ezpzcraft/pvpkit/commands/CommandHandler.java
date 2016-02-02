@@ -1,4 +1,4 @@
-package eu.ezpzcraft.pvpkit;
+package eu.ezpzcraft.pvpkit.commands;
 
 import java.util.ArrayList;
 
@@ -15,18 +15,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import eu.ezpzcraft.pvpkit.commands.ArenaConfirmDelete;
-import eu.ezpzcraft.pvpkit.commands.ArenaCreate;
-import eu.ezpzcraft.pvpkit.commands.ArenaDelete;
-import eu.ezpzcraft.pvpkit.commands.ArenaList;
-import eu.ezpzcraft.pvpkit.commands.ArenaSetPos1;
-import eu.ezpzcraft.pvpkit.commands.ArenaSetPos2;
-import eu.ezpzcraft.pvpkit.commands.Ping;
-import eu.ezpzcraft.pvpkit.commands.QueueConfirmDelete;
-import eu.ezpzcraft.pvpkit.commands.QueueCreate;
-import eu.ezpzcraft.pvpkit.commands.QueueDelete;
-import eu.ezpzcraft.pvpkit.commands.QueueJoin;
-import eu.ezpzcraft.pvpkit.commands.QueueList;
+import eu.ezpzcraft.pvpkit.EzpzPvpKit;
 
 
 public class CommandHandler 

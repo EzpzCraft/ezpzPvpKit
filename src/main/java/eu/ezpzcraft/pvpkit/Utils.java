@@ -25,7 +25,7 @@ public class Utils {
     private String type = null;	
     
     /* Send Message with [EzpzKit] before */
-    public void sendKitMessage(Player player, Text text)
+    public static void sendKitMessage(Player player, Text text)
     {
     	player.sendMessage(Text.builder("[").color(TextColors.DARK_GRAY).style(TextStyles.BOLD)
 	            				.append(Text.builder("EzpzKit").color(TextColors.DARK_RED).style(TextStyles.BOLD)
@@ -36,7 +36,7 @@ public class Utils {
     }
     
     /* Send Message arena already exist*/
-    public void sendArenaExist(Player player)
+    public static void sendArenaExist(Player player)
     {
     	sendKitMessage(player,Text.builder("This arena name is already used.").color(TextColors.WHITE).style(TextStyles.RESET)
 				.append(Text.builder("\n               Choose an other name ?").color(TextColors.GOLD).style(TextStyles.BOLD)
@@ -49,7 +49,7 @@ public class Utils {
     }
 
     /* Send Message queue already exist */
-    public void sendQueueExist(Player player)
+    public static void sendQueueExist(Player player)
     {
     	sendKitMessage(player,Text.builder("This queue name is already used.").color(TextColors.WHITE).style(TextStyles.RESET)
 				.append(Text.builder("\n               Choose an other name ?").color(TextColors.GOLD).style(TextStyles.BOLD)
@@ -61,14 +61,19 @@ public class Utils {
 				.build()).build());
     }
     
+    public static void sendPingMessage(Player player, int ping)
+    {
+    	sendKitMessage(player, Text.of(TextColors.GRAY, "Ping: " + ping + "ms.") );
+    }
+    
     /* CommandBlock */
-    public void sendMessageCB(CommandSource src)
+    public static void sendMessageCB(CommandSource src)
     {
     	src.sendMessage(Text.of("[EzpzKit] Cannot execute this command from a commandblock."));
     }
     
     /* Console */
-    public void sendMessageC(CommandSource src)
+    public static void sendMessageC(CommandSource src)
     {
     	src.sendMessage(Text.of("[EzpzKit] Cannot execute this command from console."));
     }
