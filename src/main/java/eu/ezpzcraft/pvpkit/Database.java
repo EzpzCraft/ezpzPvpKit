@@ -170,7 +170,7 @@ public class Database
     }
 
     /*
-     * Get player info TODO
+     * Get player info 
      */
     public void loadPlayer(Player player) 
     {
@@ -196,6 +196,7 @@ public class Database
 	        	vote[3] = result.getLong("last_vote_4");
 	        	
 	        	EzpzPvpKit.getInstance().addPlayer( new PvPPlayer(player,score,remainingRanked,rank,vote) );
+// TODO add teal
 	        }
     	}
     	catch(SQLException e)

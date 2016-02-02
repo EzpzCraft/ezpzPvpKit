@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.PotionEffectData;
 import org.spongepowered.api.data.type.DyeColors;
@@ -19,8 +20,13 @@ import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
+import org.spongepowered.api.scoreboard.Scoreboard;
+import org.spongepowered.api.scoreboard.critieria.Criteria;
+import org.spongepowered.api.scoreboard.displayslot.DisplaySlots;
+import org.spongepowered.api.scoreboard.objective.Objective;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
+import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
@@ -30,6 +36,21 @@ import eu.ezpzcraft.pvpkit.PvPPlayer;
 
 public class JoinEventHandler 
 {	
+	Scoreboard scoreboard = null;
+	Objective objective = null;
+	
+	public JoinEventHandler()
+	{
+		this.scoreboard = Scoreboard.builder().build();
+		this.objective = Objective.builder().name("Score")
+						 .displayName( Text.of("score") )
+						 .criterion(Criteria.DUMMY)
+						 .build();
+		
+		scoreboard.addObjective(objective);
+		scoreboard.updateDisplaySlot(objective, DisplaySlots.BELOW_NAME);
+	}
+	
     @Listener
     public void handleConnection(ClientConnectionEvent.Join event)
     {
@@ -60,13 +81,16 @@ public class JoinEventHandler
         
         // Send MOTD
         sendMOTD(pvpPlayer);
+        
+        // Set scoreboard
+        setScoreboard(pvpPlayer);
     }
     
-    private void sendMOTD(PvPPlayer pvpPlayer)
+    private static void sendMOTD(PvPPlayer pvpPlayer)
     {
     	String welcome = pvpPlayer.getPlayer().get(Keys.FIRST_DATE_PLAYED)
     			                  .equals( pvpPlayer.getPlayer().get(Keys.LAST_DATE_PLAYED) ) 
-    			                  ? "     Welcome" : "     Welcome back";
+    			                  ? "     Welcome " : "     Welcome back ";
         Text motd;        
 		try 
 		{
@@ -92,7 +116,7 @@ public class JoinEventHandler
 		} 
     }
     
-    public void giveItem(PvPPlayer pvpPlayer)
+    public static void giveItem(PvPPlayer pvpPlayer)
     {
         Hotbar hotbar = pvpPlayer.getPlayer().getInventory().query(Hotbar.class);
 
@@ -148,5 +172,22 @@ public class JoinEventHandler
         hotbar.offer(stats);
         hotbar.offer(lang);
         hotbar.offer(spectator);
+    }
+    
+    public void setScoreboard(PvPPlayer pvpPlayer)
+    {
+		objective.getOrCreateScore(pvpPlayer.getPlayer().getTeamRepresentation()).setScore( pvpPlayer.getScore() );
+		pvpPlayer.getPlayer().setScoreboard(scoreboard);
+    }
+    
+    // The scoreboard of the given player will no more be visible
+    public static void removeScoreboard(PvPPlayer pvpPlayer)
+    {
+    	pvpPlayer.getPlayer().setScoreboard( Scoreboard.builder().build() );
+    }
+    
+    public static void setBossBar(PvPPlayer pvpPlayer)
+    {
+    	// TODO
     }
 }

@@ -15,7 +15,7 @@ public class Team
     private String name = null;
     private TeamStats stats = null;
     private LinkedHashSet<String> players = null;
-    private int maxSize;
+    private int maxSize = 5;
     private Location<World> location;
 	private int countdown = 3;
 
@@ -41,7 +41,7 @@ public class Team
 
     public boolean containsPlayer(Player player)
     {
-        return players.contains(player.getUniqueId());
+        return players.contains(player.getIdentifier());
     }
 
     public boolean addPlayer(Player player)

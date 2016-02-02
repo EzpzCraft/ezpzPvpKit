@@ -21,6 +21,7 @@ public class PvPPlayer
     private double enderpearlCD = 0.0;
     private PlayerState state = null;
     private DuelQueue queue = null;
+    private Boolean inMatch = false;
     		
     /* Constructor */
     public PvPPlayer(Player player, float score, int remainingRanked, String rank, long[] vote)
@@ -65,5 +66,40 @@ public class PvPPlayer
 	public String getLang()
 	{
 		return this.lang;
+	}
+
+	public Boolean getInMatch() 
+	{
+		return this.inMatch;
+	}
+
+	public void setInMatch(Boolean inMatch) 
+	{
+		this.inMatch = inMatch;
+	}
+	
+	public String getLeague()
+	{
+		if(score <= 1000)
+			return "Coal";
+		else if(score <= 1200)
+			return "Iron";
+		else if(score <= 1400)
+			return "Gold";
+		else if(score <= 1600)
+			return "Emerald";
+		else if(score <= 1800)
+			return "Diamond";
+		else if(score <= 2000)
+			return "Obsidian";
+		else if(score <= 2200)
+			return "Bedrock";
+		else
+			return "error";
+	}
+	
+	public int getScore()
+	{
+		return (int) this.score;
 	}
 }

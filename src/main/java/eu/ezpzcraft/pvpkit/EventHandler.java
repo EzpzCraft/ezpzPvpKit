@@ -43,6 +43,8 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
+import eu.ezpzcraft.pvpkit.events.JoinEventHandler;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -148,10 +150,7 @@ public class EventHandler
 
                 if(player.isPresent())
                 {
-                	if( EzpzPvpKit.getInstance().getGame().getServer().getWorld("New World").isPresent() )
-                		EzpzPvpKit.getLogger().info("WORLD NOT FOUND");
-                	else
-                		EzpzPvpKit.getLogger().info("WORLD FOUND");
+                	JoinEventHandler.removeScoreboard( EzpzPvpKit.getInstance().getPlayer(player.get().getIdentifier()));
                 }
             }
             

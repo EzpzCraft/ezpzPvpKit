@@ -21,6 +21,7 @@ import eu.ezpzcraft.pvpkit.commands.ArenaDelete;
 import eu.ezpzcraft.pvpkit.commands.ArenaList;
 import eu.ezpzcraft.pvpkit.commands.ArenaSetPos1;
 import eu.ezpzcraft.pvpkit.commands.ArenaSetPos2;
+import eu.ezpzcraft.pvpkit.commands.Ping;
 import eu.ezpzcraft.pvpkit.commands.QueueConfirmDelete;
 import eu.ezpzcraft.pvpkit.commands.QueueCreate;
 import eu.ezpzcraft.pvpkit.commands.QueueDelete;
@@ -151,6 +152,15 @@ public class CommandHandler
 				.permission("ezpzkit.command.create")
 				.build();
 		
+		/* Ping */
+		CommandSpec ping = CommandSpec.builder()
+				.description(Text.of("Ping <Player>"))
+				.executor(new Ping())
+				.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("player"))))
+				.permission("ezpzkit.command.ping")
+				.build();
+		
+		
 		/*  kit => kit help */
 		CommandSpec kit = CommandSpec.builder()
 				.description(Text.of("Display help"))
@@ -187,6 +197,7 @@ public class CommandHandler
 				.child(queuedelete, "queuedelete", "qdel", "qd")
 				.child(queueconfirmdelete, "queuecdelete", "qcdel", "qcd")
 				.child(queuelist, "queuelist", "qlist", "ql")
+				.child(ping, "ping")
 				.permission("ezpzkit.command")
 				.build();
 		

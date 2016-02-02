@@ -18,8 +18,8 @@ public class UseItemHandler
 	private LinkedHashMap<String, Integer> enderpearlCD = new LinkedHashMap<String, Integer>();
 	protected static final int defaultCD = 15000; // 15sec
 	
-	// Enderpearl CD
-	// Enderpearl prevent on 3,2,1,go
+	// Enderpearl CD => ChatTypes....
+	// Enderpearl prevent on 3,2,1,go 
 	// Arrow prevent on 3,2,1,go
 	// Arrow cannot be picked up if target is missed
 	

@@ -59,6 +59,7 @@ public class EzpzPvpKit
 	///
 	private StartMatchSetup startMatchSetup = new StartMatchSetup();	
 	private UseItemHandler useItemHandler = new UseItemHandler();
+	private ScoreboardThread scorebardThread = new ScoreboardThread();
 	
     public StartMatchSetup getStartMatchSetup() 
     {
@@ -102,6 +103,9 @@ public class EzpzPvpKit
         Task threadMatchStart = Sponge.getScheduler().createTaskBuilder().execute(startMatchSetup)
         	.interval(1, TimeUnit.SECONDS)
             .name("StartMatchSetup").submit(this);
+        Task threadScoreboard = Sponge.getScheduler().createTaskBuilder().execute(scorebardThread)
+            .interval(1, TimeUnit.SECONDS)
+            .name("Scoreboard").submit(this);
         
         getLogger().info(" Started");
     }    
@@ -133,7 +137,7 @@ public class EzpzPvpKit
         }
         
         double elapsedTime = (System.nanoTime() - startTime) / 1000000000.0;
-        logger.info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
+        logger.info("plugin successfully loaded in " + elapsedTime + " seconds");
     }
 
     /* Getters and Setters */
