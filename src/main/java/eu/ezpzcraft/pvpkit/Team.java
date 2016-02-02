@@ -14,19 +14,16 @@ public class Team
 {
     private String name = null;
     private TeamStats stats = null;
-    private LinkedHashSet<String> players = null;
-    private int maxSize;
+    private LinkedHashSet<PvPPlayer> players = null;
+    private int maxSize =5;
     private Location<World> location;
 	private int countdown = 3;
 
-    public Team(String name) throws Exception
+    public Team(String name)
     {
-        if(name==null)
-            throw new Exception("A team cannot have a null name.");
-
         this.name = name;
         // TODO: fetch stats from DB
-        this.players = new LinkedHashSet<String>();
+        this.players = new LinkedHashSet<PvPPlayer>();
     }
 
     public int getSize()
@@ -41,14 +38,14 @@ public class Team
 
     public boolean containsPlayer(Player player)
     {
-        return players.contains(player.getUniqueId());
+        return players.contains(player.getIdentifier());
     }
 
     public boolean addPlayer(Player player)
     {
         if( getSize()<maxSize )
         {
-            players.add(player.getIdentifier());
+            players.add(EzpzPvpKit.getInstance().getPlayer(player.getIdentifier()));
             return true;
         }
 
@@ -61,7 +58,7 @@ public class Team
             players.remove( player.getIdentifier() );
     }
 
-    public LinkedHashSet<String> getPlayers()
+    public LinkedHashSet<PvPPlayer> getPlayers()
     {
         return players;
     }
