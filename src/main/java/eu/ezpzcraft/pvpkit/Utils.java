@@ -38,7 +38,7 @@ public class Utils {
     /* Send Message arena already exist*/
     public void sendArenaExist(Player player)
     {
-    	sendKitMessage(player,Text.builder(" This arena name is already used.").color(TextColors.WHITE).style(TextStyles.RESET)
+    	sendKitMessage(player,Text.builder("This arena name is already used.").color(TextColors.WHITE).style(TextStyles.RESET)
 				.append(Text.builder("\n               Choose an other name ?").color(TextColors.GOLD).style(TextStyles.BOLD)
     					.onHover(TextActions.showText(Text.builder("Change it by clicking here")
 								.color(TextColors.GOLD)
@@ -51,7 +51,7 @@ public class Utils {
     /* Send Message queue already exist */
     public void sendQueueExist(Player player)
     {
-    	sendKitMessage(player,Text.builder(" This queue name is already used.").color(TextColors.WHITE).style(TextStyles.RESET)
+    	sendKitMessage(player,Text.builder("This queue name is already used.").color(TextColors.WHITE).style(TextStyles.RESET)
 				.append(Text.builder("\n               Choose an other name ?").color(TextColors.GOLD).style(TextStyles.BOLD)
     					.onHover(TextActions.showText(Text.builder("Change it by clicking here")
 								.color(TextColors.GOLD)

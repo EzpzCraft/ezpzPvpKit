@@ -21,7 +21,9 @@ import eu.ezpzcraft.pvpkit.commands.ArenaDelete;
 import eu.ezpzcraft.pvpkit.commands.ArenaList;
 import eu.ezpzcraft.pvpkit.commands.ArenaSetPos1;
 import eu.ezpzcraft.pvpkit.commands.ArenaSetPos2;
+import eu.ezpzcraft.pvpkit.commands.QueueConfirmDelete;
 import eu.ezpzcraft.pvpkit.commands.QueueCreate;
+import eu.ezpzcraft.pvpkit.commands.QueueDelete;
 
 
 public class CommandHandler 
@@ -106,14 +108,14 @@ public class CommandHandler
 				.permission("ezpzkit.command.create")
 				.build();
 		
-		/* Arena Confirm Delete */
+		/* ArenaList */
 		CommandSpec arenalist = CommandSpec.builder()
 				.description(Text.of("Create an arena <Name> <Type>"))
 				.executor(new ArenaList())
 				.permission("ezpzkit.command.create")
 				.build();
 		
-		/* Create */
+		/* Create Queue */
 		CommandSpec queuecreate = CommandSpec.builder()
 				.description(Text.of("Create an arena <Name> <Type>"))
 				.executor(new QueueCreate())
@@ -121,6 +123,22 @@ public class CommandHandler
 		                GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))),
 		                GenericArguments.onlyOne(GenericArguments.string(Text.of("type"))),
 		                GenericArguments.optionalWeak(GenericArguments.bool(Text.of("ranked"))))
+				.permission("ezpzkit.command.create")
+				.build();
+		
+		/*Queue Delete */
+		CommandSpec queuedelete = CommandSpec.builder()
+				.description(Text.of("Create an arena <Name> <Type>"))
+				.executor(new QueueDelete())
+		        .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
+				.permission("ezpzkit.command.create")
+				.build();
+		
+		/* Queue Confirm Delete */
+		CommandSpec queueconfirmdelete = CommandSpec.builder()
+				.description(Text.of("Create an arena <Name> <Type>"))
+				.executor(new QueueConfirmDelete())
+		        .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
 				.permission("ezpzkit.command.create")
 				.build();
 		
@@ -154,9 +172,11 @@ public class CommandHandler
 				.child(arenasetpos1, "asetpos1", "a1")
 				.child(arenasetpos2, "asetpos2", "a2")
 				.child(arenadelete, "adelete", "adel", "ad")
-				.child(arenaconfirmdelete, "cdelete", "confirmdelete", "cdel", "cd")
+				.child(arenaconfirmdelete, "arenacdelete", "acdel", "acd")
 				.child(arenalist, "arenalist", "alist", "al")
 				.child(queuecreate, "qcreate", "qc")
+				.child(queuedelete, "queuedelete", "qdel", "qd")
+				.child(queueconfirmdelete, "queuecdelete", "qcdel", "qcd")
 				.permission("ezpzkit.command")
 				.build();
 		

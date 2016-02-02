@@ -30,6 +30,7 @@ public class ArenaList implements CommandExecutor
     {
         if(src instanceof Player) 
         {     
+        	Player player = (Player) src;
         	LinkedList<Text> arenalist = new LinkedList<Text>();
     		for (String it : EzpzPvpKit.getInstance().getArenaList()) 
     		{   	
@@ -74,7 +75,6 @@ public class ArenaList implements CommandExecutor
     		}
         	
         	PaginationService paginationService = Sponge.getServiceManager().provide(PaginationService.class).get();
-
 	    	paginationService.builder()
 	        .title(Text.builder("")
 	        				.append(Text.builder("------------")
@@ -87,7 +87,7 @@ public class ArenaList implements CommandExecutor
 	        						.style(TextStyles.RESET)
 	        						.style(TextStyles.BOLD)
 	        						.build())
-	        				.append(Text.builder("------------/k")
+	        				.append(Text.builder("------------")
 	        						.color(TextColors.DARK_GRAY)
 	        						.style(TextStyles.STRIKETHROUGH)
 	        						.style(TextStyles.BOLD)

@@ -41,7 +41,7 @@ public class ArenaDelete implements CommandExecutor
 							        																		.style(TextStyles.RESET)
 							    	        																.color(TextColors.DARK_GREEN)
 							    	        																.build()))
-	        																.onClick(TextActions.runCommand("/kit confirmdelete "+name))
+	        																.onClick(TextActions.runCommand("/kit acdel "+name))
 	        																.build())
             													.append(Text.builder("  ┃")
             																.style(TextStyles.BOLD)

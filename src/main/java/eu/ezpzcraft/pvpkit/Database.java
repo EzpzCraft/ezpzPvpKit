@@ -310,7 +310,7 @@ public class Database
 
         String[] params = new String[5];
         params[0] = queue.getName();
-        params[1] = queue.isRanked() + "";
+        params[1] = queue.isRanked()==true ? 1 + "": 0 + "";
         params[2] = queue.getType();
         params[3] = queue.isRanked()==true ? 1 + "": 0 + "";
         params[4] = queue.getType();
