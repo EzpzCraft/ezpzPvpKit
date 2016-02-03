@@ -126,6 +126,7 @@ public class EzpzPvpKit
         for(String type: types)
         {
         	this.freeArenas.put(type, new LinkedList<String>());
+        	this.usedArenas.put(type, new LinkedList<String>());
         }
         
         double elapsedTime = (System.nanoTime() - startTime) / 1000000000.0;
@@ -184,6 +185,12 @@ public class EzpzPvpKit
     public void addArena(Arena arena)
     {
     	arenas.put(arena.getName(), arena);
+    	if(!freeArenas.containsKey(arena.getType()))
+    	{
+    		freeArenas.put(arena.getType(), new LinkedList<String>());
+    		usedArenas.put(arena.getType(), new LinkedList<String>());
+    	}
+    	freeArenas.get(arena.getType()).add(arena.getName());
     }
     
     public void removeArena(String name)
@@ -248,7 +255,6 @@ public class EzpzPvpKit
 		
 		if( list.size()<=0 )
 				return null;
-		
 		Arena arena = arenas.get( list.poll() );
 		usedArenas.get(arena.getType()).add(arena.getName());
 		

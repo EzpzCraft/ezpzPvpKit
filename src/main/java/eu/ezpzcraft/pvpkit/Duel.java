@@ -5,6 +5,12 @@ import java.util.UUID;
 
 import org.spongepowered.api.entity.living.player.Player;
 
+
+/**
+ * <b> Duel, class representing a duel. </b>
+ * <p>A duel is a couple of two team with an associated arena
+ *
+ */
 public class Duel
 {
     private Arena arena = null;
@@ -20,11 +26,20 @@ public class Duel
         this.arena = arena;
     }
 
+    /**
+     * Start the duel:
+     * <ul>
+     * <li> -- Temporary -- </li>
+     * <li> Teleport player </li>
+     * <li> Start Scheduler </li>
+     * </ul>
+     *
+     */
     public void start()
     {
         // For all players from both team
         for( String player : team1.getPlayers() )
-        {
+        {       	
         	tmp = EzpzPvpKit.getInstance().getPlayer(player).getPlayer();
         	
         	// TP
@@ -32,7 +47,7 @@ public class Duel
         	
         	// DO not forget to update player state
         	// Current duel link
-        	
+        	//
             // Save current state
             //entry.getValue().setState();
 
@@ -62,6 +77,14 @@ public class Duel
         EzpzPvpKit.getInstance().getStartMatchSetup().addTeamStart(team2);
     }
 
+    /**
+     * End the duel:
+     * <ul>
+     * <li> </li>
+     * <li> </li> 
+     * </ul>
+     *
+     */
     public void end()
     {
         // Save score

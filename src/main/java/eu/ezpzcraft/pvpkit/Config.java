@@ -1,5 +1,10 @@
 package eu.ezpzcraft.pvpkit;
 
+
+/**
+ * <b> Config, class containing all resources available in the config file </b>
+ *
+ */
 public abstract class Config
 {
     public static final String DEFAULT_RANK = "player";

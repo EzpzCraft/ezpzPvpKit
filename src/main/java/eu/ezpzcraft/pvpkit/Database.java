@@ -14,6 +14,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+
+/**
+ * <b> TODO #STEF </b>
+ *
+ */
+
 public class Database
 {
     private SqlService sql = null;

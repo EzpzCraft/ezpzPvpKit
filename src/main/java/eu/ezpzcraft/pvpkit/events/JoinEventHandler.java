@@ -70,6 +70,7 @@ public class JoinEventHandler
         EzpzPvpKit.getInstance().getDatabase().loadPlayer(player);
         PvPPlayer pvpPlayer = EzpzPvpKit.getInstance().getPlayer(player.getIdentifier());
         pvpPlayer.setTeam( new Team(pvpPlayer.getPlayer().getName()) ); // Set cote, transfer score
+        pvpPlayer.getTeam().addPlayer(pvpPlayer.getPlayer());
         
         // TP to spawn
         player.setLocation( player.getWorld().getSpawnLocation() );

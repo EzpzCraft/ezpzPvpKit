@@ -29,7 +29,7 @@ public class ArenaCreate implements CommandExecutor
     	EzpzPvpKit.getInstance().getUtils().setArenaType(args.<String>getOne("type").get());
         if(src instanceof Player && !EzpzPvpKit.getInstance().isArenaExisting(EzpzPvpKit.getInstance().getUtils().getName())) 
         {            
-        	Player player = (Player) src;
+        	Player player = (Player) src;      	
         	EzpzPvpKit.getInstance().getUtils().sendKitMessage(player,Text.builder("Set pos1")
 	            					.color(TextColors.GOLD)
 	            					.style(TextStyles.RESET)

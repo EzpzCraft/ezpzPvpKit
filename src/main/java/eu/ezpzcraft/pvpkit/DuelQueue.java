@@ -4,15 +4,26 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
+/**
+ * <b> Duelqueue, class representing a duelqueue. </b>
+ * <p> A Duelqueue is a queue with a specific type and a specific size
+ * allowing teams with the same size to join it 
+ * and be added to the waitingTeams for this queue. 
+ *
+ */
+
 public class DuelQueue
 {
-    /* Variables */
     private String name = null;
+	// List of waiting teams
     private ArrayList<Team> waitingTeams = new ArrayList<Team>();
-    private LinkedList<Duel> duels = null;
-	private Boolean isRanked = false;
+    // List of duels in this queue
+    private LinkedList<Duel> duels = new LinkedList<Duel>();
+    // DEFAULT NOTRANKED
+	private Boolean isRanked = false; 
     private String type = null;
-    private int size;
+    // DEFAULT SIZE
+    private int size = 1; 
 
     /* Constructor */
     public DuelQueue(String name, Boolean isRanked, String type, int size)
@@ -23,26 +34,46 @@ public class DuelQueue
         this.size = size;
     }
 
-    /* Methods */
+    /**
+     * Add the specified team to the queue if sizes matched
+     * @param team team to be added to the queue
+     * @return <ul><li>True - team has been added to the queue</li>
+     * 			<li>False - team is null or the team size doesn't match the queue size</li></ul>
+     */
     public boolean join(Team team)
     {
+    	//Avoid null
         if(team==null)
             return false;
-
+    	//Check size
+        if(team.getSize() != this.size)
+            return false;       
         waitingTeams.add(team);
         return true;
     }
 
+    /**
+     * Remove the specified team of the queue
+     * @param team team to be removed 
+     * @return <ul><li>True - team has been removed</li>
+     * 			<li>False - team is null or not in the queue</li></ul>
+     */
     public boolean leave(Team team)
     {
         if(team==null)
             return false;
-
+        // Is team in the queue
+        if(waitingTeams.contains(team))
+        	return false;
         waitingTeams.remove( team.getName() );
-
         return true;
     }
 
+    /**
+     * Match two teams who joined this queue.
+     * 
+     * @return ArrayList<Team> List of two team
+     */
     public ArrayList<Team> match()
     {
     	if( waitingTeams.size()<2 )
