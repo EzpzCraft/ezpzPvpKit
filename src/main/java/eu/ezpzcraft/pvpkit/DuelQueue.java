@@ -90,14 +90,14 @@ public class DuelQueue
     	// Let's check the three (if any) last teams
     	int size = waitingTeams.size();
     	int max = waitingTeams.size()>=3 ? 3: size;
-    	double cote = EzpzPvpKit.getInstance().getTeam( result.get(0) ).getScore(this.type);
+    	double cote = EzpzPvpKit.getInstance().getTeam( result.get(0) ).getStats().getScore(this.type);
     	
     	double currentMin = Double.MAX_VALUE, tmpMin;
     	int currentCandidate = 0;
     	
     	for(int i=1; i<max; ++i)
     	{
-    		tmpMin = EzpzPvpKit.getInstance().getTeam(waitingTeams.get(i)).getScore(this.type);
+    		tmpMin = EzpzPvpKit.getInstance().getTeam(waitingTeams.get(i)).getStats().getScore(this.type);
     		if( Math.abs(cote - currentMin) > Math.abs(cote - tmpMin) )
     		{
     			currentMin = tmpMin;

@@ -32,7 +32,7 @@ public class QueueJoin implements CommandExecutor
         	Player player = (Player) src;
         	PvPPlayer pvpPlayer = EzpzPvpKit.getInstance().getPlayer(player.getIdentifier());
         	
-        	if( pvpPlayer.getTeam().getSize() != EzpzPvpKit.getInstance().getQueue(name).getSize() )
+        	if( EzpzPvpKit.getInstance().getTeam(pvpPlayer.getTeam()).getSize() != EzpzPvpKit.getInstance().getQueue(name).getSize() )
         	{
         		EzpzPvpKit.getInstance().getUtils().sendKitMessage(player, Text.of(TextColors.RED, "Party size doesn't match queue size"));
 
@@ -45,7 +45,10 @@ public class QueueJoin implements CommandExecutor
         	// Match XvX
         	else
         	{
-        		EzpzPvpKit.getInstance().getQueue(name).join(EzpzPvpKit.getInstance().getPlayer(player.getIdentifier()).getTeam());      		
+        		EzpzPvpKit.getInstance()
+        			.getQueue(name).
+        			.join(EzpzPvpKit.getInstance().getPlayer(EzpzPvpKit.getInstance().getPlayer(player.getIdentifier()))
+        					.getTeam());      		
 
         	}
         	

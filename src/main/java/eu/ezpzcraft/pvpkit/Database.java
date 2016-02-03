@@ -11,6 +11,7 @@ import com.flowpowered.math.vector.Vector3d;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.HashMap;
 
 
 /**
@@ -189,7 +190,6 @@ public class Database
 	        String rank;
 	        int remainingRanked;
 	        long[] vote = new long[4];
-	        float score = 0; // TODO
 	        while( result.next() ) // Unique since UUID is a key
 	        {
 	        	rank = result.getString("rank");
@@ -199,13 +199,20 @@ public class Database
 	        	vote[2] = result.getLong("last_vote_3");
 	        	vote[3] = result.getLong("last_vote_4");
 	        	
-	        	EzpzPvpKit.getInstance().addPlayer( new PvPPlayer(player,score,remainingRanked,rank,vote) );
+	        	EzpzPvpKit.getInstance().addPlayer( new PvPPlayer(player,remainingRanked,rank,vote) );
 	        }
     	}
     	catch(SQLException e)
     	{
     		EzpzPvpKit.getLogger().info("Error while fetching player information");
     	}
+    }
+    
+    public HashMap<String, Integer> getPlayerScore(Player player)
+    {
+    	// TODO    	
+    	player.firstPlayed();
+    	return new HashMap<String,Integer>();
     }
     
     public void saveArena(Arena arena) throws SQLException

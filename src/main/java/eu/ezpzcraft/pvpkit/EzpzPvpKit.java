@@ -8,13 +8,11 @@ import eu.ezpzcraft.pvpkit.events.EventHandler;
 import eu.ezpzcraft.pvpkit.events.JoinEventHandler;
 import eu.ezpzcraft.pvpkit.events.UseItemHandler;
 import eu.ezpzcraft.pvpkit.thread.QueueThread;
-import eu.ezpzcraft.pvpkit.thread.ScoreboardThread;
 import eu.ezpzcraft.pvpkit.thread.StartMatchThread;
 
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 
@@ -52,7 +50,6 @@ public class EzpzPvpKit
 
 	// Threads
 	private StartMatchThread startMatchThread = new StartMatchThread();	
-	private ScoreboardThread scorebardThread = new ScoreboardThread();
 	private QueueThread queueThread = new QueueThread();
 	
     
@@ -88,6 +85,7 @@ public class EzpzPvpKit
         }
         
         /* Commands */
+        CommandHandler cmd = new CommandHandler(); // TODO
 		utils = new Utils();
 		getLogger().info("Commands initialized");
     	
@@ -104,9 +102,6 @@ public class EzpzPvpKit
         Sponge.getScheduler().createTaskBuilder().execute(queueThread)
             .interval(1, TimeUnit.SECONDS)
             .name("QueueDispatcher").submit(this);
-        Sponge.getScheduler().createTaskBuilder().execute(scorebardThread) // useless
-            .interval(1, TimeUnit.SECONDS)
-            .name("Scoreboard").submit(this);
         getLogger().info("Threads launched");
         
         double elapsedTime = (System.nanoTime() - startTime) / 1000000000.0;
@@ -156,79 +151,145 @@ public class EzpzPvpKit
         return queues.get(name);
     }
     
+    /**
+     * Add a queue
+     * @param queue
+     */
     public void addQueue(DuelQueue queue)
     {
     	this.queues.put(queue.getName(), queue);
     }
     
+    /**
+     * Remove queue
+     * @param name
+     */
     public void removeQueue(String name)
     {
     	if(isArenaExisting(name))
-    		queues.remove(name);
+    		queues.remove(name);   	
     }
     
+    /**
+     * Check if a queue exists
+     * @param name
+     * @return true if it exists, false otherwise
+     */
     public Boolean isQueueExisting(String name)
     {
     	return queues.containsKey(name);
     }
 
+    /**
+     * Get the arena
+     * @param name
+     * @return Arena
+     */
     public Arena getArena(String name)
     {
         return arenas.get(name);
     }
     
+    /**
+     * Add an arena
+     * @param arena
+     */
     public void addArena(Arena arena)
     {
     	arenas.put(arena.getName(), arena);
     	if(!freeArenas.containsKey(arena.getType()))
-    	{
     		freeArenas.put(arena.getType(), new LinkedList<String>());
+    	if(!usedArenas.containsKey(arena.getType()))
     		usedArenas.put(arena.getType(), new LinkedList<String>());
-    	}
     	freeArenas.get(arena.getType()).add(arena.getName());
     }
     
+    /**
+     * Remove an arena
+     * @param name
+     */
     public void removeArena(String name)
     {
     	if(isArenaExisting(name))
+    	{
+    		// Remove also the arena type
+    		String type = arenas.get(name).getType();
+    		freeArenas.get(type).remove(name);
+    		usedArenas.get(type).remove(name);
     		arenas.remove(name);
+    	}
     }
     
+    /**
+     * Check if an arena exists
+     * @param name
+     * @return true if the arena exists, false otherwise
+     */
     public Boolean isArenaExisting(String name)
     {
     	return arenas.containsKey(name);
     }
 
+    /**
+     * Database object getter
+     * @return database
+     */
     public Database getDatabase()
     {
         return this.db;
     }
     
+    /**
+     * Utils object getter
+     * @return Utils
+     */
     public Utils getUtils() 
     {
 		return utils;
 	}
 
+    /**
+     * Raw arenas list getter
+     * @return LinkedHashMap<String, Arena>
+     */
     public LinkedHashMap<String, Arena> getArenas()
     {
     	return this.arenas;
     }
     
+    /**
+     * Raw queues getter
+     * @return LinkedHashMap<String, DuelQueue>
+     */
     public LinkedHashMap<String, DuelQueue> getQueues()
     {
     	return this.queues;
     }
 
+    /**
+     * Get the PvPPlayer associated to a given UUID
+     * @param uuid
+     * @return pvpPlayer
+     */
 	public PvPPlayer getPlayer(String uuid) 
 	{
 		return players.get(uuid);
 	}
 
+	/**
+	 * Add a new PvPPlayer
+	 * @param pvpPlayer
+	 */
 	public void addPlayer(PvPPlayer pvpPlayer) 
 	{
 		this.players.put(pvpPlayer.getPlayer().getIdentifier(), pvpPlayer);
 	}
 	
+	/**
+	 * Get a free Arena
+	 * @param type
+	 * @return arena
+	 */
 	public Arena getFreeArena(String type)
 	{
 		LinkedList<String> list = freeArenas.get(type);
@@ -241,21 +302,35 @@ public class EzpzPvpKit
 		return arena;
 	}
 	
+	/**
+	 * Get a team from its name
+	 * @param name
+	 * @return team
+	 */
 	public Team getTeam(String name)
 	{
 		return this.teams.get(name);
 	}
 
+	/**
+	 * Add a team
+	 * @param team
+	 */
 	public void addTeam(Team team)
 	{
 		this.teams.put(team.getName(), team);
 	}
 	
+	/**
+	 * Remove a team
+	 * @param name
+	 */
 	public void removeTeam(String name)
 	{
 		this.teams.remove(name);
 	}
 	
+	// TODO REMOVE
     public StartMatchThread getStartMatchSetup() 
     {
 		return startMatchThread;

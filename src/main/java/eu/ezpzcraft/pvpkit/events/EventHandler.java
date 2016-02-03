@@ -99,7 +99,7 @@ public class EventHandler
 						team = new Team("MonEquipe");
 	                	for(Player player2 : Sponge.getServer().getOnlinePlayers())
 	                	{
-	                		team.addPlayer(player2);
+	                		team.addPlayer(player2.getIdentifier());
 	                	}
 	                    EzpzPvpKit.getInstance().getStartMatchSetup().addTeamStart(team.getName());
 					} catch (Exception e) 

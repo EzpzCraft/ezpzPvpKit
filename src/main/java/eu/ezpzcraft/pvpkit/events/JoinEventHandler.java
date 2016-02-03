@@ -2,16 +2,11 @@ package eu.ezpzcraft.pvpkit.events;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.manipulator.mutable.PotionEffectData;
-import org.spongepowered.api.data.type.DyeColors;
-import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.Cause;
@@ -19,21 +14,18 @@ import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
-import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.scoreboard.Scoreboard;
 import org.spongepowered.api.scoreboard.critieria.Criteria;
 import org.spongepowered.api.scoreboard.displayslot.DisplaySlots;
 import org.spongepowered.api.scoreboard.objective.Objective;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
-import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
 import eu.ezpzcraft.pvpkit.Config;
 import eu.ezpzcraft.pvpkit.EzpzPvpKit;
 import eu.ezpzcraft.pvpkit.PvPPlayer;
-import eu.ezpzcraft.pvpkit.Team;
 
 public class JoinEventHandler 
 {	
@@ -68,9 +60,8 @@ public class JoinEventHandler
         
         // Load player informations
         EzpzPvpKit.getInstance().getDatabase().loadPlayer(player);
+        // TODO load score
         PvPPlayer pvpPlayer = EzpzPvpKit.getInstance().getPlayer(player.getIdentifier());
-        pvpPlayer.setTeam( new Team(pvpPlayer.getPlayer().getName()) ); // Set cote, transfer score
-        pvpPlayer.getTeam().addPlayer(pvpPlayer.getPlayer());
         
         // TP to spawn
         player.setLocation( player.getWorld().getSpawnLocation() );
@@ -89,6 +80,10 @@ public class JoinEventHandler
         setScoreboard(pvpPlayer);
     }
     
+    /**
+     * Send the server MOTD to a given pvpPlayer
+     * @param pvpPlayer
+     */
     private static void sendMOTD(PvPPlayer pvpPlayer)
     {
     	String welcome = pvpPlayer.getPlayer().get(Keys.FIRST_DATE_PLAYED)
@@ -119,6 +114,10 @@ public class JoinEventHandler
 		} 
     }
     
+    /**
+     * Give the spawn item to a given pvpPlayer
+     * @param pvpPlayer
+     */
     public static void giveItem(PvPPlayer pvpPlayer)
     {
         Hotbar hotbar = pvpPlayer.getPlayer().getInventory().query(Hotbar.class);
@@ -152,7 +151,7 @@ public class JoinEventHandler
         stats.offer(Keys.DISPLAY_NAME, title);
         stats.offer(Keys.ITEM_LORE, lore);
 
-        // Lang
+        // Lang TODO style
         ItemStack lang = ItemStack.builder().itemType(ItemTypes.BANNER).quantity(1).build();
         title = Text.builder("Lang").color(TextColors.AQUA).style(TextStyles.BOLD).build();
         lore = new ArrayList<Text>();
@@ -177,13 +176,22 @@ public class JoinEventHandler
         hotbar.offer(spectator);
     }
     
+    /**
+     * Set the scoreboard of the given pvpPlayer
+     * @param pvpPlayer
+     */
     public void setScoreboard(PvPPlayer pvpPlayer)
     {
-		objective.getOrCreateScore(pvpPlayer.getPlayer().getTeamRepresentation()).setScore( pvpPlayer.getScore() );
+		objective.getOrCreateScore(pvpPlayer.getPlayer().getTeamRepresentation())
+				 .setScore( EzpzPvpKit.getInstance().getTeam(pvpPlayer.getTeam()).getStats().getMeanScore() );
 		pvpPlayer.getPlayer().setScoreboard(scoreboard);
     }
     
-    // The scoreboard of the given player will no more be visible
+    /**
+     * Remove the scoreboard of the given player
+     * /!\  the scoreboard of the given player will no more be visible (for the other!)
+     * @param pvpPlayer
+     */
     public static void removeScoreboard(PvPPlayer pvpPlayer)
     {
     	pvpPlayer.getPlayer().setScoreboard( Scoreboard.builder().build() );

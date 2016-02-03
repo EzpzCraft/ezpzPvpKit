@@ -1,7 +1,5 @@
 package eu.ezpzcraft.pvpkit;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;

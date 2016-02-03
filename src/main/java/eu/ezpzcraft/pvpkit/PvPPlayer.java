@@ -1,125 +1,184 @@
 package eu.ezpzcraft.pvpkit;
 
 
-import java.util.LinkedHashMap;
-import java.util.UUID;
-
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
 
 public class PvPPlayer
 {
     /* Variable */
     private Player player = null;
-    private float score = 0;
     private int remainingRanked = 0;
     private String rank;
     private long vote[];
     private String lang = "English"; // TODO: add in DB in the future when handling languages
-	private Team team = null;
-	private double enderpearlCD = 0.0;
+	private String team = null;
     private PlayerState state = null;
-    private DuelQueue queue = null;
+    private String queue = null;
     private Boolean inMatch = false;
     		
     /* Constructor */
-    public PvPPlayer(Player player, float score, int remainingRanked, String rank, long[] vote)
+    public PvPPlayer(Player player, int remainingRanked, String rank, long[] vote)
     {
         this.player = player;
-        this.score = score;
         this.remainingRanked = remainingRanked;
         this.rank = rank;
+        this.team = player.getName();
+
+        EzpzPvpKit.getInstance().addTeam( new Team(player.getName()) );
     }
 
     /* Methods */  
+    
+    /**
+     * Save the state of the player
+     */
     public void setState()
     {
         this.state = new PlayerState(this.player);
     }
 
+    /**
+     * Get the player state
+     * @return the player state if it has been saved previously
+     */
     public PlayerState getState()
     {
         return this.state;
     }
 
+    /**
+     * Get the player object (Sponge)
+     * @return player
+     */
     public Player getPlayer()
     {
         return this.player;
     }
 
+    /**
+     * Get the number of remaining ranked matches
+     * @return #
+     */
 	public int getRemainingRanked() 
 	{
 		return this.remainingRanked;
 	}
 
+	/**
+	 * Set number of remaining ranked matches
+	 * @param remainingRanked
+	 */
 	public void setRemainingRanked(int remainingRanked) 
 	{
 		this.remainingRanked = remainingRanked;
 	}
 
+	/**
+	 * Get the player rank
+	 * @return the rank
+	 */
 	public String getRank() 
 	{
 		return this.rank;
 	}
 	
+	/**
+	 * Get the player language
+	 * @return language
+	 */
 	public String getLang()
 	{
 		return this.lang;
 	}
 
+	/**
+	 * Check if the player is in a duel
+	 * @return true if the player is in a duel, false otherwise
+	 */
 	public Boolean getInMatch() 
 	{
 		return this.inMatch;
 	}
 
+	/**
+	 * Define the player as in a duel
+	 * @param inMatch
+	 */
 	public void setInMatch(Boolean inMatch) 
 	{
 		this.inMatch = inMatch;
 	}
 	
-	public String getLeague()
+	/**
+	 * Get the player league
+	 * @return league
+	 */
+	public String getLeague() // TODO
 	{
-		if(score <= 1000)
-			return "Coal";
-		else if(score <= 1200)
-			return "Iron";
-		else if(score <= 1400)
-			return "Gold";
-		else if(score <= 1600)
-			return "Emerald";
-		else if(score <= 1800)
-			return "Diamond";
-		else if(score <= 2000)
-			return "Obsidian";
-		else if(score <= 2200)
-			return "Bedrock";
-		else
-			return "error";
+		return "LEAGUE";
 	}
 	
-	public int getScore()
+	/**
+	 * Get the player score for a given queue type
+	 * @return the requested score
+	 */
+	public int getScore(String type)
 	{
-		return (int) this.score;
+		return EzpzPvpKit.getInstance().getDatabase().getPlayerScore(this.player).get(type);
+	}
+	
+	/**
+	 * Get the mean score of a player
+	 * @return the mean score
+	 */
+	public int getMeanScore()
+	{
+		return 10; // TODO
 	}
 
-    public DuelQueue getQueue() 
+	/**
+	 * Get the queue the player is currently in
+	 * @return the queue name
+	 */
+    public String getQueue() 
     {
-		return queue;
+		return this.queue;
 	}
 
-	public void setQueue(DuelQueue queue) 
+    /**
+     * Set the queue name the player is currently in
+     * @param queue
+     */
+	public void setQueue(String queue) 
 	{
 		this.queue = queue;
 	}
 	
-    public Team getTeam() 
+	/**
+	 * Get the queue name the player is currently in
+	 * @return team name
+	 */
+    public String getTeam() 
     {
 		return team;
 	}
 
-	public void setTeam(Team team) 
+	/**
+	 * Set the queue name the player is currently in
+	 * @param team
+	 */
+	public void setTeam(String team) 
 	{
 		this.team = team;
+	}
+	
+	/**
+	 * Get the timestamp of the last vote for the given website
+	 * @param i, the website
+	 * @return the timestamps of the last vote
+	 */
+	public long getVote(int i)
+	{
+		return this.vote[i];
 	}
 }

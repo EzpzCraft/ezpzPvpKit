@@ -1,18 +1,14 @@
 package eu.ezpzcraft.pvpkit.thread;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
 
 import org.spongepowered.api.scheduler.Task;
 
-import eu.ezpzcraft.pvpkit.Arena;
 import eu.ezpzcraft.pvpkit.Duel;
 import eu.ezpzcraft.pvpkit.DuelQueue;
 import eu.ezpzcraft.pvpkit.EzpzPvpKit;
-import eu.ezpzcraft.pvpkit.Team;
 
 public class QueueThread implements Consumer<Task>
 {

@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.entity.DisplaceEntityEvent;
 import org.spongepowered.api.event.entity.projectile.LaunchProjectileEvent;
 import org.spongepowered.api.event.entity.projectile.TargetProjectileEvent;
 import org.spongepowered.api.event.item.inventory.UseItemStackEvent;
@@ -49,6 +48,7 @@ public class UseItemHandler
     {
     	EzpzPvpKit.getLogger().info("|USE| target");
     }
+    
     
     public void addCD(String playerName)
     {

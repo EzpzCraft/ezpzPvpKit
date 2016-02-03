@@ -1,8 +1,7 @@
 package eu.ezpzcraft.pvpkit.thread;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.LinkedList;
 import java.util.function.Consumer;
 
 import org.spongepowered.api.Sponge;
@@ -21,51 +20,54 @@ import eu.ezpzcraft.pvpkit.Team;
 
 public class StartMatchThread implements Consumer<Task>
 {
-	private LinkedHashMap<String,Team> teams = new LinkedHashMap<String,Team>();
-	private Team team = null;
-	private int countdown;
-	private int ticks = (int) (Sponge.getServer().getTicksPerSecond()/4.);
-
+	private LinkedList<String> teams = new LinkedList<String>();
+	private LinkedHashMap<String,Integer> countdowns = new LinkedHashMap<String,Integer>();
+	private LinkedHashMap<String,Location<World>> locations = new LinkedHashMap<String,Location<World>>();
 	
+	private int ticks = (int) (Sponge.getServer().getTicksPerSecond()/4.);
+	
+	// Temporary variables
+	private int _countdown;
+	private PvPPlayer _player = null;
+	private Team _team;
+	
+	/**
+	 * For each team joining a duel, it prevents the players to move and send them
+	 * a title (3,2,1,go!).
+	 */
 	@Override
     public void accept(Task task) 
     {
 		// each team
-		for (Map.Entry<String,Team> entryT : teams.entrySet()) 
+		for (String team: teams) 
 		{
-			team = teams.get(entryT.getKey());
-			countdown = team.getCountdown();
-			// each player of the current team
-			for (String player : team.getPlayers()) 
+			_team = EzpzPvpKit.getInstance().getTeam(team);
+			_countdown = getCD(team);
+			
+			// For each player of the current team			
+			for (String player : _team.getPlayers()) 
 			{
-				sendCountDownTitle(EzpzPvpKit.getInstance().getPlayer(player),countdown);
+				_player = EzpzPvpKit.getInstance().getPlayer(player);
+				sendCountDownTitle(_player,_countdown);				
 			}
-			if(countdown == 0)
+
+			if(_countdown == 0)
 			{
-				//CREATE BOX
-				for(int x=-2;x<=2;x++)
-				{
-					for(int z=-2;z<=2;z++)
-					{
-						for(int y=-3;y<=3;y++)
-						{
-							if((Math.abs(x)<=1)&&(Math.abs(z)<=1)&&(Math.abs(y)<=2)){}
-							else
-							{
-								if(team.getLocation().add(x, y, z).getBlock().equals(BlockTypes.STAINED_GLASS.getDefaultState()))
-									team.getLocation().add(x, y, z).setBlock(BlockTypes.AIR.getDefaultState());
-							}						
-						}
-					}
-				}
-				teams.remove(entryT.getKey());
+				removeBox( locations.get(team) );
+				teams.remove(team);
+				locations.remove(team);
+				countdowns.remove(team);
 			}
 			else
-				team.setCountdown(countdown-1);	
+				setCD(team, _countdown-1);
 		}
     }
 	
-	
+	/**
+	 * Send the countdown title
+	 * @param pvpPlayer
+	 * @param cd, value of the countdown
+	 */
 	private void sendCountDownTitle(PvPPlayer pvpPlayer, int cd)
 	{
 		Player player = pvpPlayer.getPlayer();
@@ -108,35 +110,26 @@ public class StartMatchThread implements Consumer<Task>
 	}
 	
 	
-	/* Getters and Setters */
+	/**
+	 * Add a team to the list of team to manage
+	 * @param teamName
+	 */
     public void addTeamStart(String teamName) 
     {
-    	Team team = EzpzPvpKit.getInstance().getTeam(teamName);
-    	
-		teams.put(team.getName(), team);		
-		team.setLocation( 
-				EzpzPvpKit.getInstance().getPlayer(team.getPlayers().iterator().next()).getPlayer().getLocation() );
-
-		/*CREATE BOX
-		for(int x=-2;x<=2;x++)
-		{
-			for(int z=-2;z<=2;z++)
-			{
-				for(int y=-3;y<=3;y++)
-				{
-					if((Math.abs(x)<=1)&&(Math.abs(z)<=1)&&(Math.abs(y)<=2)){}
-					else
-					{
-						if(team.getLocation().add(x, y, z).getBlock().equals(BlockTypes.AIR.getDefaultState()))
-							team.getLocation().add(x, y, z).setBlock(BlockTypes.STAINED_GLASS.getDefaultState());
-					}						
-				}
-			}
-		}*/
+    	Team team = EzpzPvpKit.getInstance().getTeam(teamName);		
+		teams.add(teamName);
+		locations.put(teamName, EzpzPvpKit.getInstance()
+										  .getPlayer(team.getPlayers().iterator().next())
+										  .getPlayer().getLocation() );
 		
-		setBox(team.getLocation());	
+		this.countdowns.put(teamName, 3);
+		setBox( locations.get(teamName) );	
 	}
     
+    /**
+     * Create the box around the given location
+     * @param location
+     */
     public void setBox(Location<World> location)
     {
 		setBlock(location.add(2, 0, 0));
@@ -202,6 +195,10 @@ public class StartMatchThread implements Consumer<Task>
 		setBlock(location.add(-1, 3, -1));
     }
     
+    /**
+     * Remove the box at a given location
+     * @param location
+     */
     public void removeBox(Location<World> location)
     {
 		removeBlock(location.add(2, 0, 0));
@@ -240,7 +237,9 @@ public class StartMatchThread implements Consumer<Task>
 		removeBlock(location.add(1, -1, -2));
 		removeBlock(location.add(-2, -1, 1));
 		removeBlock(location.add(-2, -1, -1));
-		removeBlock(location.add(2, -1, 1));
+		removeBlock(location.add(2, -1, 1));			
+		
+		
 		removeBlock(location.add(2, -1, -1));
 		
 		removeBlock(location.add(2, 2, 0));
@@ -256,7 +255,8 @@ public class StartMatchThread implements Consumer<Task>
 		removeBlock(location.add(2, 2, 1));
 		removeBlock(location.add(2, 2, -1));
 		
-		/*removeBlock(location.add(2, -2, 0));
+		/* Get a floor ?
+		removeBlock(location.add(2, -2, 0));
 		removeBlock(location.add(-2, -2, 0));
 		removeBlock(location.add(0, -2, 2));
 		removeBlock(location.add(0, -2, -2));
@@ -290,16 +290,44 @@ public class StartMatchThread implements Consumer<Task>
 		removeBlock(location.add(-1, 3, -1));
     }
     
-    public void removeBlock(Location<World> location)
+    /**
+     * Remove a block of box
+     * @param location
+     */
+    private void removeBlock(Location<World> location)
     {
     	if(location.getBlock() == BlockTypes.STAINED_GLASS.getDefaultState())
     		location.setBlock(BlockTypes.AIR.getDefaultState());
     }
     
-    public void setBlock(Location<World> location)
+    /**
+     * Set a block of box
+     * @param location
+     */
+    private void setBlock(Location<World> location)
     {
     	if(location.getBlock() == BlockTypes.AIR.getDefaultState())
     		location.setBlock(BlockTypes.STAINED_GLASS.getDefaultState());
     }
-
+    
+    /**
+     * Get the countdown of a given team
+     * @param team
+     * @return the countdown value
+     */
+    private int getCD(String team)
+    {
+    	Integer result = this.countdowns.get(team);
+    	return result==null ? 0 : result;    
+    }    
+    
+    /**
+     * Set the countdown value of a team
+     * @param team
+     * @param value
+     */
+    private void setCD(String team, int value)
+    {
+    	this.countdowns.put(team, value);
+    }
 }
