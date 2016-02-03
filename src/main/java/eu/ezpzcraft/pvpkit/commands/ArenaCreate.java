@@ -15,22 +15,25 @@ import org.spongepowered.api.text.format.TextStyles;
 
 
 import eu.ezpzcraft.pvpkit.EzpzPvpKit;
+import eu.ezpzcraft.pvpkit.Utils;
 
+/**
+  *  Start creation of an arena from :
+  *  <ul>
+  *  <li>name </li>
+  *  <li>type </li>
+  *  </ul>
+  */
 public class ArenaCreate implements CommandExecutor
-{
-
-	
+{	
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException 
     {
-    	
-
     	EzpzPvpKit.getInstance().getUtils().setArenaName(args.<String>getOne("name").get());
     	EzpzPvpKit.getInstance().getUtils().setArenaType(args.<String>getOne("type").get());
         if(src instanceof Player && !EzpzPvpKit.getInstance().isArenaExisting(EzpzPvpKit.getInstance().getUtils().getName())) 
-        {            
-        	Player player = (Player) src;      	
-        	EzpzPvpKit.getInstance().getUtils().sendKitMessage(player,Text.builder("Set pos1")
+        {                   	
+        	Utils.sendKitMessage((Player) src,Text.builder("Set pos1")
 	            					.color(TextColors.GOLD)
 	            					.style(TextStyles.RESET)
 	            					.onHover(TextActions.showText(Text.builder("Click to set pos1")
@@ -41,22 +44,15 @@ public class ArenaCreate implements CommandExecutor
 	            				    .build());
             
         }
-        else if(src instanceof Player && EzpzPvpKit.getInstance().isArenaExisting(EzpzPvpKit.getInstance().getUtils().getName()))
-        {
-        	Player player = (Player) src;
-        	EzpzPvpKit.getInstance().getUtils().sendArenaExist(player);
-        }
+        else if(src instanceof Player && 
+        		EzpzPvpKit.getInstance().isArenaExisting(EzpzPvpKit.getInstance().getUtils().getName()))
+        	Utils.sendArenaExist((Player) src);
         else if(src instanceof ConsoleSource) 
-        {
-        	EzpzPvpKit.getInstance().getUtils().sendMessageC(src);
-        }
+        	Utils.sendMessageC(src);
         else if(src instanceof CommandBlockSource) 
-        {
-        	EzpzPvpKit.getInstance().getUtils().sendMessageCB(src);
-        }
+        	Utils.sendMessageCB(src);
         
-
-        return CommandResult.success();
+       return CommandResult.success();
     }
 	
 	

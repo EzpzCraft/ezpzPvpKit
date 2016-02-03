@@ -13,7 +13,17 @@ import org.spongepowered.api.text.format.TextColors;
 
 import eu.ezpzcraft.pvpkit.DuelQueue;
 import eu.ezpzcraft.pvpkit.EzpzPvpKit;
+import eu.ezpzcraft.pvpkit.Utils;
 
+/**
+ * Create a queue from: 
+ * <ul>
+ * <li>name </li>
+ * <li>type </li>
+ * <li>optional: size </li>
+ * <li>optional: isranked </li>
+ * </ul>
+ */
 public class QueueCreate implements CommandExecutor
 {
 
@@ -37,29 +47,21 @@ public class QueueCreate implements CommandExecutor
         	{
         		EzpzPvpKit.getInstance().addQueue(new DuelQueue(name,ranked,type,size));
         		EzpzPvpKit.getInstance().getDatabase().saveQueue(EzpzPvpKit.getInstance().getQueue(name));
-        		EzpzPvpKit.getInstance().getUtils().sendKitMessage(player, Text.of("Queue created"));
+        		Utils.sendKitMessage(player, Text.of("Queue created"));
         	}
         	catch(Exception e)
         	{
-        		EzpzPvpKit.getInstance().getUtils().sendKitMessage(player, Text.of(TextColors.RED, "Failed to create the queue : "+name));
+        		Utils.sendKitMessage(player, Text.of(TextColors.RED, "Failed to create the queue : "+name));
         	}
             
         }
         else if(src instanceof Player && EzpzPvpKit.getInstance().isQueueExisting(name))
-        {
-        	Player player = (Player) src;
-        	EzpzPvpKit.getInstance().getUtils().sendQueueExist(player);
-        }
+        	Utils.sendQueueExist((Player) src);
         else if(src instanceof ConsoleSource) 
-        {
-        	EzpzPvpKit.getInstance().getUtils().sendMessageC(src);
-        }
+        	Utils.sendMessageC(src);
         else if(src instanceof CommandBlockSource) 
-        {
-        	EzpzPvpKit.getInstance().getUtils().sendMessageCB(src);
-        }
+        	Utils.sendMessageCB(src);
         
-
         return CommandResult.success();
     }
 	

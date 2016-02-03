@@ -9,14 +9,18 @@ import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.format.TextStyles;
 
+import eu.ezpzcraft.pvpkit.DuelQueue;
 import eu.ezpzcraft.pvpkit.EzpzPvpKit;
 import eu.ezpzcraft.pvpkit.PvPPlayer;
 import eu.ezpzcraft.pvpkit.Team;
+import eu.ezpzcraft.pvpkit.Utils;
 
+/**
+ * Player and his team join the specified queue
+ *
+ */
 public class QueueJoin implements CommandExecutor
 {
 
@@ -31,42 +35,29 @@ public class QueueJoin implements CommandExecutor
         {            
         	Player player = (Player) src;
         	PvPPlayer pvpPlayer = EzpzPvpKit.getInstance().getPlayer(player.getIdentifier());
+        	Team team = EzpzPvpKit.getInstance().getTeam( pvpPlayer.getTeam() );
+        	DuelQueue queue = EzpzPvpKit.getInstance().getQueue(name);
         	
-        	if( EzpzPvpKit.getInstance().getTeam(pvpPlayer.getTeam()).getSize() != EzpzPvpKit.getInstance().getQueue(name).getSize() )
-        	{
-        		EzpzPvpKit.getInstance().getUtils().sendKitMessage(player, Text.of(TextColors.RED, "Party size doesn't match queue size"));
-
-        	}
+        	if( team.getSize() != queue.getSize() )
+        		Utils.sendKitMessage(player, Text.of(TextColors.RED, "Party size doesn't match queue size"));
         	else if( pvpPlayer.getInMatch() )
-        	{
-        		EzpzPvpKit.getInstance().getUtils().sendKitMessage(player, Text.of(TextColors.RED, "Cannot join queue in duel"));
-
-        	}
+        		Utils.sendKitMessage(player, Text.of(TextColors.RED, "Cannot join queue in duel"));
         	// Match XvX
         	else
         	{
-        		EzpzPvpKit.getInstance()
-        			.getQueue(name).
-        			.join(EzpzPvpKit.getInstance().getPlayer(EzpzPvpKit.getInstance().getPlayer(player.getIdentifier()))
-        					.getTeam());      		
-
+        		queue.join(team);      		
+        		for(String it : team.getPlayers())
+        			Utils.sendKitMessage(EzpzPvpKit.getInstance().getPlayer(it).getPlayer(), 
+        								 Text.of("You joined queue : "+name));
         	}
         	
         }
         else if(src instanceof Player && !EzpzPvpKit.getInstance().isQueueExisting(name))
-        {
-        	Player player = (Player) src;
-        	EzpzPvpKit.getInstance().getUtils().sendKitMessage(player, Text.of(TextColors.RED, "this queue doesn't exist"));
-        }
+        	Utils.sendKitMessage((Player) src, Text.of(TextColors.RED, "this queue doesn't exist"));
         else if(src instanceof ConsoleSource) 
-        {
-        	EzpzPvpKit.getInstance().getUtils().sendMessageC(src);
-        }
+        	Utils.sendMessageC(src);
         else if(src instanceof CommandBlockSource) 
-        {
-        	EzpzPvpKit.getInstance().getUtils().sendMessageCB(src);
-        }
-        
+        	Utils.sendMessageCB(src);       
 
         return CommandResult.success();
     }

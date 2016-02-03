@@ -20,11 +20,14 @@ import org.spongepowered.api.text.format.TextStyles;
 
 import eu.ezpzcraft.pvpkit.Arena;
 import eu.ezpzcraft.pvpkit.EzpzPvpKit;
+import eu.ezpzcraft.pvpkit.Utils;
 
+/**
+ * List all the current arena and display info about it
+ *
+ */
 public class ArenaList implements CommandExecutor
-{
-
-	
+{	
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException 
     {
@@ -106,15 +109,10 @@ public class ArenaList implements CommandExecutor
 
         }
         else if(src instanceof ConsoleSource) 
-        {
-        	EzpzPvpKit.getInstance().getUtils().sendMessageC(src);
-        }
+        	Utils.sendMessageC(src);
         else if(src instanceof CommandBlockSource) 
-        {
-        	EzpzPvpKit.getInstance().getUtils().sendMessageCB(src);
-        }
+        	Utils.sendMessageCB(src);
         
-
         return CommandResult.success();
     }
 	

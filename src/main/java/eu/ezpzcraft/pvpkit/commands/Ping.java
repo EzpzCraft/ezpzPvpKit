@@ -1,6 +1,5 @@
 package eu.ezpzcraft.pvpkit.commands;
 
-import java.util.LinkedList;
 import java.util.Optional;
 
 import org.spongepowered.api.Sponge;
@@ -11,17 +10,15 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.source.CommandBlockSource;
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.format.TextStyles;
 
-import eu.ezpzcraft.pvpkit.EzpzPvpKit;
 import eu.ezpzcraft.pvpkit.Utils;
 
+/**
+ * Get the ping of the specified player
+ */
 public class Ping  implements CommandExecutor
 {
     @Override
@@ -44,13 +41,9 @@ public class Ping  implements CommandExecutor
         	Utils.sendPingMessage(source, dest.getConnection().getPing());
         }
         else if(src instanceof ConsoleSource) 
-        {
-        	EzpzPvpKit.getInstance().getUtils().sendMessageC(src);
-        }
+        	Utils.sendMessageC(src);
         else if(src instanceof CommandBlockSource) 
-        {
-        	EzpzPvpKit.getInstance().getUtils().sendMessageCB(src);
-        }        
+        	Utils.sendMessageCB(src);       
 
         return CommandResult.success();
     }

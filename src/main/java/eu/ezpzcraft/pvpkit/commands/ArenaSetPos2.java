@@ -14,7 +14,11 @@ import org.spongepowered.api.text.format.TextStyles;
 
 import eu.ezpzcraft.pvpkit.Arena;
 import eu.ezpzcraft.pvpkit.EzpzPvpKit;
+import eu.ezpzcraft.pvpkit.Utils;
 
+/**
+ * Set pos2 for the specified arena
+ */
 public class ArenaSetPos2 implements CommandExecutor
 {
 
@@ -25,7 +29,9 @@ public class ArenaSetPos2 implements CommandExecutor
 	        if(src instanceof Player && !EzpzPvpKit.getInstance().isArenaExisting(name)) 
 	        {     
 	        	Player player = (Player) src;
-	        	//In creation or not ?
+	        	/*
+	        	 * Check if arena is in creation
+	        	 */
 	        	if(EzpzPvpKit.getInstance().getUtils().getName() != null && EzpzPvpKit.getInstance().getUtils().getName().equals(name))
 	        	{
 	        		try {
@@ -42,21 +48,19 @@ public class ArenaSetPos2 implements CommandExecutor
 						EzpzPvpKit.getInstance().addArena(arena);
 						EzpzPvpKit.getInstance().getDatabase().saveArena(arena); 
 						
-						EzpzPvpKit.getInstance().getUtils().sendKitMessage(player, Text.builder(name+" is now created")
+						Utils.sendKitMessage(player, Text.builder(name+" is now created")
 										    					.color(TextColors.WHITE)
 										    					.style(TextStyles.RESET)
 										    				    .build());		
 					} 
 	        		catch (Exception e) 
 	        		{
-	    				EzpzPvpKit.getInstance().getUtils().sendKitMessage(player, Text.builder("Failed to set pos2 for "+name)
+	    				Utils.sendKitMessage(player, Text.builder("Failed to set pos2 for "+name)
 								.color(TextColors.RED).build());
 					}
 	        	}
 	        	else
-	        	{
-	            	EzpzPvpKit.getInstance().getUtils().sendKitMessage(player, Text.of(name + " is not in creation"));
-	        	}
+	            	Utils.sendKitMessage(player, Text.of(name + " is not in creation"));
 	        }
 	        else if(src instanceof Player && EzpzPvpKit.getInstance().isArenaExisting(name))
 	        {
@@ -68,23 +72,18 @@ public class ArenaSetPos2 implements CommandExecutor
 					
 					EzpzPvpKit.getInstance().getDatabase().saveArena(EzpzPvpKit.getInstance().getArena(name));
 					
-					EzpzPvpKit.getInstance().getUtils().sendKitMessage(player, Text.of("pos2 redefined for "+name));
+					Utils.sendKitMessage(player, Text.of("pos2 redefined for "+name));
 				} catch (Exception e) 
 	        	{
-					EzpzPvpKit.getInstance().getUtils().sendKitMessage(player, Text.builder("Failed to set pos2 for "+name)
+					Utils.sendKitMessage(player, Text.builder("Failed to set pos2 for "+name)
 																	.color(TextColors.RED).build());
 				}
 	        }
 	        else if(src instanceof ConsoleSource) 
-	        {
-	        	EzpzPvpKit.getInstance().getUtils().sendMessageC(src);
-	        }
+	        	Utils.sendMessageC(src);
 	        else if(src instanceof CommandBlockSource) 
-	        {
-	        	EzpzPvpKit.getInstance().getUtils().sendMessageCB(src);
-	        }
+	        	Utils.sendMessageCB(src);
 	        
-
 	        return CommandResult.success();
 	    }
 	

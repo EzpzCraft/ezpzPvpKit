@@ -22,10 +22,11 @@ import eu.ezpzcraft.pvpkit.DuelQueue;
 import eu.ezpzcraft.pvpkit.EzpzPvpKit;
 import eu.ezpzcraft.pvpkit.Utils;
 
+/**
+ * Display the current list of queue
+ */
 public class QueueList implements CommandExecutor
-{
-
-	
+{	
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException 
     {
@@ -66,10 +67,12 @@ public class QueueList implements CommandExecutor
 															.append(Text.of(TextColors.WHITE, it.getValue().getType()))
 															.append(Text.of("\n",TextColors.GRAY, "Ranked  :  "))
 															.append(Text.of(TextColors.WHITE, it.getValue().isRanked()))
+															.append(Text.of("\n",TextColors.GRAY, "Size  :  "))
+															.append(Text.of(TextColors.WHITE, it.getValue().getSize()+"vs"+it.getValue().getSize()))
 															.style(TextStyles.RESET)
 															.color(TextColors.GRAY)
 															.build()))
-													.build()).build());		 // TODO add 1v1; 2v2...								
+													.build()).build());										
 	    		}
         	}
         	PaginationService paginationService = Sponge.getServiceManager().provide(PaginationService.class).get();
@@ -99,15 +102,10 @@ public class QueueList implements CommandExecutor
 
         }
         else if(src instanceof ConsoleSource) 
-        {
         	Utils.sendMessageC(src);
-        }
         else if(src instanceof CommandBlockSource) 
-        {
         	Utils.sendMessageCB(src);
-        }
         
-
         return CommandResult.success();
     }
 	
