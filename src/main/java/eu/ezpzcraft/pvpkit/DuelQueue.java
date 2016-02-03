@@ -105,17 +105,17 @@ public class DuelQueue
     		}
     	}
     		
-    	// Add randomness to avoid repetition
+    	/* Add randomness to avoid repetition
     	double random = Math.random();    	
     	switch(currentCandidate)
     	{
 	    	case 0:
 	        	if( random <= 0.6 )
-	        		currentCandidate = 0;
+	        		currentCandidate = 0 < max ? 0 : max;
 	        	else if( random <= 0.8 )
-	        		currentCandidate = 1;
+	        		currentCandidate = 1 < max ? 1 : max;
 	        	else
-	        		currentCandidate = 2;
+	        		currentCandidate = 2 < max ? 2 : max;;
 	    		break;
 	    	case 1:
 	        	if( random <= 0.6 )
@@ -133,7 +133,7 @@ public class DuelQueue
 	        	else
 	        		currentCandidate = 1;
 	    		break;    	
-    	}    	
+    	}  */  	
     	
     	result.add( waitingTeams.remove(currentCandidate) );
     	

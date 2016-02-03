@@ -290,7 +290,7 @@ public class Database
 	        String name;
 	        String world;
 	        Float pos1_x, pos1_y, pos1_z, pos2_x, pos2_y, pos2_z;
-	        Float orientation1_x, orientation1_y, orientation1_z, orientation2_x, orientation2_y, orientation2_z;
+	        double orientation1_x, orientation1_y, orientation1_z, orientation2_x, orientation2_y, orientation2_z;
 	        Float score;
 	        String type;
 	        Location<World> pos1, pos2;
@@ -307,12 +307,12 @@ public class Database
 	        	pos2_x = result.getFloat("pos2_x");
 	        	pos2_y = result.getFloat("pos2_y");
 	        	pos2_z = result.getFloat("pos2_z");
-	        	orientation1_x = result.getFloat("orientation1_x");
-	        	orientation1_y = result.getFloat("orientation1_y");
-	        	orientation1_z = result.getFloat("orientation1_z");
-	        	orientation2_x = result.getFloat("orientation2_x");
-	        	orientation2_y = result.getFloat("orientation2_y");
-	        	orientation2_z = result.getFloat("orientation2_z");
+	        	orientation1_x = result.getDouble("orientation1_x");
+	        	orientation1_y = result.getDouble("orientation1_y");
+	        	orientation1_z = result.getDouble("orientation1_z");
+	        	orientation2_x = result.getDouble("orientation2_x");
+	        	orientation2_y = result.getDouble("orientation2_y");
+	        	orientation2_z = result.getDouble("orientation2_z");
 	        	score = result.getFloat("score");
 	        	type = result.getString("type");
 	        	

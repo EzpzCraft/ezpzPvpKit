@@ -23,8 +23,10 @@ public class PvPPlayer
         this.remainingRanked = remainingRanked;
         this.rank = rank;
         this.team = player.getName();
-
-        EzpzPvpKit.getInstance().addTeam( new Team(player.getName()) );
+        
+        String name = player.getName();
+        EzpzPvpKit.getInstance().addTeam( new Team(name) );
+        EzpzPvpKit.getInstance().getTeam(name).addPlayer(player.getIdentifier());
     }
 
     /* Methods */  

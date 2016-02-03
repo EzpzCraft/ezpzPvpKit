@@ -95,7 +95,8 @@ public class Arena
      * Return the first rotation of the arena
      * @return rotation1 of the arena
      */
-	public Vector3d getRotation1() {
+	public Vector3d getRotation1() 
+	{
 		return rotation1;
 	}
 
@@ -103,7 +104,8 @@ public class Arena
      * Change the first rotation of the arena
      * @param rotation1 new Rotation1
      */
-	public void setRotation1(Vector3d rotation1) {
+	public void setRotation1(Vector3d rotation1) 
+	{
 		this.rotation1 = rotation1;
 	}
 

@@ -63,7 +63,7 @@ public class EzpzPvpKit
     @Listener
     public void onServerStarting(GameStartedServerEvent event)
     {
-    	long startTime = 0;
+    	long startTime = System.nanoTime();
     	
     	/* Database */
     	db.createDB();
@@ -104,7 +104,7 @@ public class EzpzPvpKit
             .name("QueueDispatcher").submit(this);
         getLogger().info("Threads launched");
         
-        double elapsedTime = (System.nanoTime() - startTime) / 1000000000.0;
+        double elapsedTime = (System.nanoTime() - startTime) / 1000000000.;
         logger.info("EzpzPvpKit plugin successfully loaded in " + elapsedTime + " seconds");
     }
 
@@ -293,7 +293,10 @@ public class EzpzPvpKit
 	public Arena getFreeArena(String type)
 	{
 		LinkedList<String> list = freeArenas.get(type);
-		
+		logger.info("---- ARENAS :  " + arenas.size());
+		logger.info("---- FREEARENAS :  " + freeArenas.size());
+		logger.info("---- USEDARENAS :  " + usedArenas.size());
+		logger.info("---- FREEARENA<a> :  " + freeArenas.get("a").size());
 		if( list.size()<=0 )
 				return null;
 		Arena arena = arenas.get( list.poll() );

@@ -36,7 +36,8 @@ public class TeamStats
      */
     public int getScore(String type)
     {
-        return scores.get(type);
+       // return scores.get(type);
+    	return 1000;
     }
     
     /**

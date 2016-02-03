@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 
 import org.spongepowered.api.scheduler.Task;
 
+import eu.ezpzcraft.pvpkit.Arena;
 import eu.ezpzcraft.pvpkit.Duel;
 import eu.ezpzcraft.pvpkit.DuelQueue;
 import eu.ezpzcraft.pvpkit.EzpzPvpKit;
@@ -23,12 +24,16 @@ public class QueueThread implements Consumer<Task>
 			if( teams==null )
 				continue;
 
-			// 2. Find a free arena, create a new duel and start it			
-			Duel duel = new Duel(teams.get(0), 
-					 	 		 teams.get(1), 
-					 	 		 EzpzPvpKit.getInstance().getFreeArena( queue.getValue().getType() ));
+			// 2. Find a free arena, create a new duel and start it		
+			Arena arena = EzpzPvpKit.getInstance().getFreeArena( queue.getValue().getType() );
+			if(arena==null)
+				EzpzPvpKit.getLogger().info("nulnulunuullllllllllllllllllllllllllllllllllllllll");
+			else
+			{
+				Duel duel = new Duel(teams.get(0), teams.get(1), arena);
 			
 			duel.start();
+			}
 		}
     }
 }

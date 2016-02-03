@@ -44,7 +44,7 @@ public class QueueJoin implements CommandExecutor
         		Utils.sendKitMessage(player, Text.of(TextColors.RED, "Cannot join queue in duel"));
         	// Match XvX
         	else
-        	{
+        	{        		
         		queue.join(team);      		
         		for(String it : team.getPlayers())
         			Utils.sendKitMessage(EzpzPvpKit.getInstance().getPlayer(it).getPlayer(), 
