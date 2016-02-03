@@ -88,6 +88,7 @@ public class EzpzPvpKit
         }
         
         /* Commands */
+        CommandHandler cmd = new CommandHandler();
 		utils = new Utils();
 		getLogger().info("Commands initialized");
     	

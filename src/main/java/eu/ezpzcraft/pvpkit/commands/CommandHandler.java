@@ -96,7 +96,8 @@ public class CommandHandler
 		CommandSpec arenaconfirmdelete = CommandSpec.builder()
 				.description(Text.of("Create an arena <Name> <Type>"))
 				.executor(new ArenaConfirmDelete())
-		        .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
+		        .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))),
+		        		GenericArguments.onlyOne(GenericArguments.bool(Text.of("bool"))))
 				.permission("ezpzkit.command.create")
 				.build();
 		
@@ -114,7 +115,7 @@ public class CommandHandler
 		        .arguments(
 		                GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))),
 		                GenericArguments.onlyOne(GenericArguments.string(Text.of("type"))),
-		                GenericArguments.optionalWeak(GenericArguments.bool(Text.of("size"))),
+		                GenericArguments.optionalWeak(GenericArguments.integer(Text.of("size"))),
 		                GenericArguments.optionalWeak(GenericArguments.bool(Text.of("ranked"))))
 				.permission("ezpzkit.command.create")
 				.build();
@@ -131,7 +132,8 @@ public class CommandHandler
 		CommandSpec queueconfirmdelete = CommandSpec.builder()
 				.description(Text.of("Create an arena <Name> <Type>"))
 				.executor(new QueueConfirmDelete())
-		        .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
+		        .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))),
+		        		GenericArguments.onlyOne(GenericArguments.bool(Text.of("bool"))))
 				.permission("ezpzkit.command.create")
 				.build();
 		
@@ -196,7 +198,7 @@ public class CommandHandler
 				.child(queuelist, "queuelist", "qlist", "ql")
 				.child(joinqueue, "joinqueue", "joinq")
 				.permission("ezpzkit.command")
-				.build();
+				.build();		
 		
 		Sponge.getCommandManager().register(EzpzPvpKit.getInstance(), kit, "kit", "k", "ezpzkit");
 		Sponge.getCommandManager().register(EzpzPvpKit.getInstance(), ping, "ping");		

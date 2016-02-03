@@ -14,10 +14,13 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
 import eu.ezpzcraft.pvpkit.EzpzPvpKit;
+import eu.ezpzcraft.pvpkit.Utils;
 
+/**
+ * Delete arena
+ */
 public class ArenaDelete implements CommandExecutor
 {
-
 	
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException 
@@ -25,56 +28,42 @@ public class ArenaDelete implements CommandExecutor
     	String name = args.<String>getOne("name").get();
         if(src instanceof Player && EzpzPvpKit.getInstance().isArenaExisting(name)) 
         {     
-        	Player player = (Player) src;
-            EzpzPvpKit.getInstance().getUtils().sendKitMessage(player, Text.builder("Delete "+name+"?")
-            													.append(Text.builder("\n                 ")
-            													.append(Text.builder("---------")
-            																.style(TextStyles.STRIKETHROUGH)
-            																.style(TextStyles.BOLD)
-            																.color(TextColors.DARK_GRAY)
-            													.append(Text.builder("\n                 ")
-            																.style(TextStyles.RESET)
-            													.append(Text.builder("   ✔ ")
-	        																.style(TextStyles.BOLD)
-	        																.color(TextColors.DARK_GREEN)
-	        																.onHover(TextActions.showText(Text.builder("Click to delete "+name)
-							        																		.style(TextStyles.RESET)
-							    	        																.color(TextColors.DARK_GREEN)
-							    	        																.build()))
-	        																.onClick(TextActions.runCommand("/kit acdel "+name))
-	        																.build())
-            													.append(Text.builder("  ┃")
-            																.style(TextStyles.BOLD)
-            																.color(TextColors.DARK_GRAY)
-            													.append(Text.builder("   ✘ ")
-            																.color(TextColors.RED)
-	        																.onHover(TextActions.showText(Text.builder("Click to cancel the delete")
-	        																		.style(TextStyles.RESET)
-	    	        																.color(TextColors.RED)
-	    	        																.build()))
-	        																.build())
-            													.append(Text.builder("\n               ")
-            													.append(Text.builder("---------")
-            																.style(TextStyles.STRIKETHROUGH)
-            																.style(TextStyles.BOLD)
-            																.color(TextColors.DARK_GRAY)			
-            													.build()).build()).build()).build()).build()).build()).build());
+            Utils.sendKitMessage((Player) src, Text.builder("Delete "+name+"?   ")           		
+            										.append(Text.builder("┃  ")     
+            											.style(TextStyles.BOLD)
+            											.color(TextColors.DARK_GRAY)
+            										.build())         										
+            										.append(Text.builder("✔")
+            											.style(TextStyles.BOLD)
+	        											.color(TextColors.DARK_GREEN)
+	        											.onHover(TextActions.showText(Text.of(TextStyles.RESET,
+	        													TextColors.DARK_GREEN,"Click to delete "+name)))
+	        											.onClick(TextActions.runCommand("/kit acdel "+name+" true"))
+	        										.build())
+            										.append(Text.builder("  ┃   ")
+            											.style(TextStyles.BOLD)
+            											.color(TextColors.DARK_GRAY)
+            										.build())
+            										.append(Text.builder("✘")
+                										.onHover(TextActions.showText(Text.of(TextStyles.RESET,
+    	        													TextColors.RED,"Click to cancel the delete")))
+            											.color(TextColors.RED)
+            											.style(TextStyles.BOLD)
+	        											.onClick(TextActions.runCommand("/kit acdel "+name+" false"))
+	        										.build())
+            										.append(Text.builder("  ┃\n ")
+            											.style(TextStyles.BOLD)
+            											.color(TextColors.DARK_GRAY)			
+            										.build())
+            									.build());
         }
         else if(src instanceof Player && !EzpzPvpKit.getInstance().isArenaExisting(name))
-        {
-        	Player player = (Player) src;
-        	EzpzPvpKit.getInstance().getUtils().sendKitMessage(player, Text.of(name + " doesn't exist"));
-        }
+        	Utils.sendKitMessage((Player) src, Text.of(name + " doesn't exist"));
         else if(src instanceof ConsoleSource) 
-        {
-        	EzpzPvpKit.getInstance().getUtils().sendMessageC(src);
-        }
+        	Utils.sendMessageC(src);
         else if(src instanceof CommandBlockSource) 
-        {
-        	EzpzPvpKit.getInstance().getUtils().sendMessageCB(src);
-        }
+        	Utils.sendMessageCB(src);
         
-
         return CommandResult.success();
     }
 	

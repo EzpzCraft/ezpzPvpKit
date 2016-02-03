@@ -12,47 +12,44 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
 import eu.ezpzcraft.pvpkit.EzpzPvpKit;
+import eu.ezpzcraft.pvpkit.Utils;
 
+/**
+  *  Confirm the delete of an arena
+  */
 public class ArenaConfirmDelete implements CommandExecutor
-{
-
-	
+{	
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException 
     {
     	String name = args.<String>getOne("name").get();
+    	Boolean bool = args.<Boolean>getOne("bool").get();
         if(src instanceof Player && EzpzPvpKit.getInstance().isArenaExisting(name)) 
-        {      
+        {   
         	Player player = (Player) src;
-        	try 
+        	if(bool)
         	{
-				EzpzPvpKit.getInstance().getDatabase().deleteArena(EzpzPvpKit.getInstance().getArena(name));
-				EzpzPvpKit.getInstance().removeArena(name);
-				EzpzPvpKit.getInstance().getUtils().sendKitMessage(player, Text.of(name + " is now deleted"));
-			} 
-        	catch (Exception e) 
-        	{
-        		EzpzPvpKit.getInstance().getUtils().sendKitMessage(player, Text.builder("Failed to delete "+name)
-        																.color(TextColors.RED)
-        																.build());
-        		e.printStackTrace();
-			}
+	        	try 
+	        	{
+					EzpzPvpKit.getInstance().getDatabase().deleteArena(EzpzPvpKit.getInstance().getArena(name));
+					EzpzPvpKit.getInstance().removeArena(name);
+					Utils.sendKitMessage(player, Text.of(name + " is now deleted"));
+				} 
+	        	catch (Exception e) 
+	        	{
+	        		Utils.sendKitMessage(player, Text.builder("Failed to delete "+name).color(TextColors.RED).build());
+				}
+        	}
+        	else
+        		Utils.sendKitMessage(player, Text.of("Delete canceled"));
         }
         else if(src instanceof Player && !EzpzPvpKit.getInstance().isArenaExisting(name))
-        {
-        	Player player = (Player) src;
-        	EzpzPvpKit.getInstance().getUtils().sendKitMessage(player, Text.of(name + " doesn't exist"));
-        }
+        	Utils.sendKitMessage((Player) src, Text.of(name + " doesn't exist"));
         else if(src instanceof ConsoleSource) 
-        {
-        	EzpzPvpKit.getInstance().getUtils().sendMessageC(src);
-        }
+        	Utils.sendMessageC(src);
         else if(src instanceof CommandBlockSource) 
-        {
-        	EzpzPvpKit.getInstance().getUtils().sendMessageCB(src);
-        }
+        	Utils.sendMessageCB(src);
         
-
         return CommandResult.success();
     }
 	
