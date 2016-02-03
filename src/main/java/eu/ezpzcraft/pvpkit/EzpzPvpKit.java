@@ -1,10 +1,10 @@
 package eu.ezpzcraft.pvpkit;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import com.google.inject.Inject;
 
 import eu.ezpzcraft.pvpkit.commands.CommandHandler;
+import eu.ezpzcraft.pvpkit.events.EventHandler;
 import eu.ezpzcraft.pvpkit.events.JoinEventHandler;
 import eu.ezpzcraft.pvpkit.events.UseItemHandler;
 import eu.ezpzcraft.pvpkit.thread.QueueThread;
@@ -17,7 +17,6 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.scheduler.Task;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -35,87 +34,46 @@ public class EzpzPvpKit
     @Inject
     private Game game;
     
+    // <type, queue>
     private LinkedHashMap<String, DuelQueue> queues = new LinkedHashMap<String, DuelQueue>();
-    private long startTime = 0;
+    // <name, arena>
     private LinkedHashMap<String, Arena> arenas = new LinkedHashMap<String, Arena>();
+    // <UUID, PvPPlayer>
     private LinkedHashMap<String, PvPPlayer> players = new LinkedHashMap<String, PvPPlayer>();
+    // <name, Team>
+    private LinkedHashMap<String, Team> teams = new LinkedHashMap<String, Team>();
+    // <type, Arena[]>
     private LinkedHashMap<String, LinkedList<String>> usedArenas = new LinkedHashMap<String, LinkedList<String>>();
     private LinkedHashMap<String, LinkedList<String>> freeArenas = new LinkedHashMap<String, LinkedList<String>>();
-    private static EzpzPvpKit instance = null;
-    private Database db = null;
+    
+    private static EzpzPvpKit instance = null; // Singleton
+    private Database db = new Database();;
 	private Utils utils = null;
 
-	///
+	// Threads
 	private StartMatchThread startMatchThread = new StartMatchThread();	
 	private ScoreboardThread scorebardThread = new ScoreboardThread();
 	private QueueThread queueThread = new QueueThread();
 	
-    public StartMatchThread getStartMatchSetup() 
-    {
-		return startMatchThread;
-	}  
     
 	/* Constructor */
 	public EzpzPvpKit()
     {
-        this.instance = this;
-        this.db = new Database();
+        instance = this;
     }
 
-    /* Methods */
-       
-    @Listener
-    public void onGameInit(GameInitializationEvent event)
-    {   
-    	this.startTime = System.nanoTime();
-    	
-    	/* Load Commands */
-    	
-    	try 
-    	{
-			CommandHandler launch =  new CommandHandler();
-			utils = new Utils();
-	    	getLogger().info(" Commands initialized");
-		} 
-    	catch (Exception e) 
-    	{
-    		getLogger().info(" Commands failed to initialize");
-		}
-    	
-    	/*  Register events */
-    	
-        Sponge.getGame().getEventManager().registerListeners(this, new EventHandler());
-        Sponge.getGame().getEventManager().registerListeners(this, new UseItemHandler());
-        Sponge.getGame().getEventManager().registerListeners(this, new JoinEventHandler());
-        
-        /*  Create thread */
-        Sponge.getScheduler().createTaskBuilder().execute(startMatchThread)
-        	.interval(1, TimeUnit.SECONDS)
-            .name("StartMatchSetup").submit(this);
-        Sponge.getScheduler().createTaskBuilder().execute(queueThread)
-            .interval(1, TimeUnit.SECONDS)
-            .name("QueueDispatcher").submit(this);
-        Sponge.getScheduler().createTaskBuilder().execute(scorebardThread) // useless
-            .interval(1, TimeUnit.SECONDS)
-            .name("Scoreboard").submit(this);
-        
-        getLogger().info(" Started");
-    }    
-    
+    /* Methods */       
     @Listener
     public void onServerStarting(GameStartedServerEvent event)
     {
-    	/* Create DB if needed */
-    	db.createDB();
+    	long startTime = 0;
     	
-        /* Load queues */
+    	/* Database */
+    	db.createDB();
         db.loadArenas();
-        
-        /* Load arenas */
         db.loadQueues();	
         
-        /* Create free arena list */
-        
+        /* Create free arena list */        
         // Find all type of arenas available
         LinkedHashSet<String> types = new LinkedHashSet<String>();
         for(Map.Entry<String, Arena> entry : arenas.entrySet())
@@ -129,17 +87,45 @@ public class EzpzPvpKit
         	this.usedArenas.put(type, new LinkedList<String>());
         }
         
+        /* Commands */
+		utils = new Utils();
+		getLogger().info("Commands initialized");
+    	
+    	/*  Events */    	
+        Sponge.getGame().getEventManager().registerListeners(this, new EventHandler());
+        Sponge.getGame().getEventManager().registerListeners(this, new UseItemHandler());
+        Sponge.getGame().getEventManager().registerListeners(this, new JoinEventHandler());
+        getLogger().info("Event handlers registrated");
+        
+        /*  Threads */
+        Sponge.getScheduler().createTaskBuilder().execute(startMatchThread)
+        	.interval(1, TimeUnit.SECONDS)
+            .name("StartMatchSetup").submit(this);
+        Sponge.getScheduler().createTaskBuilder().execute(queueThread)
+            .interval(1, TimeUnit.SECONDS)
+            .name("QueueDispatcher").submit(this);
+        Sponge.getScheduler().createTaskBuilder().execute(scorebardThread) // useless
+            .interval(1, TimeUnit.SECONDS)
+            .name("Scoreboard").submit(this);
+        getLogger().info("Threads launched");
+        
         double elapsedTime = (System.nanoTime() - startTime) / 1000000000.0;
-        logger.info("plugin successfully loaded in " + elapsedTime + " seconds");
+        logger.info("EzpzPvpKit plugin successfully loaded in " + elapsedTime + " seconds");
     }
 
-    /* Getters and Setters */
-    
+    /**
+     * Logger getter    
+     * @return logger
+     */
     public static Logger getLogger()
     {
         return EzpzPvpKit.getInstance().logger;
     }
 
+    /**
+     * Get singleton instance
+     * @return EzpzPvpKit
+     */
     public static EzpzPvpKit getInstance()
     {
         synchronized(EzpzPvpKit.class)
@@ -151,11 +137,20 @@ public class EzpzPvpKit
         return EzpzPvpKit.instance;
     }
     
+    /**
+     * Game getter
+     * @return Game
+     */
     public Game getGame()
     {
     	return this.game;
     }
 
+    /**
+     * Queue getter
+     * @param name
+     * @return
+     */
     public DuelQueue getQueue(String name)
     {
         return queues.get(name);
@@ -213,25 +208,10 @@ public class EzpzPvpKit
     {
 		return utils;
 	}
-    
-    public LinkedList<String> getArenaList()
+
+    public LinkedHashMap<String, Arena> getArenas()
     {
-    	LinkedList<String> arenalist = new LinkedList<String>();
-    	for (Map.Entry<String,Arena> entry : arenas.entrySet()) 
-    	{   	
-    		arenalist.add(entry.getKey());
-    	}
-    	return arenalist;
-    }
-    
-    public LinkedList<String> getQueueList() // TO REMOVE
-    {
-    	LinkedList<String> queuelist = new LinkedList<String>();
-    	for (Map.Entry<String,DuelQueue> entry : queues.entrySet()) 
-    	{   	
-    		queuelist.add(entry.getKey());
-    	}
-    	return queuelist;
+    	return this.arenas;
     }
     
     public LinkedHashMap<String, DuelQueue> getQueues()
@@ -260,6 +240,25 @@ public class EzpzPvpKit
 		
 		return arena;
 	}
+	
+	public Team getTeam(String name)
+	{
+		return this.teams.get(name);
+	}
 
+	public void addTeam(Team team)
+	{
+		this.teams.put(team.getName(), team);
+	}
+	
+	public void removeTeam(String name)
+	{
+		this.teams.remove(name);
+	}
+	
+    public StartMatchThread getStartMatchSetup() 
+    {
+		return startMatchThread;
+	}  
 }
 

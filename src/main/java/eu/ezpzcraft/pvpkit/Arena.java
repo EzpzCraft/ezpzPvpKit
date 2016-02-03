@@ -20,7 +20,7 @@ import com.flowpowered.math.vector.Vector3d;
  * <li> one type (String) </li>
  * <li> one appreciation score (float) </li>
  * </ul>
- *
+ * 
  */
 
 public class Arena
@@ -32,7 +32,9 @@ public class Arena
     private Vector3d rotation2 = null;
     private String type = null;
     private float voteScore = 0;
-    private LinkedHashMap<Location<World>, BlockState> modifiedBlocks = null; // TODO block
+    // Modified block in order to reset arena: <pos, block>
+    private LinkedHashMap<Location<World>, BlockState> 
+    modifiedBlocks = new LinkedHashMap<Location<World>, BlockState>();
 
     public Arena(String name, String type, float voteScore,
     				Location<World> pos1, Vector3d rotation1, 

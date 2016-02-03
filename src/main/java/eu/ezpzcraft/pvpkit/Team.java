@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class Team
@@ -28,10 +29,8 @@ public class Team
         this.players = new LinkedHashSet<String>();
         this.scores = new HashMap<String, Double>(); // What on queue creation ? Must be updated
         
-        for(String type:  EzpzPvpKit.getInstance().getQueueList() )
-        	this.scores.put(type, 1000.0); // TODO 
-        
-        
+        for( Map.Entry<String, DuelQueue> queue: EzpzPvpKit.getInstance().getQueues().entrySet() )
+        	this.scores.put(queue.getKey(), 1000.0);
     }
 
     public int getSize()

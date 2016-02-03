@@ -1,6 +1,7 @@
 package eu.ezpzcraft.pvpkit.commands;
 
 import java.util.LinkedList;
+import java.util.Map;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
@@ -17,6 +18,7 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
+import eu.ezpzcraft.pvpkit.Arena;
 import eu.ezpzcraft.pvpkit.EzpzPvpKit;
 
 public class ArenaList implements CommandExecutor
@@ -29,13 +31,13 @@ public class ArenaList implements CommandExecutor
         if(src instanceof Player) 
         {     
         	LinkedList<Text> arenalist = new LinkedList<Text>();
-        	if(EzpzPvpKit.getInstance().getArenaList().size()==0)
+        	if(EzpzPvpKit.getInstance().getArenas().size()==0)
         	{
         		arenalist.add(Text.of("No arena created"));
         	}
         	else
         	{
-	    		for (String it : EzpzPvpKit.getInstance().getArenaList()) 
+	    		for (Map.Entry<String, Arena> it : EzpzPvpKit.getInstance().getArenas().entrySet()) 
 	    		{   	
 	    			arenalist.add(Text.builder("")   
 											.append(Text.builder(" [")
@@ -45,32 +47,32 @@ public class ArenaList implements CommandExecutor
 													.color(TextColors.RED)
 													.style(TextStyles.BOLD)
 													.build())
-													.onHover(TextActions.showText(Text.builder("Click to delete "+it)
+													.onHover(TextActions.showText(Text.builder("Click to delete "+it.getKey())
 															.style(TextStyles.RESET)
 															.color(TextColors.RED)
 															.build()))
-													.onClick(TextActions.runCommand("/k adel "+it))
+													.onClick(TextActions.runCommand("/k adel "+it.getKey()))
 													.build())
 											.append(Text.builder("]")
 													.style(TextStyles.BOLD)
 													.color(TextColors.DARK_GRAY)
 													.build())
-											.append(Text.builder("   "+it)
+											.append(Text.builder("   "+it.getKey())
 													.style(TextStyles.RESET)
 													.color(TextColors.WHITE)
 													.onHover(TextActions.showText(Text.builder("Type  ")
 															.append(Text.of(TextColors.GRAY, ":  "))
-															.append(Text.of(TextColors.WHITE, EzpzPvpKit.getInstance().getArena(it).getType()))
+															.append(Text.of(TextColors.WHITE, it.getValue().getType()))
 															.append(Text.of("\n",TextColors.GRAY, "pos1  "))
 															.append(Text.of(TextColors.GRAY, ":  "))
-															.append(Text.of(TextColors.GRAY,"(",TextColors.GOLD,EzpzPvpKit.getInstance().getArena(it).getPos1().getBlockX(),TextColors.GRAY,",",
-																	TextColors.GOLD,EzpzPvpKit.getInstance().getArena(it).getPos1().getBlockY(),TextColors.GRAY,",",
-																	TextColors.GOLD,EzpzPvpKit.getInstance().getArena(it).getPos1().getBlockZ(),TextColors.GRAY,")"))
+															.append(Text.of(TextColors.GRAY,"(",TextColors.GOLD,it.getValue().getPos1().getBlockX(),TextColors.GRAY,",",
+																	TextColors.GOLD,it.getValue().getPos1().getBlockY(),TextColors.GRAY,",",
+																	TextColors.GOLD,it.getValue().getPos1().getBlockZ(),TextColors.GRAY,")"))
 															.append(Text.of("\n",TextColors.GRAY, "pos2  "))
 															.append(Text.of(TextColors.GRAY, ":  "))
-															.append(Text.of(TextColors.GRAY,"(",TextColors.GOLD,EzpzPvpKit.getInstance().getArena(it).getPos2().getBlockX(),TextColors.GRAY,",",
-																	TextColors.GOLD,EzpzPvpKit.getInstance().getArena(it).getPos2().getBlockY(),TextColors.GRAY,",",
-																	TextColors.GOLD,EzpzPvpKit.getInstance().getArena(it).getPos2().getBlockZ(),TextColors.GRAY,")"))
+															.append(Text.of(TextColors.GRAY,"(",TextColors.GOLD,it.getValue().getPos2().getBlockX(),TextColors.GRAY,",",
+																	TextColors.GOLD,it.getValue().getPos2().getBlockY(),TextColors.GRAY,",",
+																	TextColors.GOLD,it.getValue().getPos2().getBlockZ(),TextColors.GRAY,")"))
 															.style(TextStyles.RESET)
 															.color(TextColors.GRAY)
 															.build()))

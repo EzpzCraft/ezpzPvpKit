@@ -21,7 +21,7 @@ public class QueueThread implements Consumer<Task>
     {
 		for( Entry<String, DuelQueue> queue: EzpzPvpKit.getInstance().getQueues().entrySet() )
 		{
-			ArrayList<Team> teams = queue.getValue().match();
+			ArrayList<String> teams = queue.getValue().match();
 			
 			// 1. Find a team couple
 			if( teams==null )

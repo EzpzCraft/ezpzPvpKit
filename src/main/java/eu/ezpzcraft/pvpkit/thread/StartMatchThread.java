@@ -109,8 +109,9 @@ public class StartMatchThread implements Consumer<Task>
 	
 	
 	/* Getters and Setters */
-    public void addTeamStart(Team team) 
+    public void addTeamStart(String teamName) 
     {
+    	Team team = EzpzPvpKit.getInstance().getTeam(teamName);
     	
 		teams.put(team.getName(), team);		
 		team.setLocation( 
@@ -132,9 +133,8 @@ public class StartMatchThread implements Consumer<Task>
 				}
 			}
 		}*/
-		setBox(team.getLocation());
 		
-
+		setBox(team.getLocation());	
 	}
     
     public void setBox(Location<World> location)

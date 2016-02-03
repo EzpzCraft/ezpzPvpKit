@@ -1,7 +1,6 @@
 package eu.ezpzcraft.pvpkit;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 /**
@@ -15,8 +14,8 @@ import java.util.LinkedList;
 public class DuelQueue
 {
     private String name = null;
-	// List of waiting teams
-    private ArrayList<Team> waitingTeams = new ArrayList<Team>();
+	// List of waiting teams (name)
+    private ArrayList<String> waitingTeams = new ArrayList<String>();
     // List of duels in this queue
     private LinkedList<Duel> duels = new LinkedList<Duel>();
     // DEFAULT NOTRANKED
@@ -48,7 +47,7 @@ public class DuelQueue
     	//Check size
         if(team.getSize() != this.size)
             return false;       
-        waitingTeams.add(team);
+        waitingTeams.add(team.getName());
         return true;
     }
 
@@ -70,30 +69,35 @@ public class DuelQueue
     }
 
     /**
-     * Match two teams who joined this queue.
+     * Match two teams who joined this queue:
+     * Matching is done by comparing the three first teams (team2,3,4) 
+     * score with the first team (team1). The pair <team1, teamX> is then
+     * created according to:
+     * - the smallest score difference
+     * - a probability of 0.6
      * 
-     * @return ArrayList<Team> List of two team
+     * @return ArrayList<String> List of two team
      */
-    public ArrayList<Team> match()
+    public ArrayList<String> match()
     {
     	if( waitingTeams.size()<2 )
     		return null;
 
     	// From here we know that there is at least one available couple
-    	ArrayList<Team> result = new ArrayList<Team>();
+    	ArrayList<String> result = new ArrayList<String>();
     	result.add( waitingTeams.remove(0) );
     	
     	// Let's check the three (if any) last teams
     	int size = waitingTeams.size();
     	int max = waitingTeams.size()>=3 ? 3: size;
-    	double cote = result.get(0).getScore(this.type);
+    	double cote = EzpzPvpKit.getInstance().getTeam( result.get(0) ).getScore(this.type);
     	
     	double currentMin = Double.MAX_VALUE, tmpMin;
     	int currentCandidate = 0;
     	
     	for(int i=1; i<max; ++i)
     	{
-    		tmpMin = waitingTeams.get(i).getScore(this.type);
+    		tmpMin = EzpzPvpKit.getInstance().getTeam(waitingTeams.get(i)).getScore(this.type);
     		if( Math.abs(cote - currentMin) > Math.abs(cote - tmpMin) )
     		{
     			currentMin = tmpMin;
@@ -101,40 +105,90 @@ public class DuelQueue
     		}
     	}
     		
+    	// Add randomness to avoid repetition
+    	double random = Math.random();    	
+    	switch(currentCandidate)
+    	{
+	    	case 0:
+	        	if( random <= 0.6 )
+	        		currentCandidate = 0;
+	        	else if( random <= 0.8 )
+	        		currentCandidate = 1;
+	        	else
+	        		currentCandidate = 2;
+	    		break;
+	    	case 1:
+	        	if( random <= 0.6 )
+	        		currentCandidate = 1;
+	        	else if( random <= 0.8 )
+	        		currentCandidate = 0;
+	        	else
+	        		currentCandidate = 2;
+	    		break;
+	    	default:
+	        	if( random <= 0.6 )
+	        		currentCandidate = 2;
+	        	else if( random <= 0.8 )
+	        		currentCandidate = 0;
+	        	else
+	        		currentCandidate = 1;
+	    		break;    	
+    	}    	
+    	
     	result.add( waitingTeams.remove(currentCandidate) );
     	
         return result;
     }
 
+    /**
+     * Add the duel to the queue
+     * @param duel
+     */
     public void addDuel(Duel duel)
     {
         duels.add(duel);
     }
     
+    /**
+     * Get the queue name
+     * @return name
+     */
     public String getName()
     {
     	return this.name;
     }
     
+    /**
+     * Determine if this is a ranked queue
+     * @return true if the queue is ranked false otherwise
+     */
     public Boolean isRanked()
     {
     	return this.isRanked;
     }
     
+    /**
+     * Get the queue type
+     * @return type as a String
+     */
     public String getType()
     {
     	return this.type;
     }
-    public Boolean getIsRanked() 
-    {
-		return isRanked;
-	}
 
+    /**
+     * Define if the queue is ranked or not
+     * @param isRanked
+     */
 	public void setIsRanked(Boolean isRanked) 
 	{
 		this.isRanked = isRanked;
 	}
 
+	/**
+	 * Get the queue size
+	 * @return the size
+	 */
 	public int getSize() 
 	{
 		return size;

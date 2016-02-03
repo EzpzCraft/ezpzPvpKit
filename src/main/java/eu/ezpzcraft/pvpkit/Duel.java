@@ -1,7 +1,5 @@
 package eu.ezpzcraft.pvpkit;
 
-import java.util.Map;
-import java.util.UUID;
 
 import org.spongepowered.api.entity.living.player.Player;
 
@@ -14,12 +12,12 @@ import org.spongepowered.api.entity.living.player.Player;
 public class Duel
 {
     private Arena arena = null;
-    private Team team1 = null;
-    private Team team2 = null;
+    private String team1 = null;
+    private String team2 = null;
     
     private Player tmp = null; // tmp var
 
-    public Duel(Team team1, Team team2, Arena arena)
+    public Duel(String team1, String team2, Arena arena)
     {
         this.team1 = team1;
         this.team2 = team2;
@@ -38,7 +36,7 @@ public class Duel
     public void start()
     {
         // For all players from both team
-        for( String player : team1.getPlayers() )
+        for( String player : EzpzPvpKit.getInstance().getTeam(team1).getPlayers() )
         {       	
         	tmp = EzpzPvpKit.getInstance().getPlayer(player).getPlayer();
         	
@@ -65,7 +63,7 @@ public class Duel
         	
         	// Send msg
         }
-        for( String player : team2.getPlayers()  )
+        for( String player : EzpzPvpKit.getInstance().getTeam(team2).getPlayers() )
         {
         	tmp = EzpzPvpKit.getInstance().getPlayer(player).getPlayer();
         	
