@@ -5,10 +5,14 @@ import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.manipulator.mutable.PotionEffectData;
 import org.spongepowered.api.data.type.DyeColors;
+import org.spongepowered.api.effect.potion.PotionEffect;
+import org.spongepowered.api.effect.potion.PotionEffectTypes;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.entity.projectile.Arrow;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
@@ -27,8 +31,11 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
 import eu.ezpzcraft.pvpkit.Database;
+import eu.ezpzcraft.pvpkit.Duel;
+import eu.ezpzcraft.pvpkit.DuelQueue;
 import eu.ezpzcraft.pvpkit.EzpzPvpKit;
 import eu.ezpzcraft.pvpkit.PlayerState;
+import eu.ezpzcraft.pvpkit.PvPPlayer;
 import eu.ezpzcraft.pvpkit.Team;
 
 import java.sql.SQLException;
@@ -85,31 +92,6 @@ public class EventHandler
                     states.put( player.get().getName(), new PlayerState(player.get()) );
             }
             
-            //TODO REMOVE
-            else if ( tr.getOriginal().getState().getType().equals(BlockTypes.SPONGE) )
-            {
-                Cause cause = event.getCause();
-                Optional<Player> player = cause.first(Player.class);
-
-                if(player.isPresent())
-                {          
-                	Team team;
-					try 
-					{
-						team = new Team("MonEquipe");
-	                	for(Player player2 : Sponge.getServer().getOnlinePlayers())
-	                	{
-	                		team.addPlayer(player2.getIdentifier());
-	                	}
-	                    EzpzPvpKit.getInstance().getStartMatchSetup().addTeamStart(team.getName());
-					} catch (Exception e) 
-					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
-                }
-            }
             
             
             else if ( tr.getOriginal().getState().getType().equals(BlockTypes.STONE) )
@@ -268,10 +250,39 @@ public class EventHandler
         
         if( !(living instanceof Player) )       
         	return;
-
+        
         Player player = (Player) living;
-        player.offer(Keys.HEALTH, player.get(Keys.MAX_HEALTH).get());        
-        player.setLocationSafely( player.getWorld().getSpawnLocation() );
+        PvPPlayer pvpplayer = EzpzPvpKit.getInstance().getPlayer(player.getIdentifier());
+        Team team = EzpzPvpKit.getInstance().getTeam(pvpplayer.getTeam());
+        DuelQueue queue = EzpzPvpKit.getInstance().getQueue(team.getQueue());
+        Duel duel = queue.getDuel(team.getName());
+        
+        pvpplayer.setAlive(false);
+        
+        // SET INVISIBLE AND FLYABLE
+        player.offer(Keys.CAN_FLY, true);
+        player.gameMode().set(GameModes.SPECTATOR);
+              
+        for(String playerUUID : team.getPlayers())
+        {
+        	if(EzpzPvpKit.getInstance().getPlayer(playerUUID).getAlive())
+        		return; //TODO spectator
+        }
+        
+        queue.removeDuel(duel.getTeam1(), duel.getTeam2());
+        
+        for(String playerUUID2 : team.getPlayers())
+        {
+            // SET INVISIBLE AND FLYABLE
+            player.offer(Keys.CAN_FLY, false);
+            player.gameMode().set(GameModes.SURVIVAL);
+            
+        	EzpzPvpKit.getInstance().getPlayer(playerUUID2).getPlayer().offer(Keys.HEALTH, player.get(Keys.MAX_HEALTH).get());        
+        	EzpzPvpKit.getInstance().getPlayer(playerUUID2).getPlayer().setLocationSafely( player.getWorld().getSpawnLocation() );
+        }       
+        duel.end();  
+        EzpzPvpKit.getInstance().fromUsedToFree(duel.getArena());
+        team.setQueue(null);
     }    
 
     // TODO supprimer toute interaction avec les blocks dans le spawn

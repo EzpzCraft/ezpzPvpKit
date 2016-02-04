@@ -11,17 +11,18 @@ import org.spongepowered.api.entity.living.player.Player;
  */
 public class Duel
 {
-    private Arena arena = null;
-    private String team1 = null;
+	private Arena arena = null;
+	private String team1 = null;
     private String team2 = null;
     
-    private Player tmp = null; // tmp var
+    private PvPPlayer tmp = null; // tmp var
 
     public Duel(String team1, String team2, Arena arena)
     {
         this.team1 = team1;
         this.team2 = team2;
         this.arena = arena;
+        EzpzPvpKit.getInstance().getQueue(EzpzPvpKit.getInstance().getTeam(team1).getQueue()).addDuel(this);
     }
 
     /**
@@ -35,13 +36,18 @@ public class Duel
      */
     public void start()
     {
+    	
+    	EzpzPvpKit.getInstance().getTeam(team1).setInMatch(true);
+    	EzpzPvpKit.getInstance().getTeam(team2).setInMatch(true);
         // For all players from both team
+    	
         for( String player : EzpzPvpKit.getInstance().getTeam(team1).getPlayers() )
         {       	
-        	tmp = EzpzPvpKit.getInstance().getPlayer(player).getPlayer();
+        	tmp = EzpzPvpKit.getInstance().getPlayer(player);
         	
+        	tmp.setAlive(true);      	
         	// TP
-        	tmp.setLocationAndRotation( arena.getPos1(), arena.getRotation1() );
+        	tmp.getPlayer().setLocationAndRotation( arena.getPos1(), arena.getRotation1() );
         	
         	// DO not forget to update player state
         	// Current duel link
@@ -65,14 +71,13 @@ public class Duel
         }
         for( String player : EzpzPvpKit.getInstance().getTeam(team2).getPlayers() )
         {
-        	tmp = EzpzPvpKit.getInstance().getPlayer(player).getPlayer();
+        	tmp = EzpzPvpKit.getInstance().getPlayer(player);
         	
+        	tmp.setAlive(true);
         	// TP
-        	tmp.setLocationAndRotation( arena.getPos2(), arena.getRotation2() );
-        }
-        
-        EzpzPvpKit.getInstance().getStartMatchSetup().addTeamStart(team1);
-        EzpzPvpKit.getInstance().getStartMatchSetup().addTeamStart(team2);
+        	tmp.getPlayer().setLocationAndRotation( arena.getPos2(), arena.getRotation2() );
+        }      
+        EzpzPvpKit.getInstance().getStartMatchSetup().addTeamStart(team1,team2);
     }
 
     /**
@@ -85,6 +90,11 @@ public class Duel
      */
     public void end()
     {
+    	EzpzPvpKit.getInstance().getTeam(team1).setInMatch(false);
+    	EzpzPvpKit.getInstance().getTeam(team2).setInMatch(false);
+    	
+    	EzpzPvpKit.getInstance().getQueue(EzpzPvpKit.getInstance().getTeam(team1).getQueue())
+    										.removeDuel(this.getTeam1(),this.getTeam2());
         // Save score
         // TP back (pos+orientation)
         // Set health
@@ -92,4 +102,58 @@ public class Duel
         // Set effects
         // Set inventory
     }
+    
+    /**
+     * Get team1
+     * @return team1
+     */
+    public String getTeam1() 
+    {
+		return team1;
+	}
+
+    /**
+     * Get team2
+     * @return team2
+     */
+	public String getTeam2() 
+	{
+		return team2;
+	}
+
+	/**
+	 * Set team1
+	 * @param team1
+	 */
+	public void setTeam1(String team1) 
+	{
+		this.team1 = team1;
+	}
+
+	/**
+	 * Set team2
+	 * @param team2
+	 */
+	public void setTeam2(String team2) 
+	{
+		this.team2 = team2;
+	}
+	
+	/**
+	 * Get arena
+	 * @return arena
+	 */
+    public Arena getArena() 
+    {
+		return arena;
+	}
+
+    /**
+     * Set arena
+     * @param arena
+     */
+	public void setArena(Arena arena) 
+	{
+		this.arena = arena;
+	}
 }

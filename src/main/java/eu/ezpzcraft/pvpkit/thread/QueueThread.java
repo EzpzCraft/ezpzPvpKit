@@ -31,8 +31,8 @@ public class QueueThread implements Consumer<Task>
 			else
 			{
 				Duel duel = new Duel(teams.get(0), teams.get(1), arena);
-			
-			duel.start();
+				queue.getValue().addDuel(duel);
+				duel.start();
 			}
 		}
     }

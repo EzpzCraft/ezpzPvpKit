@@ -68,21 +68,7 @@ public class EzpzPvpKit
     	/* Database */
     	db.createDB();
         db.loadArenas();
-        db.loadQueues();	
-        
-        /* Create free arena list */        
-        // Find all type of arenas available
-        LinkedHashSet<String> types = new LinkedHashSet<String>();
-        for(Map.Entry<String, Arena> entry : arenas.entrySet())
-        {
-        	types.add( entry.getValue().getType() );
-        }
-        
-        for(String type: types)
-        {
-        	this.freeArenas.put(type, new LinkedList<String>());
-        	this.usedArenas.put(type, new LinkedList<String>());
-        }
+        db.loadQueues();	       
         
         /* Commands */
         CommandHandler cmd = new CommandHandler(); // TODO
@@ -303,6 +289,16 @@ public class EzpzPvpKit
 		usedArenas.get(arena.getType()).add(arena.getName());
 		
 		return arena;
+	}
+	
+	/**
+	 * Transert the arena from used to free list
+	 * @param arena
+	 */
+	public void fromUsedToFree(Arena arena)
+	{
+		this.usedArenas.get(arena.getType()).remove(arena.getName());
+		this.freeArenas.get(arena.getType()).add(arena.getName());
 	}
 	
 	/**

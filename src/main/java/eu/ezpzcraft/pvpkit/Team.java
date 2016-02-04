@@ -9,6 +9,8 @@ public class Team
     // Player UUID
     private LinkedHashSet<String> players = null; 
     private int maxSize = 5;
+    private String queue = null;
+    private Boolean inMatch = false;
 
     public Team(String name)
     {
@@ -83,5 +85,41 @@ public class Team
 	public TeamStats getStats()
 	{
 		return this.stats;
+	}
+	
+	/**
+	 * Check if the player is in a duel
+	 * @return true if the player is in a duel, false otherwise
+	 */
+	public Boolean getInMatch() 
+	{
+		return this.inMatch;
+	}
+
+	/**
+	 * Define the player as in a duel
+	 * @param inMatch
+	 */
+	public void setInMatch(Boolean inMatch) 
+	{
+		this.inMatch = inMatch;
+	}
+	
+	/**
+	 * Get the queue the player is currently in
+	 * @return the queue name
+	 */
+    public String getQueue() 
+    {
+		return this.queue;
+	}
+
+    /**
+     * Set the queue name the player is currently in
+     * @param queue
+     */
+	public void setQueue(String queue) 
+	{
+		this.queue = queue;
 	}
 }

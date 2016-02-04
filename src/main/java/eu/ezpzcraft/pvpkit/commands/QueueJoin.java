@@ -37,14 +37,17 @@ public class QueueJoin implements CommandExecutor
         	PvPPlayer pvpPlayer = EzpzPvpKit.getInstance().getPlayer(player.getIdentifier());
         	Team team = EzpzPvpKit.getInstance().getTeam( pvpPlayer.getTeam() );
         	DuelQueue queue = EzpzPvpKit.getInstance().getQueue(name);
-        	
+        	// Size ?
         	if( team.getSize() != queue.getSize() )
         		Utils.sendKitMessage(player, Text.of(TextColors.RED, "Party size doesn't match queue size"));
-        	else if( pvpPlayer.getInMatch() )
-        		Utils.sendKitMessage(player, Text.of(TextColors.RED, "Cannot join queue in duel"));
-        	// Match XvX
+        	// Is in duel ?
+        	else if( team.getInMatch() )
+        		Utils.sendKitMessage(player, Text.of(TextColors.RED, "Cannot join queue in duel"));   		
         	else
-        	{        		
+        	{     
+            	// is in other queue ?
+            	if(team.getQueue()!=null)
+            		EzpzPvpKit.getInstance().getQueue(team.getQueue()).leave(team);    
         		queue.join(team);      		
         		for(String it : team.getPlayers())
         			Utils.sendKitMessage(EzpzPvpKit.getInstance().getPlayer(it).getPlayer(), 

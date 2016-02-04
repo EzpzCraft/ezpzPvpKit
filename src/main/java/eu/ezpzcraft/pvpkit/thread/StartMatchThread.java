@@ -1,7 +1,10 @@
 package eu.ezpzcraft.pvpkit.thread;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.function.Consumer;
 
 import org.spongepowered.api.Sponge;
@@ -20,16 +23,19 @@ import eu.ezpzcraft.pvpkit.Team;
 
 public class StartMatchThread implements Consumer<Task>
 {
-	private LinkedList<String> teams = new LinkedList<String>();
+	private LinkedHashSet<String> teams = new LinkedHashSet<String>();
 	private LinkedHashMap<String,Integer> countdowns = new LinkedHashMap<String,Integer>();
 	private LinkedHashMap<String,Location<World>> locations = new LinkedHashMap<String,Location<World>>();
+	private LinkedList<String> teamsToRemove; 
 	
 	private int ticks = (int) (Sponge.getServer().getTicksPerSecond()/4.);
 	
 	// Temporary variables
 	private int _countdown;
 	private PvPPlayer _player = null;
-	private Team _team;
+	private Team _team = null;
+	private String team = null;
+	private Iterator<String> it = null;
 	
 	/**
 	 * For each team joining a duel, it prevents the players to move and send them
@@ -37,10 +43,13 @@ public class StartMatchThread implements Consumer<Task>
 	 */
 	@Override
     public void accept(Task task) 
-    {
+    {		
+		teamsToRemove = new LinkedList<String>();
+		it = teams.iterator();
 		// each team
-		for (String team: teams) 
+		while (it.hasNext()) 
 		{
+			team = it.next();
 			_team = EzpzPvpKit.getInstance().getTeam(team);
 			_countdown = getCD(team);
 			
@@ -53,13 +62,19 @@ public class StartMatchThread implements Consumer<Task>
 
 			if(_countdown == 0)
 			{
-				removeBox( locations.get(team) );
-				teams.remove(team);
-				locations.remove(team);
-				countdowns.remove(team);
+				teamsToRemove.add(team);
+				EzpzPvpKit.getInstance().getQueue(_team.getQueue()).leave(_team);								
 			}
 			else
 				setCD(team, _countdown-1);
+		}
+		for(String s: teamsToRemove)
+		{
+			removeBox( locations.get(s) );
+			teams.remove(s);
+			locations.remove(s);
+			countdowns.remove(s);
+			
 		}
     }
 	
@@ -111,19 +126,26 @@ public class StartMatchThread implements Consumer<Task>
 	
 	
 	/**
-	 * Add a team to the list of team to manage
+	 * Add the two teams of one duel to the list of team to manage
 	 * @param teamName
 	 */
-    public void addTeamStart(String teamName) 
+    public void addTeamStart(String teamName, String teamName2) 
     {
-    	Team team = EzpzPvpKit.getInstance().getTeam(teamName);		
+    	Team team = EzpzPvpKit.getInstance().getTeam(teamName);	
+    	Team team2 = EzpzPvpKit.getInstance().getTeam(teamName2);	
 		teams.add(teamName);
+		teams.add(teamName2);
 		locations.put(teamName, EzpzPvpKit.getInstance()
 										  .getPlayer(team.getPlayers().iterator().next())
 										  .getPlayer().getLocation() );
+		locations.put(teamName2, EzpzPvpKit.getInstance()
+				  .getPlayer(team2.getPlayers().iterator().next())
+				  .getPlayer().getLocation() );
 		
 		this.countdowns.put(teamName, 3);
+		this.countdowns.put(teamName2, 3);
 		setBox( locations.get(teamName) );	
+		setBox( locations.get(teamName2) );
 	}
     
     /**

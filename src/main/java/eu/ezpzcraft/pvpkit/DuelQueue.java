@@ -1,6 +1,7 @@
 package eu.ezpzcraft.pvpkit;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 /**
@@ -16,8 +17,8 @@ public class DuelQueue
     private String name = null;
 	// List of waiting teams (name)
     private ArrayList<String> waitingTeams = new ArrayList<String>();
-    // List of duels in this queue
-    private LinkedList<Duel> duels = new LinkedList<Duel>();
+    // List of duels in this queue <teamname,duel>
+    private LinkedHashMap<String, Duel> duels = new LinkedHashMap<String, Duel>();
     // DEFAULT NOTRANKED
 	private Boolean isRanked = false; 
     private String type = null;
@@ -48,6 +49,7 @@ public class DuelQueue
         if(team.getSize() != this.size)
             return false;       
         waitingTeams.add(team.getName());
+        team.setQueue(this.getName());
         return true;
     }
 
@@ -146,7 +148,29 @@ public class DuelQueue
      */
     public void addDuel(Duel duel)
     {
-        duels.add(duel);
+        duels.put(duel.getTeam1(),duel);
+        duels.put(duel.getTeam2(),duel);
+    }
+    
+    /**
+     * Delete a duel from the queue
+     * @param name
+     * @param name2
+     */
+    public void removeDuel(String name,String name2)
+    {
+        duels.remove(name);
+        duels.remove(name2);
+    }
+    
+    /**
+     * Get the duel of a team
+     * @param teamName
+     * @return duel of the specified team
+     */
+    public Duel getDuel(String teamName)
+    {
+    	return duels.get(teamName);
     }
     
     /**
@@ -192,5 +216,15 @@ public class DuelQueue
 	public int getSize() 
 	{
 		return size;
+	}
+	
+	/**
+	 * Determine if the name is in the queue
+	 * @param name team name
+	 * @return true if team is already in the queue
+	 */
+	public Boolean isTeamWaiting(String name)
+	{
+		return this.waitingTeams.contains(name);
 	}
 }

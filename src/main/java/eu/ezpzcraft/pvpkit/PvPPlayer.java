@@ -13,10 +13,9 @@ public class PvPPlayer
     private String lang = "English"; // TODO: add in DB in the future when handling languages
 	private String team = null;
     private PlayerState state = null;
-    private String queue = null;
-    private Boolean inMatch = false;
-    		
-    /* Constructor */
+    private Boolean alive = false;
+
+	/* Constructor */
     public PvPPlayer(Player player, int remainingRanked, String rank, long[] vote)
     {
         this.player = player;
@@ -93,23 +92,6 @@ public class PvPPlayer
 		return this.lang;
 	}
 
-	/**
-	 * Check if the player is in a duel
-	 * @return true if the player is in a duel, false otherwise
-	 */
-	public Boolean getInMatch() 
-	{
-		return this.inMatch;
-	}
-
-	/**
-	 * Define the player as in a duel
-	 * @param inMatch
-	 */
-	public void setInMatch(Boolean inMatch) 
-	{
-		this.inMatch = inMatch;
-	}
 	
 	/**
 	 * Get the player league
@@ -136,24 +118,6 @@ public class PvPPlayer
 	public int getMeanScore()
 	{
 		return 10; // TODO
-	}
-
-	/**
-	 * Get the queue the player is currently in
-	 * @return the queue name
-	 */
-    public String getQueue() 
-    {
-		return this.queue;
-	}
-
-    /**
-     * Set the queue name the player is currently in
-     * @param queue
-     */
-	public void setQueue(String queue) 
-	{
-		this.queue = queue;
 	}
 	
 	/**
@@ -182,5 +146,22 @@ public class PvPPlayer
 	public long getVote(int i)
 	{
 		return this.vote[i];
+	}
+	
+	/**
+	 * Is the player alive ?
+	 * @return true if alive
+	 */
+	public Boolean getAlive() 
+	{
+		return alive;
+	}
+
+	/**
+	 * Set if the player is alive or not
+	 * @param alive
+	 */
+	public void setAlive(Boolean alive) {
+		this.alive = alive;
 	}
 }
