@@ -73,8 +73,7 @@ public class StartMatchThread implements Consumer<Task>
 			removeBox( locations.get(s) );
 			teams.remove(s);
 			locations.remove(s);
-			countdowns.remove(s);
-			
+			countdowns.remove(s);			
 		}
     }
 	

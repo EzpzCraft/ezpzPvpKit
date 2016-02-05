@@ -1,8 +1,13 @@
 package eu.ezpzcraft.pvpkit;
 
-
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
-
+import org.spongepowered.api.entity.living.player.gamemode.GameModes;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
+import org.spongepowered.api.text.format.TextColor;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 
 /**
  * <b> Duel, class representing a duel. </b>
@@ -16,6 +21,7 @@ public class Duel
     private String team2 = null;
     
     private PvPPlayer tmp = null; // tmp var
+    private Player tmp2 = null;
 
     public Duel(String team1, String team2, Arena arena)
     {
@@ -39,6 +45,8 @@ public class Duel
     	
     	EzpzPvpKit.getInstance().getTeam(team1).setInMatch(true);
     	EzpzPvpKit.getInstance().getTeam(team2).setInMatch(true);
+    	EzpzPvpKit.getInstance().getTeam(team1).setLastArena(arena.getName());
+    	EzpzPvpKit.getInstance().getTeam(team2).setLastArena(arena.getName());
         // For all players from both team
     	
         for( String player : EzpzPvpKit.getInstance().getTeam(team1).getPlayers() )
@@ -48,7 +56,7 @@ public class Duel
         	tmp.setAlive(true);      	
         	// TP
         	tmp.getPlayer().setLocationAndRotation( arena.getPos1(), arena.getRotation1() );
-        	
+
         	// DO not forget to update player state
         	// Current duel link
         	//
@@ -88,19 +96,68 @@ public class Duel
      * </ul>
      *
      */
-    public void end()
+    public void end(Team winner)
     {
-    	EzpzPvpKit.getInstance().getTeam(team1).setInMatch(false);
-    	EzpzPvpKit.getInstance().getTeam(team2).setInMatch(false);
+    	Team _team1 = EzpzPvpKit.getInstance().getTeam(team1);
+    	Team _team2 = EzpzPvpKit.getInstance().getTeam(team2);
+    	_team1.setInMatch(false);
+    	_team2.setInMatch(false);
     	
     	EzpzPvpKit.getInstance().getQueue(EzpzPvpKit.getInstance().getTeam(team1).getQueue())
     										.removeDuel(this.getTeam1(),this.getTeam2());
-        // Save score
-        // TP back (pos+orientation)
-        // Set health
-        // Set hunger
-        // Set effects
-        // Set inventory
+    	
+        for( String player : _team1.getPlayers() )
+        {
+        	tmp = EzpzPvpKit.getInstance().getPlayer(player);      
+        	tmp2 = tmp.getPlayer();
+        	
+        	tmp.setAlive(false);
+        	tmp.getState().reset(tmp.getPlayer());  	
+        	tmp2.offer(Keys.CAN_FLY, false);
+            tmp2.gameMode().set(GameModes.SURVIVAL);
+            
+            // Vote ?
+            if( EzpzPvpKit.getInstance().getCommandHandler().getVoteMap()
+            			  .canVote(tmp2.getIdentifier(), _team1.getLastArena()) )
+            {
+            	sendVoteMsg(tmp2);
+            }
+            
+            // TODO save match in DB
+            // winner parameter
+            
+            // End of cbt msg
+        }  
+    }
+    
+    /**
+     * Send a map ranking message to the given player
+     * @param player
+     */
+    private void sendVoteMsg(Player player)
+    {
+    	Text msg = Text.builder("Rate the map: ").color(TextColors.GRAY)    			
+    	.append(Text.builder("[0]").color(TextColors.DARK_RED)
+    			    .onClick(TextActions.runCommand("/vote 1"))
+    			    .onHover(TextActions.showText(Text.of(TextColors.DARK_RED,"Awful")))
+    			    .build())
+    	.append(Text.builder("[1]").color(TextColors.RED)
+			    .onClick(TextActions.runCommand("/vote 2"))
+			    .onHover(TextActions.showText(Text.of(TextColors.RED,"Bad")))
+			    .build())
+    	.append(Text.builder("[0]").color(TextColors.YELLOW)
+			    .onClick(TextActions.runCommand("/vote 3"))
+			    .onHover(TextActions.showText(Text.of(TextColors.YELLOW,"Okay")))
+			    .build())
+    	.append(Text.builder("[0]").color(TextColors.GREEN)
+			    .onClick(TextActions.runCommand("/vote 4"))
+			    .onHover(TextActions.showText(Text.of(TextColors.GREEN,"Good")))
+			    .build())
+    	.append(Text.builder("[0]").color(TextColors.DARK_GREEN)
+			    .onClick(TextActions.runCommand("/vote 5"))
+			    .onHover(TextActions.showText(Text.of(TextColors.DARK_GREEN,"Amazing")))
+			    .build())
+    	.build();
     }
     
     /**

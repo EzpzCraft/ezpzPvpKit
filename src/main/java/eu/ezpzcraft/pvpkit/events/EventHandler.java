@@ -258,31 +258,23 @@ public class EventHandler
         Duel duel = queue.getDuel(team.getName());
         
         pvpplayer.setAlive(false);
-        
-        // SET INVISIBLE AND FLYABLE
-        player.offer(Keys.CAN_FLY, true);
-        player.gameMode().set(GameModes.SPECTATOR);
-              
+                     
         for(String playerUUID : team.getPlayers())
         {
         	if(EzpzPvpKit.getInstance().getPlayer(playerUUID).getAlive())
-        		return; //TODO spectator
+        	{
+        		// SET INVISIBLE AND FLYABLE
+                player.offer(Keys.CAN_FLY, true);
+                player.gameMode().set(GameModes.SPECTATOR);
+        		return;
+        	}
         }
         
-        queue.removeDuel(duel.getTeam1(), duel.getTeam2());
-        
-        for(String playerUUID2 : team.getPlayers())
-        {
-            // SET INVISIBLE AND FLYABLE
-            player.offer(Keys.CAN_FLY, false);
-            player.gameMode().set(GameModes.SURVIVAL);
-            
-        	EzpzPvpKit.getInstance().getPlayer(playerUUID2).getPlayer().offer(Keys.HEALTH, player.get(Keys.MAX_HEALTH).get());        
-        	EzpzPvpKit.getInstance().getPlayer(playerUUID2).getPlayer().setLocationSafely( player.getWorld().getSpawnLocation() );
-        }       
-        duel.end();  
+        queue.removeDuel(duel.getTeam1(), duel.getTeam2());    
+        duel.end(team);  
         EzpzPvpKit.getInstance().fromUsedToFree(duel.getArena());
         team.setQueue(null);
+        
     }    
 
     // TODO supprimer toute interaction avec les blocks dans le spawn

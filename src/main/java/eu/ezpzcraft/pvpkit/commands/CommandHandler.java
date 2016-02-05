@@ -20,7 +20,7 @@ import eu.ezpzcraft.pvpkit.EzpzPvpKit;
 
 public class CommandHandler 
 {
-	
+	private VoteMap voteMap = new VoteMap();
 	
 	public CommandHandler()
 	{
@@ -160,6 +160,14 @@ public class CommandHandler
 				.permission("ezpzkit.command.create")
 				.build();
 		
+		/* Vote */
+		CommandSpec vote = CommandSpec.builder()
+				.description(Text.of("Vote for the last map"))
+				.executor(voteMap)
+				.arguments(GenericArguments.onlyOne(GenericArguments.integer(Text.of("score"))))
+				.permission("ezpzkit.vote")
+				.build();
+		
 		/*  kit => kit help */
 		CommandSpec kit = CommandSpec.builder()
 				.description(Text.of("Display help"))
@@ -201,7 +209,13 @@ public class CommandHandler
 				.build();		
 		
 		Sponge.getCommandManager().register(EzpzPvpKit.getInstance(), kit, "kit", "k", "ezpzkit");
-		Sponge.getCommandManager().register(EzpzPvpKit.getInstance(), ping, "ping");		
+		Sponge.getCommandManager().register(EzpzPvpKit.getInstance(), ping, "ping");	
+		Sponge.getCommandManager().register(EzpzPvpKit.getInstance(), vote, "vote");
 	}
 
+	public VoteMap getVoteMap()
+	{
+		return this.voteMap;
+	}
+	
 }
