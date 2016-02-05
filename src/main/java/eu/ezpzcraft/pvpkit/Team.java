@@ -135,22 +135,4 @@ public class Team
 	{
 		this.queue = queue;
 	}
-	
-	/**
-	 * Last arena getter
-	 * @return the name of the last arena
-	 */
-	public String getLastArena()
-	{
-		return this.lastArena;
-	}
-	
-	/**
-	 * Last arena setter
-	 * @param arena
-	 */
-	public void setLastArena(String arena)
-	{
-		this.lastArena = arena;
-	}
 }

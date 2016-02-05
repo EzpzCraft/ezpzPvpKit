@@ -20,7 +20,7 @@ public class PvPPlayer
 	private LinkedHashSet<String>  invitations = null;
     private PlayerState state = null;
     private Boolean alive = false;
-    
+    private String lastArena = null;
 
 	/* Constructor */
     public PvPPlayer(Player player, int remainingRanked, String rank, long[] vote)
@@ -191,5 +191,22 @@ public class PvPPlayer
 	{
 		this.invitations.remove(teamName);
 	}
-
+	
+	/**
+	 * Last arena getter
+	 * @return the name of the last arena
+	 */
+	public String getLastArena()
+	{
+		return this.lastArena;
+	}
+	
+	/**
+	 * Last arena setter
+	 * @param arena
+	 */
+	public void setLastArena(String arena)
+	{
+		this.lastArena = arena;
+	}
 }

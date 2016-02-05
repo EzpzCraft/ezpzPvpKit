@@ -45,12 +45,12 @@ public class Duel
     	
     	EzpzPvpKit.getInstance().getTeam(team1).setInMatch(true);
     	EzpzPvpKit.getInstance().getTeam(team2).setInMatch(true);
-    	EzpzPvpKit.getInstance().getTeam(team1).setLastArena(arena.getName());
-    	EzpzPvpKit.getInstance().getTeam(team2).setLastArena(arena.getName());
         // For all players from both team
     	
         for( String player : EzpzPvpKit.getInstance().getTeam(team1).getPlayers() )
-        {       	
+        {    
+        	tmp.setLastArena(arena.getName());
+        	
         	tmp = EzpzPvpKit.getInstance().getPlayer(player);
         	
         	tmp.setState();
@@ -81,6 +81,8 @@ public class Duel
         }
         for( String player : EzpzPvpKit.getInstance().getTeam(team2).getPlayers() )
         {
+        	tmp.setLastArena(arena.getName());
+        	
         	tmp = EzpzPvpKit.getInstance().getPlayer(player);
         	
         	tmp.setState();
@@ -121,8 +123,7 @@ public class Duel
             tmp2.gameMode().set(GameModes.SURVIVAL);
             
             // Vote ?
-            if( EzpzPvpKit.getInstance().getCommandHandler().getVoteMap()
-            			  .canVote(tmp2.getIdentifier(), _team1.getLastArena()) )
+            if( EzpzPvpKit.getInstance().getCommandHandler().getVoteMap().canVote(tmp) )
             {
             	sendVoteMsg(tmp2);
             }
