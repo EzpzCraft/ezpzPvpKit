@@ -1,6 +1,8 @@
 package eu.ezpzcraft.pvpkit;
 
 
+import java.util.LinkedHashSet;
+
 import org.spongepowered.api.entity.living.player.Player;
 
 public class PvPPlayer
@@ -11,9 +13,14 @@ public class PvPPlayer
     private String rank;
     private long vote[];
     private String lang = "English"; // TODO: add in DB in the future when handling languages
+    // UUID if player is single
+    // Otherwise name of leader by default
 	private String team = null;
+	// list <TeamName> (invited this player)
+	private LinkedHashSet<String>  invitations = null;
     private PlayerState state = null;
     private Boolean alive = false;
+    
 
 	/* Constructor */
     public PvPPlayer(Player player, int remainingRanked, String rank, long[] vote)
@@ -21,11 +28,12 @@ public class PvPPlayer
         this.player = player;
         this.remainingRanked = remainingRanked;
         this.rank = rank;
-        this.team = player.getName();
+        this.team = player.getIdentifier();
+        this.invitations = new LinkedHashSet<String>();
         
-        String name = player.getName();
-        EzpzPvpKit.getInstance().addTeam( new Team(name) );
-        EzpzPvpKit.getInstance().getTeam(name).addPlayer(player.getIdentifier());
+        //Create team and add player to it
+        EzpzPvpKit.getInstance().addTeam( new Team(this.team) );
+        EzpzPvpKit.getInstance().getTeam(this.team).addPlayer(this.team);
     }
 
     /* Methods */  
@@ -161,7 +169,27 @@ public class PvPPlayer
 	 * Set if the player is alive or not
 	 * @param alive
 	 */
-	public void setAlive(Boolean alive) {
+	public void setAlive(Boolean alive) 
+	{
 		this.alive = alive;
 	}
+	
+	/**
+	 * Add team to the list of invitations
+	 * @param teamName
+	 */
+	public void addInvitations(String teamName)
+	{
+		this.invitations.add(teamName);
+	}
+	
+	/**
+	 * Remove team to the list of invitations
+	 * @param teamName
+	 */
+	public void removeInvitations(String teamName)
+	{
+		this.invitations.remove(teamName);
+	}
+
 }

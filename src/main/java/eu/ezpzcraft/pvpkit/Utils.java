@@ -59,6 +59,36 @@ public class Utils {
 				.build()).build());
     }
     
+    /* Send Message with [p] before */
+    public static void sendPartyMessage(Player player, Text text)
+    {
+    	player.sendMessage(Text.builder("[").color(TextColors.DARK_GRAY).style(TextStyles.BOLD)
+	            				.append(Text.builder("p").color(TextColors.YELLOW).style(TextStyles.BOLD)
+	            				.append(Text.builder("]").color(TextColors.DARK_GRAY).style(TextStyles.BOLD)
+	            				.append(Text.builder(" ").style(TextStyles.RESET).color(TextColors.WHITE)
+	            				.append(text)
+	            				.build()).build()).build()).build());
+    }
+    
+    /* Send Message with [p] before */
+    public static Text getYesNo(String cmdYes, String textYes, String cmdNo, String textNo)
+    {
+    	return Text.builder("[")     
+					.style(TextStyles.BOLD)
+					.color(TextColors.DARK_GRAY)		         										
+				.append(Text.of(TextColors.DARK_GREEN,
+								TextActions.showText(Text.of(TextStyles.NONE,TextColors.DARK_GREEN,textYes)),
+								TextActions.runCommand(cmdYes), " ✔"))
+				.append(Text.of(TextStyles.BOLD,TextColors.DARK_GRAY," | "))
+				.append(Text.of(TextStyles.BOLD,
+								TextColors.RED,
+								TextActions.showText(Text.of(TextStyles.NONE,TextColors.RED,textNo)),
+								TextActions.runCommand(cmdNo)," ✘"))
+				.append(Text.of(TextStyles.BOLD,TextColors.DARK_GRAY," ]"))
+				.build();
+    }
+    
+    
     public static void sendPingMessage(Player player, int ping)
     {
     	sendKitMessage(player, Text.of(TextColors.GRAY, "Ping: " + ping + "ms.") );

@@ -158,7 +158,7 @@ public class CommandHandler
 				.executor(new QueueJoin())
 				.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
 				.permission("ezpzkit.command.create")
-				.build();
+				.build();		
 		
 		/*  kit => kit help */
 		CommandSpec kit = CommandSpec.builder()
@@ -198,9 +198,27 @@ public class CommandHandler
 				.child(queuelist, "queuelist", "qlist", "ql")
 				.child(joinqueue, "joinqueue", "joinq")
 				.permission("ezpzkit.command")
-				.build();		
+				.build();	
+		
+		/* Party invite */
+		CommandSpec partyinvite = CommandSpec.builder()
+				.description(Text.of(""))
+				.executor(new PartyInvite())
+				.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
+				.permission("")
+				.build();
+		
+		/* Party => help */
+		CommandSpec party = CommandSpec.builder()
+				.description(Text.of(""))
+				.executor(new Party())
+				.child(partyinvite, "invite", "inv")
+				.permission("")
+				.build();
+		
 		
 		Sponge.getCommandManager().register(EzpzPvpKit.getInstance(), kit, "kit", "k", "ezpzkit");
+		Sponge.getCommandManager().register(EzpzPvpKit.getInstance(), party, "party", "p");
 		Sponge.getCommandManager().register(EzpzPvpKit.getInstance(), ping, "ping");		
 	}
 

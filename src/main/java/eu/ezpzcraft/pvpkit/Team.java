@@ -1,13 +1,16 @@
 package eu.ezpzcraft.pvpkit;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 
 public class Team
 {
     private String name = null;
     private TeamStats stats = null;
-    // Player UUID
-    private LinkedHashSet<String> players = null; 
+    // Player UUID 
+    // First is the leader  
+    private LinkedList<String> players = null; 
     private int maxSize = 5;
     private String queue = null;
     private Boolean inMatch = false;
@@ -16,7 +19,7 @@ public class Team
     {
         this.name = name;
         this.stats = new TeamStats();
-        this.players = new LinkedHashSet<String>();
+        this.players = new LinkedList<String>();
     }
 
     public int getSize()
@@ -73,7 +76,7 @@ public class Team
      * Get the raw player list
      * @return LinkedHashSet<String> of UUID 
      */
-    public LinkedHashSet<String> getPlayers()
+    public LinkedList<String> getPlayers()
     {
         return players;
     }
@@ -85,6 +88,15 @@ public class Team
 	public TeamStats getStats()
 	{
 		return this.stats;
+	}
+	
+	/**
+	 * Get the leader of the team
+	 * @return leader of the team
+	 */
+	public String getLeader()
+	{
+		return this.players.get(0);
 	}
 	
 	/**
