@@ -52,6 +52,8 @@ public class EzpzPvpKit
 	private StartMatchThread startMatchThread = new StartMatchThread();	
 	private QueueThread queueThread = new QueueThread();
 	
+	// Command
+	private CommandHandler cmd = null;
     
 	/* Constructor */
 	public EzpzPvpKit()
@@ -71,7 +73,7 @@ public class EzpzPvpKit
         db.loadQueues();	       
         
         /* Commands */
-        CommandHandler cmd = new CommandHandler(); // TODO
+        this.cmd = new CommandHandler();
 		utils = new Utils();
 		getLogger().info("Commands initialized");
     	
@@ -327,6 +329,15 @@ public class EzpzPvpKit
 	public void removeTeam(String name)
 	{
 		this.teams.remove(name);
+	}
+	
+	/**
+	 * Command handler getter
+	 * @return the command handler
+	 */
+	public CommandHandler getCommandHandler()
+	{
+		return this.cmd;
 	}
 	
 	// TODO REMOVE

@@ -14,6 +14,7 @@ public class Team
     private int maxSize = 5;
     private String queue = null;
     private Boolean inMatch = false;
+    private String lastArena = null;
 
     public Team(String name)
     {
@@ -133,5 +134,23 @@ public class Team
 	public void setQueue(String queue) 
 	{
 		this.queue = queue;
+	}
+	
+	/**
+	 * Last arena getter
+	 * @return the name of the last arena
+	 */
+	public String getLastArena()
+	{
+		return this.lastArena;
+	}
+	
+	/**
+	 * Last arena setter
+	 * @param arena
+	 */
+	public void setLastArena(String arena)
+	{
+		this.lastArena = arena;
 	}
 }

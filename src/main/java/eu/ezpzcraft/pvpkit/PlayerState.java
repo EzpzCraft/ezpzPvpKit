@@ -68,11 +68,11 @@ public class PlayerState
 
         player.getInventory().clear();
 
-        Iterator<Inventory> it = player.getInventory().slots().iterator();
+       /* Iterator<Inventory> it = player.getInventory().slots().iterator();
         for( Inventory slot: inventory.slots() )
         {
         	if(it.hasNext())
         		it.next().offer(slot.first());
-        }
+        }*/
     }
 }

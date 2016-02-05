@@ -72,6 +72,7 @@ public class Database
 	        		+ "orientation2_y DOUBLE NOT NULL, "
 	        		+ "orientation2_z DOUBLE NOT NULL, "
 	        		+ "score DOUBLE NOT NULL DEFAULT 0, "
+	        		+ "nb_votes INT NOT NULL DEFAULT 0, "
 	        		+ "type VARCHAR(32) NOT NULL "
 	                + ")ENGINE=InnoDB;";
 	        execute(executeString, datasource);  
@@ -494,6 +495,27 @@ public class Database
 	        	
 	        	EzpzPvpKit.getInstance().addQueue( new DuelQueue(name, isRanked, type, size) );
 	        }
+    	}
+    	catch(SQLException e)
+    	{
+    		EzpzPvpKit.getLogger().info("Error while loading queues from database.");
+    	}
+    }
+    
+    // vote in [0;5]
+    public void saveVote(String arena, int vote)
+    { 
+    	try
+    	{
+	        DataSource datasource = getDataSource("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password);
+	        
+	        String executeString = "UPDATE Arenas SET score=score+?, nb_votes=nb_votes+1 WHERE name=?";
+	        
+	        String[] params = new String[2];
+	        params[0] = vote + "";
+	        params[1] = arena;
+	        
+	        executePrepared(datasource, executeString, params);
     	}
     	catch(SQLException e)
     	{
