@@ -213,7 +213,7 @@ public class CommandHandler
 				.description(Text.of(""))
 				.executor(new PartyInvite())
 				.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
-				.permission("")
+				.permission("party.invite")
 				.build();
 		
 		/* Party leave */
@@ -223,12 +223,21 @@ public class CommandHandler
 				.permission("party.leave")
 				.build();
 		
+		/* Party accept */
+		CommandSpec partyaccept = CommandSpec.builder()
+				.description(Text.of("Accept an party invitation"))
+				.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("party"))))
+				.executor(new PartyAccept())
+				.permission("party.accept")
+				.build();
+		
 		/* Party => help */
 		CommandSpec party = CommandSpec.builder()
 				.description(Text.of(""))
 				.executor(new Party())
 				.child(partyinvite, "invite", "inv")
 				.child(partyleave, "leave")
+				.child(partyaccept, "accept", "acc")
 				.permission("")
 				.build();
 		
