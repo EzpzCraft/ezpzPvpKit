@@ -216,14 +216,21 @@ public class CommandHandler
 				.permission("")
 				.build();
 		
+		/* Party leave */
+		CommandSpec partyleave = CommandSpec.builder()
+				.description(Text.of("Leave current party"))
+				.executor(new PartyLeave())
+				.permission("party.leave")
+				.build();
+		
 		/* Party => help */
 		CommandSpec party = CommandSpec.builder()
 				.description(Text.of(""))
 				.executor(new Party())
 				.child(partyinvite, "invite", "inv")
+				.child(partyleave, "leave")
 				.permission("")
 				.build();
-		
 		
 		Sponge.getCommandManager().register(EzpzPvpKit.getInstance(), kit, "kit", "k", "ezpzkit");
 		Sponge.getCommandManager().register(EzpzPvpKit.getInstance(), party, "party", "p");

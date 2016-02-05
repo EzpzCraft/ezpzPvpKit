@@ -174,7 +174,7 @@ public class PvPPlayer
 		this.alive = alive;
 	}
 	
-	/**
+	/**_team1
 	 * Add team to the list of invitations
 	 * @param teamName
 	 */

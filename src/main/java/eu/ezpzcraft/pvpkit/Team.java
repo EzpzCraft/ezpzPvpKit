@@ -36,6 +36,15 @@ public class Team
     {
         return name;
     }
+    
+    /**
+     * Team name setter
+     * @param name
+     */
+    public void setName(String name)
+    {
+    	this.name = name;
+    }
 
     /**
      * Check if the team contains a given player
