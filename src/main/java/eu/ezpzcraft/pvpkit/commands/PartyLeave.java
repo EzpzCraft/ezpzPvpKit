@@ -40,6 +40,11 @@ public class PartyLeave implements CommandExecutor
         	
         		Utils.sendPartyMessage(source, Text.of("You left the party"));
         	}
+        	
+        	Team newTeam = new Team(source.getName());
+        	EzpzPvpKit.getInstance().addTeam(newTeam);
+        	newTeam.addPlayer(source.getIdentifier());
+        	pvpPlayer.setTeam(newTeam.getName());
         }
         else if(src instanceof ConsoleSource) 
         	Utils.sendMessageC(src);
