@@ -29,33 +29,9 @@ public class ArenaDelete implements CommandExecutor
         if(src instanceof Player && EzpzPvpKit.getInstance().isArenaExisting(name)) 
         {     
             Utils.sendKitMessage((Player) src, Text.builder("Delete "+name+"?   ")           		
-            										.append(Text.builder("┃  ")     
-            											.style(TextStyles.BOLD)
-            											.color(TextColors.DARK_GRAY)
-            										.build())         										
-            										.append(Text.builder("✔")
-            											.style(TextStyles.BOLD)
-	        											.color(TextColors.DARK_GREEN)
-	        											.onHover(TextActions.showText(Text.of(TextStyles.RESET,
-	        													TextColors.DARK_GREEN,"Click to delete "+name)))
-	        											.onClick(TextActions.runCommand("/kit acdel "+name+" true"))
-	        										.build())
-            										.append(Text.builder("  ┃   ")
-            											.style(TextStyles.BOLD)
-            											.color(TextColors.DARK_GRAY)
-            										.build())
-            										.append(Text.builder("✘")
-                										.onHover(TextActions.showText(Text.of(TextStyles.RESET,
-    	        													TextColors.RED,"Click to cancel the delete")))
-            											.color(TextColors.RED)
-            											.style(TextStyles.BOLD)
-	        											.onClick(TextActions.runCommand("/kit acdel "+name+" false"))
-	        										.build())
-            										.append(Text.builder("  ┃\n ")
-            											.style(TextStyles.BOLD)
-            											.color(TextColors.DARK_GRAY)			
-            										.build())
-            									.build());
+            										.append(Utils.getYesNo("/kit acdel "+name+" true", "Click to delete "+name,
+            												"/kit acdel "+name+" false", "Click to cancel the delete"))
+            										.build());
         }
         else if(src instanceof Player && !EzpzPvpKit.getInstance().isArenaExisting(name))
         	Utils.sendKitMessage((Player) src, Text.of(name + " doesn't exist"));

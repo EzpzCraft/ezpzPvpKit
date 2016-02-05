@@ -36,6 +36,7 @@ public class VoteMap  implements CommandExecutor
         	else if( canVote(pvpPlayer) )
         	{
         		EzpzPvpKit.getInstance().getDatabase().saveVote(pvpPlayer.getLastArena(), score);
+        		pvpPlayer.setLastArena(null);
         		Utils.sendKitMessage(source, Text.of(TextColors.GRAY, "Vote saved, thank you !"));
         	}
         	else        	
@@ -56,6 +57,6 @@ public class VoteMap  implements CommandExecutor
      */
     public boolean canVote(PvPPlayer pvpPlayer)
     {
-    	return pvpPlayer.getLastArena()==null;
+    	return pvpPlayer.getLastArena()!=null;
     }
 }

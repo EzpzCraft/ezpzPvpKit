@@ -30,32 +30,8 @@ public class QueueDelete implements CommandExecutor
         if(src instanceof Player && EzpzPvpKit.getInstance().isQueueExisting(name)) 
         {     
         	Utils.sendKitMessage((Player) src, Text.builder("Delete "+name+"?   ")           		
-												.append(Text.builder("┃  ")     
-													.style(TextStyles.BOLD)
-													.color(TextColors.DARK_GRAY)
-												.build())         										
-												.append(Text.builder("✔")
-													.style(TextStyles.BOLD)
-													.color(TextColors.DARK_GREEN)
-													.onHover(TextActions.showText(Text.of(TextStyles.RESET,
-															TextColors.DARK_GREEN,"Click to delete "+name)))
-													.onClick(TextActions.runCommand("/kit qcdel "+name+" true"))
-												.build())
-												.append(Text.builder("  ┃   ")
-													.style(TextStyles.BOLD)
-													.color(TextColors.DARK_GRAY)
-												.build())
-												.append(Text.builder("✘")
-													.onHover(TextActions.showText(Text.of(TextStyles.RESET,
-																TextColors.RED,"Click to cancel the delete")))
-													.color(TextColors.RED)
-													.style(TextStyles.BOLD)
-													.onClick(TextActions.runCommand("/kit qcdel "+name+" false"))
-												.build())
-												.append(Text.builder("  ┃\n ")
-													.style(TextStyles.BOLD)
-													.color(TextColors.DARK_GRAY)			
-												.build())
+												.append(Utils.getYesNo("/kit qcdel "+name+" true", "Click to delete "+name, 
+														 "/kit qcdel "+name+" false","Click to cancel the delete"))
 											.build());
         }
         else if(src instanceof Player && !EzpzPvpKit.getInstance().isQueueExisting(name))

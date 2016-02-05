@@ -49,9 +49,10 @@ public class Duel
     	
         for( String player : EzpzPvpKit.getInstance().getTeam(team1).getPlayers() )
         {    
-        	tmp.setLastArena(arena.getName());
-        	
+       	
         	tmp = EzpzPvpKit.getInstance().getPlayer(player);
+        	
+        	tmp.setLastArena(arena.getName());
         	
         	tmp.setState();
         	
@@ -80,10 +81,10 @@ public class Duel
         	// Send msg
         }
         for( String player : EzpzPvpKit.getInstance().getTeam(team2).getPlayers() )
-        {
-        	tmp.setLastArena(arena.getName());
-        	
+        {      	
         	tmp = EzpzPvpKit.getInstance().getPlayer(player);
+        	
+        	tmp.setLastArena(arena.getName());
         	
         	tmp.setState();
         	
@@ -132,7 +133,30 @@ public class Duel
             // winner parameter
             
             // End of cbt msg
+            
         }  
+        
+        for( String player : _team2.getPlayers() )
+        {
+        	tmp = EzpzPvpKit.getInstance().getPlayer(player);      
+        	tmp2 = tmp.getPlayer();
+        	
+        	tmp.setAlive(false);
+        	tmp.getState().reset(tmp.getPlayer());  	
+        	tmp2.offer(Keys.CAN_FLY, false);
+            tmp2.gameMode().set(GameModes.SURVIVAL);
+            
+            // Vote ?
+            if( EzpzPvpKit.getInstance().getCommandHandler().getVoteMap().canVote(tmp) )
+            {
+            	sendVoteMsg(tmp2);
+            }
+            
+            // TODO save match in DB
+            // winner parameter
+            
+            // End of cbt msg
+        } 
     }
     
     /**
@@ -142,27 +166,28 @@ public class Duel
     private void sendVoteMsg(Player player)
     {
     	Text msg = Text.builder("Rate the map: ").color(TextColors.GRAY)    			
-    	.append(Text.builder("[0]").color(TextColors.DARK_RED)
+    	.append(Text.builder("[1]").color(TextColors.DARK_RED)
     			    .onClick(TextActions.runCommand("/vote 1"))
     			    .onHover(TextActions.showText(Text.of(TextColors.DARK_RED,"Awful")))
     			    .build())
-    	.append(Text.builder("[1]").color(TextColors.RED)
+    	.append(Text.builder("[2]").color(TextColors.RED)
 			    .onClick(TextActions.runCommand("/vote 2"))
 			    .onHover(TextActions.showText(Text.of(TextColors.RED,"Bad")))
 			    .build())
-    	.append(Text.builder("[0]").color(TextColors.YELLOW)
+    	.append(Text.builder("[3]").color(TextColors.YELLOW)
 			    .onClick(TextActions.runCommand("/vote 3"))
 			    .onHover(TextActions.showText(Text.of(TextColors.YELLOW,"Okay")))
 			    .build())
-    	.append(Text.builder("[0]").color(TextColors.GREEN)
+    	.append(Text.builder("[4]").color(TextColors.GREEN)
 			    .onClick(TextActions.runCommand("/vote 4"))
 			    .onHover(TextActions.showText(Text.of(TextColors.GREEN,"Good")))
 			    .build())
-    	.append(Text.builder("[0]").color(TextColors.DARK_GREEN)
+    	.append(Text.builder("[5]").color(TextColors.DARK_GREEN)
 			    .onClick(TextActions.runCommand("/vote 5"))
 			    .onHover(TextActions.showText(Text.of(TextColors.DARK_GREEN,"Amazing")))
 			    .build())
     	.build();
+    	player.sendMessage(msg);
     }
     
     /**
